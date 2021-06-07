@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <script>
+        function outputUpdate(new_value, type) {
+            if (type == "T") {
+                document.querySelector('#selected-T').value= new_value;
+            }
+            if (type == "P") {
+                document.querySelector('#selected-P').value= new_value;
+            }
+            if (type == "z") {
+                document.querySelector('#selected-z').value= new_value;
+            }
+        }
+    </script>
+    <title>Vapour Liquid Equilibrium (Binary)</title>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark", style="color: white;">
+        <div class="container-md">
+            <a class="navbar-brand"><strong>Binary VLE</strong></a>
+            <span class='navbar-text', style='font-size: small;'><strong>Component A:</strong> {{ chemicals[form.componentA.data] }}</span>
+            <span class='navbar-text', style='font-size: small;'><strong>Component B:</strong> {{ chemicals[form.componentB.data] }}</span>
+            <span class='navbar-text', style='font-size: small;'><strong>Temperature (T):</strong> {{ "%0.2f" % T }} degree Celcius</span> 
+            <span class='navbar-text', style='font-size: small;'><strong>Pressure (P):</strong> {{ "%0.2f" % P }} kPa</span>
+            <span class='navbar-text', style='font-size: small;'><strong>Composition (z):</strong> {{ "%0.2f" % z }}</span> 
+        </div>
+    </nav>
+
+    <div class='container-sm', style='background-color: burlywood'>
+        <form method="POST">
+            <strong >RESET PARAMETERS</strong>
+            <br>
+            {{ form.hidden_tag() }}
+            {{ form.componentA.label }} {{ form.componentA() }}
+            <br>
+            {{ form.componentB.label }} {{ form.componentB() }}
+            <br>
+            {{ form.plot_type.label  }} {{ form.plot_type() }}
+            <br>
+            {{ form.T.label  }} {{ form.T(min=0, max=100, step=0.01, oninput="outputUpdate(value, 'T')") }}
+            <output for="T" id="selected-T">{{ form.T.data }} </output> degree Celcius
+            <br>
+            {{ form.P.label  }} {{ form.P(min=1, max=1000, step=0.01, oninput="outputUpdate(value, 'P')") }}
+            <output for="P" id="selected-P">{{ form.P.data }} </output> kPa
+            <br>
+            {{ form.z.label  }} {{ form.z(min=0, max=1, step=0.01, oninput="outputUpdate(value, 'z')") }}
+            <output for="z" id="selected-z">{{ form.z.data }} </output>
+            <br>
+            {{ form.submit() }}
+        </form>
+    </div>
+
+</body>
+</html>
