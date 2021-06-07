@@ -35,14 +35,15 @@
       
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav mr-auto">
+
             <!--First Link-->
             <li class="nav-item active">
-                <a class="nav-link" href="basic.html"> Thermodynamics <!--<span class="sr-only">(current)</span>--></a>
+              <a class="nav-link" href="basic.html"> Thermodynamics <!--<span class="sr-only">(current)</span>--></a>
             </li>
-  
+
             <!--Second Link-->
             <li class="nav-item">
-                <a class="nav-link" href="Binary.html">Testing</a>
+              <a class="nav-link" href="Binary.html">Testing</a>
             </li>
 
             <!--Third Link (Dropdown)-->
@@ -50,11 +51,11 @@
               <button class="btn btn-secondary dropdown-toggle" id="navbarDropdown" 
                       role="button" data-toggle="dropdown" aria-haspopup="true" 
                       aria-expanded="false">
-                Pure Component VLE
+                Binary VLE
               </button>
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="basic.html">Pure Component VLE</a>
-                <a class="dropdown-item" href="binary.html">Binary VLE</a>
+                <a class="dropdown-item" href="Binary.html">Binary VLE</a>
               </div>
             </li>
           </ul>
@@ -63,6 +64,7 @@
 
     <div class="container-sm">
         <span class='navbar-text' style="text-align: center;"><strong>Component A:</strong> {{ chemicals[form.componentA.data] }}</span>
+        <span class='navbar-text' style="text-align: center;"><strong>Component B:</strong> {{ chemicals[form.componentB.data] }}</span>
     </div>
 
     <div class="container">
@@ -77,6 +79,8 @@
             <br>
             {{ form.hidden_tag() }}
             {{ form.componentA.label }} {{ form.componentA() }}
+            <br>
+            {{ form.componentB.label }} {{ form.componentB() }}
             <br>
             {{ form.plot_type.label  }} {{ form.plot_type() }}
             <br>
