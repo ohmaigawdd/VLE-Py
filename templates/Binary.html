@@ -90,11 +90,18 @@
             {{ form.P.label  }} {{ form.P(min=1, max=1000, step=0.01, oninput="outputUpdate(value, 'P')") }}
             <output for="P" id="selected-P">{{ form.P.data }} </output> kPa
             <br>
-            {{ form.z.label  }} {{ form.z(min=0, max=1, step=0.01, oninput="outputUpdate(value, 'z')") }}
+            {{ form.z.label  }} {{ form.plot(min=0, max=1, step=0.01, oninput="outputUpdate(value, 'z')") }}
             <output for="z" id="selected-z">{{ form.z.data }} </output>
+            <br>
+            <!--{{ form.plot.label  }} {{ form.plot(min=0, max=1, step=0.01, oninput="outputUpdate(value, 'z')") }}
+            <output for="plot" id="selected-plot">{{ form.plot.data }} </output>-->
             <br>
             {{ form.submit() }}
         </form>
+    </div>
+
+    <div>
+      
     </div>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
