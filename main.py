@@ -1,7 +1,6 @@
-from flask import Flask, render_template, session
+from flask import Flask, render_template, session #, request
 from flask_wtf import FlaskForm
 from wtforms.fields import SelectField, SubmitField, html5
-import js
 '''import RachfordRice'''
 
 app = Flask(__name__)
