@@ -1,4 +1,7 @@
 import math
+import warnings
+from scipy import optimize
+solve = optimize.fsolve
 
 class RachfordRice:
 
@@ -159,17 +162,71 @@ class RachfordRice:
             iter += 1
         return v
 
+
+    def getPureComponentBoilingTemp(self, component, pressure):  # pressure is to be in psia. ouput in CELCIUS
+        if component in self.components:
+            coeff = RachfordRice.McWilliam_Coeff[component]
+            aT1 = coeff[0]
+            aT2 = coeff[1]
+            aT3 = coeff[2]
+            ap1 = coeff[3]
+            ap2 = coeff[4]
+            ap3 = coeff[5]
+            
+            def equation(T):  # solve for T to make K = 1 
+                lnK = aT1/(T**2) + aT2/T + aT3 + ap1*math.log(pressure) + ap2/(pressure**2) + ap3/pressure # in psia and rankine
+                K = math.exp(lnK)
+                return K - 1
+
+            try:
+                result = (solve(equation, 650).item(0) - 491.67) *(5/9)
+                print(equation(result*(9/5)+491.67))
+                return result
+            except ValueError:
+                return None
+
+    def getPureComponentBoilingPressure(self, component, temperature):  # temperature is to be in rankine. output in PSIA
+        if component in self.components:
+            coeff = RachfordRice.McWilliam_Coeff[component]
+            aT1 = coeff[0]
+            aT2 = coeff[1]
+            aT3 = coeff[2]
+            ap1 = coeff[3]
+            ap2 = coeff[4]
+            ap3 = coeff[5]
+            
+            def equation(P):  # solve for T to make K = 1 
+                lnK = aT1/(temperature**2) + aT2/temperature + aT3 + ap1*math.log(P) + ap2/(P**2) + ap3/P
+                K = math.exp(lnK)
+                return K - 1
+
+            with warnings.catch_warnings():
+                warnings.filterwarnings('error')
+
+                try:
+                    # result = solve(equation, 8).item(0)
+                    result = optimize.newton(equation, 1)
+                    return result
+                except RuntimeWarning or ValueError:
+                    return None
+        
+
     
 # # Test functions
-test = RachfordRice(2, 50, 101, ['n-Pentane','n-Heptane'], [0.5,0.5])
-#print(test.params['Tmax'])
-print(test.get_dets())
-print(test.x)
-print(test.y)
-print(test.v)
-print(test.checkState())
+# test = RachfordRice(2, -100, 500, ['n-Octane','n-Octane'], [0.3,0.7])
+# print(test.params['Tmax'])
+# print(test.get_dets())
+# print(test.x)
+# print(test.y)
+# print(test.v)
+# print(test.checkState())
 
 ## Testing add_chemical function
 # dict = {'n-Decane': [0, -9760.45703, 13.80354, -0.71470, 0, 0, 5.79]}
 # test.add_chemical(dict)
 # print(test.McWilliam_Coeff)
+
+test = RachfordRice(2, 50, 105, ['n-Octane','Ethane'], [0.3,0.7])
+print(test.getPureComponentBoilingTemp('Ethane', 15.23)) 
+print(test.getPureComponentBoilingPressure('Ethane', 581.67))
+print(test.getPureComponentBoilingPressure('n-Octane', 581.67))

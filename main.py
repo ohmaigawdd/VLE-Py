@@ -1,62 +1,59 @@
-from flask import Flask, render_template, session #, request
-from flask_wtf import FlaskForm
-from wtforms.fields import SelectField, SubmitField, html5
-'''import RachfordRice'''
+from flask import Flask, render_template, session
+from calc import RashfordRice
+from resetParamForm import InfoForm
+from VLECalculations import RachfordRice
 
 app = Flask(__name__)
 
 app.config["SECRET_KEY"] = "mykey"
 
-class InfoForm(FlaskForm):
-
-    componentA = SelectField("Component A: ", choices = [('met','Methane'),('ethy','Ethylene'),('eth','Ethane'),('propy','Propylene'),
-    ('prop','Propane'), ('isob','Isobutane') , ('nbut','n-Butane'), ('isop','Isopentane'), ('npent','n-Pentane'),
-    ('nhex','n-Hexane'), ('nhep','n-Heptane'), ('noct','n-Octane'),('nnon','n-Nonane'), ('ndec','n-Decane')])
-
-    componentB = SelectField("Component B: ", choices = [('met','Methane'),('ethy','Ethylene'),('eth','Ethane'),('propy','Propylene'),
-    ('prop','Propane'), ('isob','Isobutane') , ('nbut','n-Butane'), ('isop','Isopentane'), ('npent','n-Pentane'),
-    ('nhex','n-Hexane'), ('nhep','n-Heptane'), ('noct','n-Octane'),('nnon','n-Nonane'), ('ndec','n-Decane')])
-
-    plot_type = SelectField("Plot Type: ", choices = [("yxP","y-x (const P)"), ("yxT","y-x (const T)"), ("Txy","T-x-y"), ("Pxy","P-x-y")])
-
-    T = html5.DecimalRangeField("Temperature: ")
-
-    P = html5.DecimalRangeField("Pressure: ")
-
-    z = html5.DecimalRangeField("Overall Composition: ")
-
-    submit = SubmitField("Submit") 
+@app.route("/")
+def home():
+    return render_template("home.html")
 
 
-@app.route("/", methods=["GET","POST"])
-def index():
+@app.route("/binaryvle", methods=["GET","POST"])
+def binaryvle():
 
     form = InfoForm()
 
     chemicals = dict([('met','Methane'),('ethy','Ethylene'),('eth','Ethane'),('propy','Propylene'),
     ('prop','Propane'), ('isob','Isobutane') , ('nbut','n-Butane'), ('isop','Isopentane'), ('npent','n-Pentane'),
-    ('nhex','n-Hexane'), ('nhep','n-Heptane'), ('noct','n-Octane'),('nnon','n-Nonane'), ('ndec','n-Decane')])
+    ('nhex','n-Hexane'), ('nhep','n-Heptane'), ('noct','n-Octane'),('nnon','n-Nonane'), ('ndec','n-Decane'), ("none", "Not initialised")])
 
-    plots = dict([("yxP","y-x (const P)"), ("yxT","y-x (const T)"), ("Txy","T-x-y"), ("Pxy","P-x-y")])
+    plots = dict([("yxP","y-x (const P)"), ("yxT","y-x (const T)"), ("Txy","T-x-y"), ("Pxy","P-x-y"), ("none", "Not initialised")])
     
+    #initialisation
     if form.T.data==None and form.P.data==None and form.z.data==None:
-        componentA = 'met'
-        componentB = 'ethy'
-        plot_type = 'yxP'        
-        T = 0.00
-        P = 101.00
-        z = 0.00
-
-    if form.validate_on_submit():
-
+        componentA = "met"
+        componentB = "ethy"
+        plot_type = 'yxP'
+        T = 100
+        P = 500
+        z = 0.3
+        errors = False
+    #if form has the same 2 components for A and B OR problem with T, P, z
+    elif not form.validate_on_submit() or form.componentA.data == form.componentB.data:
+        componentA = form.componentA.data
+        componentB = form.componentB.data
+        plot_type = form.plot_type.data
+        T = 100
+        P = 500
+        z = 0.3
+        errors = True
+    #if form is 100% okay
+    elif form.validate_on_submit():
         componentA = form.componentA.data
         componentB = form.componentB.data
         plot_type = form.plot_type.data
         T = form.T.data
         P = form.P.data
         z = form.z.data
+        errors = False
 
-    return render_template("basic.html", form=form, componentA=componentA, componentB=componentB, plot_type=plot_type, T=T, P=P, z=z, chemicals=chemicals, plots=plots)
+    system = RachfordRice(2, T, P, [chemicals[componentA], chemicals[componentB]], [z, 1-z])
+
+    return render_template("binaryvle.html", form=form, plot_type=plot_type, system=system, chemicals=chemicals, plots=plots, errors=errors)
 
 
 if __name__ == "__main__":
