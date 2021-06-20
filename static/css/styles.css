@@ -1,0 +1,89 @@
+/* Insert your custom CSS here */
+
+/* For the all HTML pages */
+html {
+	font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+	background-color: black;
+	align-items: center;
+} 
+
+/* To modify <body> by Bootstrap a little */
+.container {
+	background-color: black
+}
+
+/* For the main content for each page right now */
+.mainHeader {
+	font-size: 50px;
+	font-weight: 600;
+    	background-clip: text;
+	-webkit-background-clip: text;  
+	color: transparent;  
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-image: url("../images/homebg.jpg");
+	margin-top: 50px;
+}
+
+.mainText {
+	font-size: 30px;
+	font-weight: 100;
+	color: white; 
+	margin-bottom: 50px;
+}
+
+/* For all content boxes in our page */
+.information {
+	height: 325px;
+	width: 48.5%;
+	padding: 15px;
+	float: left;	
+	margin-top: 15px;
+	margin-bottom: 15px;
+	border: 5px solid darkgray;
+}
+
+/* For main text in web app function boxes */
+
+.informationHeader {
+	font-size: 27px;
+	font-weight: 600;
+	color: white;  
+}
+
+.informationText {
+	font-weight: 300;
+	color: white;
+}
+
+/* For the footer of the webpage */
+.footer {
+	position: fixed;
+	height: 25px;
+	bottom: 0;
+	width: 77%;
+	color: white;
+	text-align: center;
+	font-size: 15px;
+}
+
+/* For tables */
+td {
+	padding-right: 20px;
+	padding-bottom: 5px;
+}
+
+.tableHeader {
+	font-weight: 300;
+	color: white;
+}
+
+.tableText {
+	font-weight: 300;
+	color: darkgray;
+}
+
+/* For any legends you may need */
+.legend {
+	position: aboslute;
+}

@@ -6,7 +6,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
-    <link rel="stylesheet" href="/css/style.css">
     <script>
         function outputUpdate(new_value, type) {
             if (type == "T") {
@@ -20,56 +19,26 @@
             }
         }
     </script>
-    <title>Chemical Engineering Webtool</title>
+
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='app.js')}}">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.10.2/p5.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+
+    <title>Vapour Liquid Equilibrium (Binary)</title>
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="basic.html">Webtool</a>
-        <!--When zoomed in, menu becomes a toggle dropdown-->
-        <button class="navbar-toggler" type="button" data-toggle="collapse" 
-                data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" 
-                aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-      
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav mr-auto">
-            <!--First Link-->
-            <li class="nav-item active">
-                <a class="nav-link" href="basic.html"> Thermodynamics <!--<span class="sr-only">(current)</span>--></a>
-            </li>
-  
-            <!--Second Link-->
-            <li class="nav-item">
-                <a class="nav-link" href="Binary.html">Testing</a>
-            </li>
-
-            <!--Third Link (Dropdown)-->
-            <li class="nav-item dropdown">
-              <button class="btn btn-secondary dropdown-toggle" id="navbarDropdown" 
-                      role="button" data-toggle="dropdown" aria-haspopup="true" 
-                      aria-expanded="false">
-                Pure Component VLE
-              </button>
-              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="basic.html">Pure Component VLE</a>
-                <a class="dropdown-item" href="binary.html">Binary VLE</a>
-              </div>
-            </li>
-          </ul>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark", style="color: white;">
+        <div class="container-md">
+            <a class="navbar-brand"><strong>Binary VLE</strong></a>
+            <span class='navbar-text', style='font-size: small;'><strong>Component A:</strong> {{ system.components[0] }}</span>
+            <span class='navbar-text', style='font-size: small;'><strong>Component B:</strong> {{ system.components[1] }}</span>
+            <span class='navbar-text', style='font-size: small;'><strong>Temperature (T):</strong> {{ "%0.2f" % system.T }} degree Celcius</span> 
+            <span class='navbar-text', style='font-size: small;'><strong>Pressure (P):</strong> {{ "%0.2f" % system.P }} kPa</span>
+            <span class='navbar-text', style='font-size: small;'><strong>Composition (z):</strong> {{ "%0.2f" % system.z[0] }}</span> 
         </div>
-    </nav>        
-
-    <div class="container-sm">
-        <span class='navbar-text' style="text-align: center;"><strong>Component A:</strong> {{ chemicals[form.componentA.data] }}</span>
-    </div>
-
-    <div class="container">
-        <span class='navbar-text'><strong>Temperature (T):</strong> {{ "%0.2f" % T }} degree Celcius</span> 
-        <span class='navbar-text'><strong>Pressure (P):</strong> {{ "%0.2f" % P }} kPa</span>
-        <span class='navbar-text'><strong>Composition (z):</strong> {{ "%0.2f" % z }}</span> 
-    </div>
+    </nav>
 
     <div class='container-sm', style='background-color: burlywood'>
         <form method="POST">
@@ -77,6 +46,8 @@
             <br>
             {{ form.hidden_tag() }}
             {{ form.componentA.label }} {{ form.componentA() }}
+            <br>
+            {{ form.componentB.label }} {{ form.componentB() }}
             <br>
             {{ form.plot_type.label  }} {{ form.plot_type() }}
             <br>
@@ -92,8 +63,30 @@
             {{ form.submit() }}
         </form>
     </div>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+    <main>
+        <script>
+            var number = 100;
+            var liqArray = {{ system.x }};
+            var vapArray = {{ system.y }};
+            var vapFrac = {{ system.v }};
+            var z = {{ system.z }}
+            var crossedOverBlue = 0;
+            var crossedOverRed = 0;
+        </script>
+        <label>supposed box 1 blue count:</label><div id="box1c-blue"></div>
+        <label>supposed box 1 red count:</label><div id="box1c-red"></div>
+        <label>supposed box 2 blue count:</label><div id="box2c-blue"></div>
+        <label>supposed box 2 red count:</label><div id="box2c-red"></div>
+        <label>crossed over blue count:</label><div id="display-blue"></div>
+        <label>crossed over red count:</label><div id="display-red"></div>
+        <label>current box 1 blue count:</label><div id="box1-blue"></div>
+        <label>current box 1 red count:</label><div id="box1-red"></div>
+        <label>current box 2 blue count:</label><div id="box2-blue"></div>
+        <label>current box 2 red count:</label><div id="box2-red"></div>
+        <script src="{{url_for('static', filename='app.js')}}"></script>
+
+    </main>
+
 </body>
 </html>
