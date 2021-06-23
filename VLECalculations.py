@@ -62,7 +62,7 @@ class RachfordRice:
         self.v = self.newtonMethod()
         self.x = self.calcX()
         self.y = self.calcY(self.x)
-
+        
     #Update different values individually
     def setT(self,T):
         self.T = T
@@ -162,8 +162,7 @@ class RachfordRice:
             iter += 1
         return v
 
-
-    def getPureComponentBoilingTemp(self, component, pressure):  # pressure is to be in psia. ouput in CELCIUS
+    def getPureComponentBoilingTemp(self, component, pressure):
         if component in self.components:
             coeff = RachfordRice.McWilliam_Coeff[component]
             aT1 = coeff[0]
@@ -174,7 +173,7 @@ class RachfordRice:
             ap3 = coeff[5]
             
             def equation(T):  # solve for T to make K = 1 
-                lnK = aT1/(T**2) + aT2/T + aT3 + ap1*math.log(pressure) + ap2/(pressure**2) + ap3/pressure # in psia and rankine
+                lnK = aT1/(T**2) + aT2/T + aT3 + ap1*math.log(pressure) + ap2/(pressure**2) + ap3/pressure
                 K = math.exp(lnK)
                 return K - 1
 
@@ -185,7 +184,7 @@ class RachfordRice:
             except ValueError:
                 return None
 
-    def getPureComponentBoilingPressure(self, component, temperature):  # temperature is to be in rankine. output in PSIA
+    def getPureComponentBoilingPressure(self, component, temperature):
         if component in self.components:
             coeff = RachfordRice.McWilliam_Coeff[component]
             aT1 = coeff[0]
@@ -204,10 +203,9 @@ class RachfordRice:
                 warnings.filterwarnings('error')
 
                 try:
-                    # result = solve(equation, 8).item(0)
-                    result = optimize.newton(equation, 1)
+                    result = solve(equation, 8).item(0)
                     return result
-                except RuntimeWarning or ValueError:
+                except RuntimeWarning:
                     return None
         
 
@@ -226,7 +224,13 @@ class RachfordRice:
 # test.add_chemical(dict)
 # print(test.McWilliam_Coeff)
 
-test = RachfordRice(2, 50, 105, ['n-Octane','Ethane'], [0.3,0.7])
-print(test.getPureComponentBoilingTemp('Ethane', 15.23)) 
-print(test.getPureComponentBoilingPressure('Ethane', 581.67))
-print(test.getPureComponentBoilingPressure('n-Octane', 581.67))
+# test = RachfordRice(2, 50, 105, ['n-Octane','Ethane'], [0.3,0.7])
+# print(test.getPureComponentBoilingTemp('Ethane', 105))
+# print(test.getPureComponentBoilingPressure('Ethane', 500))
+
+# print("hi")
+
+# a = RachfordRice(2, 150, 101.3, ['n-Hexane','n-Octane'], [0.6,0.4])
+# print(a.v, a.x, a.y)
+# a.newtonMethod()
+# print(a.v, a.x, a.y)
