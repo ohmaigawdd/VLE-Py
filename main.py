@@ -2,6 +2,7 @@ from flask import Flask, render_template, session
 from calc import RashfordRice
 from resetParamForm import InfoForm
 from VLECalculations import RachfordRice
+from Plot import plot
 
 app = Flask(__name__)
 
@@ -52,8 +53,18 @@ def binaryvle():
         errors = False
 
     system = RachfordRice(2, T, P, [chemicals[componentA], chemicals[componentB]], [z, 1-z])
+    initial = plot(system)
+    if plot_type == "yxP":
+        initial.plot_yx_constP()
+    elif plot_type == "yxT":
+        initial.plot_yx_constT()
+    elif plot_type == "Txy":
+        initial.plot_Pxy()
+    else:
+        initial.plot_Txy()
+    graphJSON = initial.generate()
 
-    return render_template("binaryvle.html", form=form, plot_type=plot_type, system=system, chemicals=chemicals, plots=plots, errors=errors)
+    return render_template("binaryvle.html", form=form, graphJSON=graphJSON, plot_type=plot_type, system=system, chemicals=chemicals, plots=plots, errors=errors)
 
 
 if __name__ == "__main__":

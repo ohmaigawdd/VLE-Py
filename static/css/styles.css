@@ -9,7 +9,7 @@ html {
 
 /* To modify <body> by Bootstrap a little */
 .container {
-	background-color: black
+	background-color: black;
 }
 
 /* For the main content for each page right now */
@@ -34,8 +34,9 @@ html {
 
 /* For all content boxes in our page */
 .information {
-	height: 325px;
-	width: 48.5%;
+	min-height: 335px;
+	width: 630px;
+	height: auto;
 	padding: 15px;
 	float: left;	
 	margin-top: 15px;
@@ -58,13 +59,16 @@ html {
 
 /* For the footer of the webpage */
 .footer {
-	position: fixed;
+	position: sticky;
 	height: 25px;
 	bottom: 0;
-	width: 77%;
 	color: white;
 	text-align: center;
 	font-size: 15px;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	margin-top: 15px;
 }
 
 /* For tables */
@@ -83,7 +87,14 @@ td {
 	color: darkgray;
 }
 
-/* For any legends you may need */
+/* For any legends (put a <table> inside */
 .legend {
-	position: aboslute;
+	min-height: 40px;
+	width: 630px;
+	height: auto;
+	padding: 10px;
+	float: left;	
+	margin-top: 15px;
+	margin-bottom: 15px;
+	border: 5px solid darkgray;
 }

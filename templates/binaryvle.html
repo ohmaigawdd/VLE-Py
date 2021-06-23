@@ -2,7 +2,7 @@
 
 
 {% block title %}
-<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='app.js')}}">
+<!-- import p5/js library -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.10.2/p5.js"></script>
 <title>Vapour Liquid Equilibrium (Binary)</title>
 {% endblock %}
@@ -32,105 +32,122 @@
     {% if form.componentA.data == form.componentB.data %}
         {{ errorList.append("Do not choose the same 2 components.") or "" }}
     {% endif %}
-    <div class="alert alert-warning rounded" role="alert" style='padding-bottom: 0px;'>
+    <div class="alert alert-warning rounded" role="alert" style='padding-bottom: 0px; margin-bottom: 0px;'>
         {% for error in errorList %}
             <ul>{{ error }}</ul>
         {% endfor %}
     </div>
 {% endif %}
 
-<div id="animateMolecules" style='margin-bottom: 30px; position: float;'>
-    <div class="information rounded" style='margin-right: 35px;'>
-        <p class='informationHeader'>Current System Parameters</p>
-        <br>
+<div class="information rounded" style='margin-right: 35px;'>
+    <p class='informationHeader'>Current System Parameters</p>
+    <br>
+    <table>
+        <tr>
+            <td class='tableHeader'><strong>Component A <img src='static/images/blue.png' style='height: 15px; width: auto; margin-bottom: 5px;'> :</strong></td> 
+            <td class='tableText'>{{ system.components[0] }}</td>
+            <td class='tableHeader'>x<sub>A</sub>:</td>
+            <td class='tableText'>{{"%0.2f" % system.x[0]}}</td>
+        </tr>
+        <tr >
+            <td class='tableHeader'><strong>Component B <img src='static/images/red.png' style='height: 15px; width: auto; margin-bottom: 5px;'> :</strong></td> 
+            <td class='tableText'>{{ system.components[1] }}</td>
+            <td class='tableHeader'>x<sub>B</sub>:</td>
+            <td class='tableText'>{{"%0.2f" % system.x[1]}}</td>
+        </tr>
+        <tr >
+            <td class='tableHeader'><strong>Temperature (T):</strong></td> 
+            <td class='tableText'>{{ "%0.2f" % system.T }} degree Celcius</td>
+            <td class='tableHeader'>y<sub>A</sub>:</td>
+            <td class='tableText'>{{"%0.2f" % system.y[0]}}</td>
+        </tr>
+        <tr>
+            <td class='tableHeader'><strong>Pressure (P):</strong></td> 
+            <td class='tableText'>{{ "%0.2f" % system.P }} kPa</td>
+            <td class='tableHeader'>y<sub>B</sub>:</td>
+            <td class='tableText'>{{"%0.2f" % system.y[1]}}</td>
+        </tr>
+        <tr>
+            <td class='tableHeader'><strong>Composition (z<sub>A</sub>):</strong></td> 
+            <td class='tableText'>{{ "%0.2f" % system.z[0] }}</td>
+            <td class='tableHeader'>Vapour Fraction (v):</td>
+            <td class='tableText'>{{"%0.2f" % system.v}}</td>
+        </tr>
+    </table>
+</div>
+
+<div class='information rounded'>
+    <form method="POST">
+        <p class='informationHeader'>Reset Parameters</p>
+        {{ form.hidden_tag() }}
+        <table>
+            <tr class='informationText'>
+                <td><strong>{{ form.componentA.label }} <img src='static/images/blue.png' style='height: 15px; width: auto; margin-bottom: 5px;'> :</strong></td> 
+                <td>{{ form.componentA() }}</td>
+            </tr>
+            <tr class='informationText'>
+                <td><strong>{{ form.componentB.label }} <img src='static/images/red.png' style='height: 15px; width: auto; margin-bottom: 5px;'> :</strong></td>
+                <td>{{ form.componentB() }}</td>
+            </tr>
+            <tr class='informationText'>
+                <td><strong>{{ form.plot_type.label  }}</strong></td>
+                <td>{{ form.plot_type() }}</td>
+            </tr>
+            <tr class='informationText'>
+                <td><strong>{{ form.T.label  }}</strong></td>
+                <td>{{ form.T() }} <sup>o</sup>C</td>
+            </tr>
+            <tr class='informationText'>
+                <td><strong>{{ form.P.label  }}</strong></td>
+                <td>{{ form.P() }} kPa</td>
+            </tr>
+            <tr class='informationText'>
+                <td><strong>{{ form.z.label  }}</strong></td>
+                <td>{{ form.z() }}</td>
+            </tr>
+            <tr>
+                <td>{{ form.submit() }}</td>
+            </tr>
+        </table>
+
+    </form>
+</div>
+
+{% if errors == False %}
+<div id='scatterchart' class='information rounded' style='margin-right: 35px; margin-top: 0px; height: 720px; padding: 0px;'>
+<!-- import plotly library -->
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script>
+    var graphs = {{ graphJSON | safe }}
+    Plotly.plot('scatterchart',graphs,{})
+</script>
+</div>
+
+<div id="animateMolecules" style='position: float;'>
+    <script>
+        var number = 100;
+        var liqArray = {{ system.x }};
+        var vapArray = {{ system.y }};
+        var vapFrac = {{ system.v }};
+        var z = {{ system.z }};
+        var crossedOverBlue = 0;
+        var crossedOverRed = 0;
+    </script>
+    <script src="{{url_for('static', filename='app.js')}}"></script>
+    <div class='legend rounded' style='margin-top: 0px;'>
         <table>
             <tr>
-                <td class='tableHeader'><strong>Component A <img src='static/images/blue.png' style='height: 15px; width: auto; margin-bottom: 5px;'> :</strong></td> 
-                <td class='tableText'>{{ system.components[0] }}</td>
-                <td class='tableHeader'>x<sub>A</sub>:</td>
-                <td class='tableText'>{{"%0.2f" % system.x[0]}}</td>
-            </tr>
-            <tr >
-                <td class='tableHeader'><strong>Component B <img src='static/images/red.png' style='height: 15px; width: auto; margin-bottom: 5px;'> :</strong></td> 
-                <td class='tableText'>{{ system.components[1] }}</td>
-                <td class='tableHeader'>x<sub>B</sub>:</td>
-                <td class='tableText'>{{"%0.2f" % system.x[1]}}</td>
-            </tr>
-            <tr >
-                <td class='tableHeader'><strong>Temperature (T):</strong></td> 
-                <td class='tableText'>{{ "%0.2f" % system.T }} degree Celcius</td>
-                <td class='tableHeader'>y<sub>A</sub>:</td>
-                <td class='tableText'>{{"%0.2f" % system.y[0]}}</td>
-            </tr>
-            <tr>
-                <td class='tableHeader'><strong>Pressure (P):</strong></td> 
-                <td class='tableText'>{{ "%0.2f" % system.P }} kPa</td>
-                <td class='tableHeader'>y<sub>B</sub>:</td>
-                <td class='tableText'>{{"%0.2f" % system.y[1]}}</td>
-            </tr>
-            <tr>
-                <td class='tableHeader'><strong>Composition (z<sub>A</sub>):</strong></td> 
-                <td class='tableText'>{{ "%0.2f" % system.z[0] }}</td>
+                <td><p class='informationHeader' style='margin-bottom: 0px;'>Legend for Animation</p></td>
+                <td class='tableHeader' style='padding-bottom: 0px; padding-left: 60px;'>Vapour: </td>
+                <td class='tableText' style='padding-bottom: 0px;'><img src='static/images/vap.png' style='height: 15px; width: auto; margin-bottom: 5px;'></td>
+                <td class='tableHeader' style='padding-bottom: 0px;'>Liquid: </td>
+                <td class='tableText' style='padding-bottom: 0px;'><img src='static/images/liq.png' style='height: 15px; width: auto; margin-bottom: 5px;'></td>
             </tr>
         </table>
     </div>
-
-    <div class='information rounded'>
-        <form method="POST">
-            <p class='informationHeader'>Reset Parameters</p>
-            {{ form.hidden_tag() }}
-            <table>
-                <tr class='informationText'>
-                    <td><strong>{{ form.componentA.label }} <img src='static/images/blue.png' style='height: 15px; width: auto; margin-bottom: 5px;'> :</strong></td> 
-                    <td>{{ form.componentA() }}</td>
-                </tr>
-                <tr class='informationText'>
-                    <td><strong>{{ form.componentB.label }} <img src='static/images/red.png' style='height: 15px; width: auto; margin-bottom: 5px;'> :</strong></td>
-                    <td>{{ form.componentB() }}</td>
-                </tr>
-                <tr class='informationText'>
-                    <td><strong>{{ form.plot_type.label  }}</strong></td>
-                    <td>{{ form.plot_type() }}</td>
-                </tr>
-                <tr class='informationText'>
-                    <td><strong>{{ form.T.label  }}</strong></td>
-                    <td>{{ form.T() }} <sup>o</sup>C</td>
-                </tr>
-                <tr class='informationText'>
-                    <td><strong>{{ form.P.label  }}</strong></td>
-                    <td>{{ form.P() }} kPa</td>
-                </tr>
-                <tr class='informationText'>
-                    <td><strong>{{ form.z.label  }}</strong></td>
-                    <td>{{ form.z() }}</td>
-                </tr>
-                <tr>
-                    <td>{{ form.submit() }}</td>
-                </tr>
-            </table>
-
-        </form>
-    </div>
-
-    <div>
-        <script>
-            var number = 100;
-            var liqArray = {{ system.x }};
-            var vapArray = {{ system.y }};
-            var vapFrac = {{ system.v }};
-            var z = {{ system.z }}
-            var crossedOverBlue = 0;
-            var crossedOverRed = 0;
-        </script>
-        {% if errors == False %}
-            <script src="{{url_for('static', filename='app.js')}}"></script>
-        {% endif %}
-    </div>
-
-    <div class='information rounded' style='margin-right: 35px; margin-top: 0px; height: 700px;'>
-        <p class='informationText'>
-            Insert graph here.
-        </p>
-    </div>
 </div>
+{% else %}
+<div style='height: 350px; width: 100%'></div>
+{% endif %}
+
 {% endblock %}
