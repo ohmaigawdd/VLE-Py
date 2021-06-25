@@ -232,7 +232,7 @@ class plot:
             )
         )
         self.fig.add_trace(go.Scatter(x=x_arr, y=y_arr, 
-                                      mode='lines + markers', name="Equilibrium Line",
+                                      mode='lines + markers', name="Equilibrium Line", line_color = "#FF00FF",
                                       hovertemplate =
                                       'x: %{x:.2f}' +
                                       '<br>y: %{y:.2f}'))
