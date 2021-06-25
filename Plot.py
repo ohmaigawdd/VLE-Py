@@ -21,7 +21,7 @@ class plot:
     def add_45degLine(self):
         self.create_plot()
         x_data = np.linspace(0,1,num=20,endpoint=True)
-        self.fig.add_trace(go.Scatter(x=x_data, y=x_data, mode = 'lines', name="45 Degree Diagonal"))
+        self.fig.add_trace(go.Scatter(x=x_data, y=x_data, mode = 'lines', name="x = y", line_color = "#FFFF00"))
 
     def create_tieline(self):
         x = self.RR.x
@@ -52,9 +52,11 @@ class plot:
             if self.plotID == 'Txy':
                 y_arr = [P]
                 type = 'P'
+                print("i ran")
             else:
                 y_arr = [T]
                 type = 'T'
+                print("i ran")
 
         
         if type == 'T':
@@ -163,7 +165,12 @@ class plot:
             xaxis_title="x (" + component + ")",
             yaxis_title = "y (" + component + ")",
             legend=dict(
-                title='Legend'
+                title='Legend',
+                orientation="h",
+                yanchor="bottom",
+                y=1.02,
+                xanchor="right",
+                x=1
             ),
             font=dict(
                 family="Helvetica Neue, monospace",
@@ -173,7 +180,7 @@ class plot:
         )
 
         self.fig.add_trace(go.Scatter(x=x_arr, y=y_arr, 
-                                      mode='markers+lines', name="Equilibrium Line", 
+                                      mode='markers+lines', name="Equilibrium Line", line_color = "#FF00FF",
                                       hovertemplate =
                                       'x: %{x:.2f}' +
                                       '<br>y: %{y:.2f}'))
@@ -188,8 +195,8 @@ class plot:
                                       '<br>y: %{y:.2f}<br>' +
                                       '%{text}', text = [f'Temperature: {currentTemp}'+ chr(176) + "C"]))
         
-        self.fig.update_xaxes(showspikes=True)
-        self.fig.update_yaxes(showspikes=True)
+        self.fig.update_xaxes(showspikes=True, range = [0, 1])
+        self.fig.update_yaxes(showspikes=True, range = [0, 1], scaleanchor = "x", scaleratio = 1)
         
     def plot_yx_constT(self):
         self.add_45degLine()
@@ -211,7 +218,12 @@ class plot:
             xaxis_title="x (" + component + ")",
             yaxis_title = "y (" + component + ")",
             legend=dict(
-                title = 'Legend'
+                title = 'Legend',
+                orientation="h",
+                yanchor="bottom",
+                y=1.02,
+                xanchor="right",
+                x=1
             ),
             font=dict(
                 family="Helvetica Neue, monospace",
@@ -220,7 +232,7 @@ class plot:
             )
         )
         self.fig.add_trace(go.Scatter(x=x_arr, y=y_arr, 
-                                      mode='lines + markers', name="Equilibrium Line",
+                                      mode='lines + markers', name="Equilibrium Line", line_color = "#FF00FF",
                                       hovertemplate =
                                       'x: %{x:.2f}' +
                                       '<br>y: %{y:.2f}'))
@@ -235,8 +247,8 @@ class plot:
                                       '<br>y: %{y:.2f}<br>' +
                                       '%{text}', text = [f'Pressure: {currentPressure} kPa']))
 
-        self.fig.update_xaxes(showspikes=True)
-        self.fig.update_yaxes(showspikes=True)
+        self.fig.update_xaxes(showspikes=True, range = [0, 1])
+        self.fig.update_yaxes(showspikes=True, range = [0, 1], scaleanchor = "x", scaleratio = 1)
     
     def plot_Pxy(self):
         self.create_plot()
@@ -259,7 +271,12 @@ class plot:
             xaxis_title="x (" + component + ")/y (" + component + ")",
             yaxis_title = "Temperature ("+chr(176)+"C)",
             legend=dict(
-                title = 'Legend'
+                title = 'Legend',
+                orientation="h",
+                yanchor="bottom",
+                y=1.02,
+                xanchor="right",
+                x=1
             ),
             font=dict(
                 family="Helvetica Neue, monospace",
@@ -271,12 +288,12 @@ class plot:
 
 
         self.fig.add_trace(go.Scatter(x=x_arr, y=P_arr,
-                                      mode="lines", name="Bubble Line",
+                                      mode="lines", name="Bubble Line", line_color = "#FF00FF",
                                       hovertemplate =
                                       'x: %{x:.2f}' +
                                       '<br>T: %{y:.2f}' + chr(176)+ 'C'))
         self.fig.add_trace(go.Scatter(x=y_arr, y=P_arr,
-                                      mode="lines", name="Dew Line",
+                                      mode="lines", name="Dew Line", line_color = "#FFFF00",
                                       hovertemplate =
                                       'y: %{x:.2f}' +
                                       '<br>T: %{y:.2f}' + chr(176)+ 'C'))
@@ -305,7 +322,12 @@ class plot:
             xaxis_title = "x (" + component + ")/y (" + component + ")",
             yaxis_title="Pressure (kPa)",
             legend=dict(
-                title = 'Legend'
+                title = 'Legend',
+                orientation="h",
+                yanchor="bottom",
+                y=1.02,
+                xanchor="right",
+                x=1
             ),
             font=dict(
                 family="Helvetica Neue, monospace",
@@ -315,15 +337,15 @@ class plot:
         )
 
         self.fig.add_trace(go.Scatter(x=x_arr, y=T_arr,
-                                      mode="lines", name="Bubble Line",
+                                      mode="lines", name="Bubble Line", line_color = "#FF00FF",
                                       hovertemplate =
                                       'x: %{x:.2f}' +
                                       '<br>P: %{y:.2f} kPa'))
         self.fig.add_trace(go.Scatter(x=y_arr, y=T_arr,
-                                      mode="lines", name="Dew Line",
+                                      mode="lines", name="Dew Line", line_color = "#FFFF00",
                                       hovertemplate =
                                       'y: %{x:.2f}' +
-                                      '<br>T: %{y:.2f}C'))
+                                      '<br>P: %{y:.2f} kPa'))
         self.create_tieline()
 
         self.fig.update_xaxes(showspikes=True)

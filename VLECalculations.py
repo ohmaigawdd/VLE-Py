@@ -27,6 +27,23 @@ class RachfordRice:
         'n-Decane': [0, -9760.45703, 13.80354, -0.71470, 0, 0, 5.69]
     }
 
+    CriticalT_P = {
+        'Methane': [-82.6, 4595],
+        'Ethylene': [9.2, 5040.8],
+        'Ethane': [32.18, 4872],
+        'Propylene': [92.42, 4664.6],
+        'Propane':  [96.75, 4301],
+        'Isobutane': [135, 3648.7],
+        'n-Butane': [152.01, 3796],
+        'Isopentane': [187.2, 3378],
+        'n-Pentane': [196.55, 3367.5],
+        'n-Hexane': [234.67, 3044.1],
+        'n-Heptane': [266.98, 2736],
+        'n-Octane': [295.59, 2483.6],
+        'n-Nonane': [321.4, 2281],
+        'n-Decane': [344.55, 2103]
+    }
+
     params = {'Pmin': 101, 'Pmax': 6000, 'Tmin':-70, 'Tmax': 200, }
     #Just to learn about class methods. Can update new chemicals using this method
     @classmethod
@@ -230,7 +247,6 @@ class RachfordRice:
 
 # print("hi")
 
-# a = RachfordRice(2, 150, 101.3, ['n-Hexane','n-Octane'], [0.6,0.4])
-# print(a.v, a.x, a.y)
-# a.newtonMethod()
-# print(a.v, a.x, a.y)
+# a = RachfordRice(2, 150, 101.3, ['Ethane','n-Octane'], [0.4,0.6])
+# print(a.getPureComponentBoilingPressure(a.components[0], a.T))
+# print(a.getPureComponentBoilingPressure(a.components[1], a.T))
