@@ -1,5 +1,4 @@
 from flask import Flask, render_template, session
-from calc import RashfordRice
 from resetParamForm import InfoForm
 from VLECalculations import RachfordRice
 from Plot import plot
