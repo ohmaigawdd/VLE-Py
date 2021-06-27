@@ -43,6 +43,7 @@ class RachfordRice:
         'n-Nonane': [321.4, 2281],
         'n-Decane': [344.55, 2103]
     }
+    
 
     params = {'Pmin': 101, 'Pmax': 6000, 'Tmin':-70, 'Tmax': 200, }
     #Just to learn about class methods. Can update new chemicals using this method
@@ -224,8 +225,68 @@ class RachfordRice:
                     return result
                 except RuntimeWarning:
                     return None
-        
 
+class Antoine:
+    #Not all n-alkanes is available here https://onlinelibrary.wiley.com/doi/pdf/10.1002/9781118135341.app1
+    #So i used http://teachers.iauo.ac.ir/images/Uploaded_files/ANTOINE_COEFFICIENTS_FOR_VAPOR_PRESSURE[1][4619259].PDF
+    #It doesnt have n-alkanes but i used the non-isomer form for now
+    #P in mmHg, T in C
+    coeff = {
+        'Methane'   : [6.84566, 435.621, 271.361], #Tmin, Tmax [-182.48,-82.57]
+        'Ethylene'  : [6.96636, 649.806, 262.73],  #Tmin, Tmax [-169.14,9.21]
+        'Ethane'    : [6.95335, 699.106, 260.264], #Tmin, Tmax [-182.8, 32.27] 
+        'Propylene' : [7.01672, 860.992, 255.895], #Tmin, Tmax [-184.15,91.61]
+        'Propane'   : [7.01887, 889.864, 257.084], #Tmin, Tmax [-187.69, 96.67]
+        'Isobutane' : [6.93388, 953.92, 247.077],  #Tmin, Tmax [-159.61,134.99]
+        'n-Butane'  : [7.00961,1022.48,248.145],   #Tmin, Tmax [-138.29, 152.03]
+        'Isopentane': [7.03015, 1140.45, 247.012], #Tmin, Tmax [-159.9, 187.28]
+        'n-Pentane' : [7.00877, 1134.15,238.678],  #Tmin, Tmax [-129.73, 196.5]
+        'n-Hexane'  : [6.9895, 1216.92, 227.451],  #Tmin, Tmax [-95.31, 234.28]
+        'n-Heptane' : [7.04605, 1341.89, 223.733], #Tmin, Tmax [-90.59, 267.11]
+        'n-Octane'  : [7.14462, 1498.96, 225.874], #Tmin, Tmax [-56.77, 295.68]
+        'n-Nonane'  : [7.1884, 1607.74, 222.414],  #Tmin, Tmax [-53.52, 322.5]
+        'n-Decane'  : [7.21745,1693.93, 216.459]   #Tmin, Tmax [-29.66, 345.3]
+     }
+
+    params = {
+        'Methane'   : [-182.48,-82.57],
+        'Ethylene'  : [-169.14,9.21],
+        'Ethane'    : [-182.8, 32.27],
+        'Propylene' : [-184.15,91.61],
+        'Propane'   : [-187.69, 96.67],
+        'Isobutane' : [-159.61,134.99],
+        'n-Butane'  : [-138.29, 152.0],
+        'Isopentane': [-159.9, 187.28],
+        'n-Pentane' : [-129.73, 196.5],
+        'n-Hexane'  : [-95.31, 234.28],
+        'n-Heptane' : [-90.59, 267.11],
+        'n-Octane'  : [-56.77, 295.68],
+        'n-Nonane'  : [-53.52, 322.5],
+        'n-Decane'  : [-29.66, 345.3]
+    }
+
+    def __init__(self, component, T, P):
+        self.component = component
+        self.T = T
+        self.P = P
+
+    def calc_Psat(self):
+        #Temperature is in C
+        Ant_coeff = Antoine.coeff[self.component]
+        A = Ant_coeff[0]
+        B = Ant_coeff[1]
+        C = Ant_coeff[2]   
+
+        #P is in mmhg
+        lgP = A - B/(C+self.T) 
+        P = pow(10,lgP) * 101.35/760
+        self.P = P
+        return self.P
+    
+    def setT(self,T):
+        self.T = T
+        self.calc_Psat()
+        return self.P
     
 # # Test functions
 # test = RachfordRice(2, -100, 500, ['n-Octane','n-Octane'], [0.3,0.7])
@@ -247,6 +308,10 @@ class RachfordRice:
 
 # print("hi")
 
-# a = RachfordRice(2, 150, 101.3, ['Ethane','n-Octane'], [0.4,0.6])
+#a = RachfordRice(2, 150, 101.3, ['Ethane','n-Octane'], [0.4,0.6])
 # print(a.getPureComponentBoilingPressure(a.components[0], a.T))
 # print(a.getPureComponentBoilingPressure(a.components[1], a.T))
+
+#ant = Antoine('n-Octane', 60, 105)
+#print(ant.calc_Psat())
+#print(ant.setT(50))
