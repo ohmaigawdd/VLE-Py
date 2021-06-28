@@ -413,9 +413,9 @@ class plot_pure:
 # plot.show()
 # print(plot.RR.x, plot.RR.y, plot.RR.v)
 
-#plot = plot_pure(Antoine('n-Octane', 50, 105))
-#plot.plot_pureVLE()
-#plot.show()
+# plot = plot_pure(Antoine('n-Octane', 50, 105))
+# plot.plot_pureVLE()
+# plot.show()
 
 '''
 x = np.arange(10)

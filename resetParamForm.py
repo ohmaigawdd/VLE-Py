@@ -2,7 +2,19 @@ from flask_wtf import FlaskForm
 from wtforms.fields import SelectField, SubmitField, FloatField
 from wtforms.validators import NumberRange
 
-class InfoForm(FlaskForm):
+class PureForm(FlaskForm):
+
+    component = SelectField("Component: ", choices = [('met','Methane'),('ethy','Ethylene'),('eth','Ethane'),('propy','Propylene'),
+    ('prop','Propane'), ('isob','Isobutane') , ('nbut','n-Butane'), ('isop','Isopentane'), ('npent','n-Pentane'),
+    ('nhex','n-Hexane'), ('nhep','n-Heptane'), ('noct','n-Octane'),('nnon','n-Nonane'), ('ndec','n-Decane')])
+
+    T = FloatField("Temperature (T): ", validators=[NumberRange(-70, 200, message=("Temperature out of range!"))])
+
+    P = FloatField("Pressure (P): ", validators=[NumberRange(101.3, 6000, message=("Pressure out of range!"))])
+
+    submit = SubmitField("Submit") 
+
+class BinaryForm(FlaskForm):
 
     componentA = SelectField("Component A ", choices = [('met','Methane'),('ethy','Ethylene'),('eth','Ethane'),('propy','Propylene'),
     ('prop','Propane'), ('isob','Isobutane') , ('nbut','n-Butane'), ('isop','Isopentane'), ('npent','n-Pentane'),
@@ -21,4 +33,3 @@ class InfoForm(FlaskForm):
     z = FloatField("Overall Composition (w.r.t. Component A): ", validators=[NumberRange(0, 1, message=("Composition out of range!"))])
 
     submit = SubmitField("Submit") 
-

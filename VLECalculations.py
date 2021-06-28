@@ -312,6 +312,6 @@ class Antoine:
 # print(a.getPureComponentBoilingPressure(a.components[0], a.T))
 # print(a.getPureComponentBoilingPressure(a.components[1], a.T))
 
-#ant = Antoine('n-Octane', 60, 105)
-#print(ant.calc_Psat())
-#print(ant.setT(50))
+# ant = Antoine('n-Octane', 60, 105)
+# print(ant.calc_Psat())
+# print(ant.setT(50))
