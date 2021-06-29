@@ -1,6 +1,6 @@
 from flask import Flask, render_template, session
-from resetParamForm import InfoForm
-from VLECalculations import RachfordRice
+from resetParamForm import PureForm, BinaryForm
+from VLECalculations import RachfordRice, Antoine
 from Plot import plot
 
 app = Flask(__name__)
@@ -11,11 +11,40 @@ app.config["SECRET_KEY"] = "mykey"
 def home():
     return render_template("home.html")
 
+@app.route("/purevle", methods=["GET","POST"])
+def purevle():
+
+    form = PureForm()
+
+    chemicals = dict([('met','Methane'),('ethy','Ethylene'),('eth','Ethane'),('propy','Propylene'),
+    ('prop','Propane'), ('isob','Isobutane') , ('nbut','n-Butane'), ('isop','Isopentane'), ('npent','n-Pentane'),
+    ('nhex','n-Hexane'), ('nhep','n-Heptane'), ('noct','n-Octane'),('nnon','n-Nonane'), ('ndec','n-Decane'), ("none", "Not initialised")])
+
+    if form.T.data==None and form.P.data==None:
+        component = "met"
+        T = 100
+        P = 500
+        errors = False
+    elif not form.validate_on_submit():
+        component = form.component.data
+        T = 100
+        P = 500
+        errors = True
+    #if form is 100% okay
+    elif form.validate_on_submit():
+        component = form.component.data
+        T = form.T.data
+        P = form.P.data
+        errors = False
+    
+    system = Antoine(chemicals[component], T, P)
+    return render_template("purevle.html", errors=errors, form=form, chemicals=chemicals, system=system)
+
 
 @app.route("/binaryvle", methods=["GET","POST"])
 def binaryvle():
 
-    form = InfoForm()
+    form = BinaryForm()
 
     chemicals = dict([('met','Methane'),('ethy','Ethylene'),('eth','Ethane'),('propy','Propylene'),
     ('prop','Propane'), ('isob','Isobutane') , ('nbut','n-Butane'), ('isop','Isopentane'), ('npent','n-Pentane'),

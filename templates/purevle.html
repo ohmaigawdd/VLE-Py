@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+<!-- import p5/js library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.10.2/p5.js"></script>
+<title>Vapour Liquid Equilibrium (Pure)</title>
+{% endblock %}
+
+
+{% block content %}
+<div>
+	<p class="mainHeader">
+	Visualisation of Pure VLE Systems
+	</p>
+	<p class="mainText">
+	This tool utilises information on the parameters of a given pure component system to generate a molecular representation of the system, as well as a desired graphical plot.
+	</p>
+</div>
+
+{% if errors == True %}
+    {% set errorList = [] %}
+    {% if form.T.errors %}
+        {{ errorList.append(form.T.errors[0]) or "" }}
+    {% endif %}
+    {% if form.P.errors %}
+        {{ errorList.append(form.P.errors[0]) or "" }}
+    {% endif %}
+    <div class="alert alert-warning rounded" role="alert" style='padding-bottom: 0px; margin-bottom: 0px;'>
+        {% for error in errorList %}
+            <ul>{{ error }}</ul>
+        {% endfor %}
+    </div>
+{% endif %}
+
+<div class="information rounded" style='margin-right: 35px;'>
+    <p class='informationHeader'>Current System Parameters</p>
+    <br>
+    <table>
+        <tr>
+            <td class='tableHeader'><strong>Component:</strong></td> 
+            <td class='tableText'>{{ system.component }}</td>
+        </tr>
+        <tr >
+            <td class='tableHeader'><strong>Temperature (T):</strong></td> 
+            <td class='tableText'>{{ "%0.2f" % system.T }} degree Celcius</td>
+        </tr>
+        <tr>
+            <td class='tableHeader'><strong>Pressure (P):</strong></td> 
+            <td class='tableText'>{{ "%0.2f" % system.P }} kPa</td>
+        </tr>
+    </table>
+</div>
+
+<div class='information rounded'>
+    <form method="POST">
+        <p class='informationHeader'>Reset Parameters</p>
+        {{ form.hidden_tag() }}
+        <table>
+            <tr class='informationText'>
+                <td><strong>{{ form.component.label }}</td> 
+                <td>{{ form.component() }}</td>
+            </tr>
+            <tr class='informationText'>
+                <td><strong>{{ form.T.label  }}</strong></td>
+                <td>{{ form.T() }} <sup>o</sup>C</td>
+            </tr>
+            <tr class='informationText'>
+                <td><strong>{{ form.P.label  }}</strong></td>
+                <td>{{ form.P() }} kPa</td>
+            </tr>
+            <tr>
+                <td>{{ form.submit() }}</td>
+            </tr>
+        </table>
+
+    </form>
+</div>
+
+<div style='height: 350px; width: 100%'></div>
+{% endblock %}
