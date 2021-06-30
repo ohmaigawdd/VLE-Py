@@ -180,7 +180,7 @@ class RachfordRice:
             iter += 1
         return v
 
-    def getPureComponentBoilingTemp(self, component, pressure):
+    def getPureComponentBoilingTemp(self, component, pressure): # psia 
         if component in self.components:
             coeff = RachfordRice.McWilliam_Coeff[component]
             aT1 = coeff[0]
@@ -194,15 +194,15 @@ class RachfordRice:
                 lnK = aT1/(T**2) + aT2/T + aT3 + ap1*math.log(pressure) + ap2/(pressure**2) + ap3/pressure
                 K = math.exp(lnK)
                 return K - 1
+            # returns temp in rankine
 
             try:
-                result = (solve(equation, 650).item(0) - 491.67) *(5/9)
-                print(equation(result*(9/5)+491.67))
-                return result
+                result = solve(equation, 650).item(0) 
+                return (result - 491.67) *(5/9)
             except ValueError:
                 return None
 
-    def getPureComponentBoilingPressure(self, component, temperature):
+    def getPureComponentBoilingPressure(self, component, temperature): # Rankine
         if component in self.components:
             coeff = RachfordRice.McWilliam_Coeff[component]
             aT1 = coeff[0]
@@ -217,12 +217,18 @@ class RachfordRice:
                 K = math.exp(lnK)
                 return K - 1
 
+            # returns a pressure in psia
+
             with warnings.catch_warnings():
                 warnings.filterwarnings('error')
 
                 try:
-                    result = solve(equation, 8).item(0)
-                    return result
+                    a = Antoine(component, (temperature-491.67)*(5/9), self.P)
+                    
+                    estimate = a.calc_Psat()*0.145038
+                    print(estimate)
+                    result = solve(equation, estimate).item(0)
+                    return result / 0.145038
                 except RuntimeWarning:
                     return None
 
