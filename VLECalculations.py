@@ -71,7 +71,12 @@ class RachfordRice:
         elif self.checkState() == "Liquid":
             self.v = 0
             self.y = [0, 0]
-        pass
+        self.exceedT = False
+        self.exceedP = False
+        if self.T >= RachfordRice.CriticalT_P[self.components[0]][0] or self.T >= RachfordRice.CriticalT_P[self.components[1]][0]:
+            self.exceedT = True
+        if self.P >= RachfordRice.CriticalT_P[self.components[0]][1] or self.P >= RachfordRice.CriticalT_P[self.components[1]][1]:
+            self.exceedP = True
 
     def calculate(self):
         self.T_degR = self.T * 9/5 + 491.67

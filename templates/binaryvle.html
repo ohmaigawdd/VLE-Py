@@ -32,9 +32,24 @@
     {% if form.componentA.data == form.componentB.data %}
         {{ errorList.append("Do not choose the same 2 components.") or "" }}
     {% endif %}
-    <div class="alert alert-warning rounded" role="alert" style='padding-bottom: 0px; margin-bottom: 0px;'>
+    <div class="alert alert-danger rounded" role="alert" style='padding-bottom: 0px; margin-bottom: 0px;'>
         {% for error in errorList %}
             <ul>{{ error }}</ul>
+        {% endfor %}
+    </div>
+{% endif %}
+
+{% if exceed == True%}
+    {% set exceedList = [] %}
+    {% if system.exceedT == True %}
+        {{ exceedList.append("System T exceeds critical T of either one of chosen components.") or "" }}
+    {% endif %}
+    {% if system.exceedP == True %}
+        {{ exceedList.append("System P exceeds critical P of either one of chosen components.") or "" }}
+    {% endif %}
+    <div class="alert alert-warning rounded" role="alert" style='padding-bottom: 0px; margin-bottom: 0px;'>
+        {% for exceed in exceedList %}
+            <ul>{{ exceed }}</ul>
         {% endfor %}
     </div>
 {% endif %}
