@@ -298,6 +298,64 @@ class Antoine:
         self.T = T
         self.calc_Psat()
         return self.P
+
+class VanDerWaalsEOS:
+    
+    # index 0 is temp in celcius, index 1s pressure in kPa
+    params = {
+        'Methane': [-82.6, 4595],
+        'Ethylene': [9.2, 5040.8],
+        'Ethane': [32.18, 4872],
+        'Propylene': [92.42, 4664.6],
+        'Propane':  [96.75, 4301],
+        'Isobutane': [135, 3648.7],
+        'n-Butane': [152.01, 3796],
+        'Isopentane': [187.2, 3378],
+        'n-Pentane': [196.55, 3367.5],
+        'n-Hexane': [234.67, 3044.1],
+        'n-Heptane': [266.98, 2736],
+        'n-Octane': [295.59, 2483.6],
+        'n-Nonane': [321.4, 2281],
+        'n-Decane': [344.55, 2103]
+    }
+
+    R = 8.314
+    
+    def __init__(self, T, P, component):  # T in Kelvin, P in bar
+        self.T = T
+        self.P = P
+        self.component = component
+
+    def C2K(self):
+        return self.T + 273.15
+
+    def kPa2Pa(self):
+        return self.P*1000
+
+    def getTR(self):
+        return self.C2K()/(VanDerWaalsEOS.params[self.component][0]+273.15)
+
+    def getPR(self):
+        return self.kPa2Pa()/(VanDerWaalsEOS.params[self.component][1]*1000)
+
+    def get_a(self):
+        return (27*VanDerWaalsEOS.R*VanDerWaalsEOS.R*(VanDerWaalsEOS.params[self.component][0]+273.15)**2)/(64*(VanDerWaalsEOS.params[self.component][1]*1000))
+
+    def get_b(self):
+        return VanDerWaalsEOS.R*(VanDerWaalsEOS.params[self.component][0]+273.15)/(8*(VanDerWaalsEOS.params[self.component][1]*1000))
+
+    def exceed_T(self):
+        if self.getTR() > 1:
+            return True
+        return False
+    
+    def exceed_P(self):
+        if self.getPR() > 1:
+            return True
+        return False
+
+
+    
     
 # # Test functions
 # test = RachfordRice(2, -100, 500, ['n-Octane','n-Octane'], [0.3,0.7])
