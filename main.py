@@ -1,6 +1,6 @@
-from flask import Flask, render_template, session
+from flask import Flask, render_template, session, request
 from resetParamForm import PureForm, BinaryForm
-from VLECalculations import RachfordRice, Antoine
+from VLECalculations import RachfordRice, Antoine, Steam
 from Plot import plot
 
 app = Flask(__name__)
@@ -99,6 +99,20 @@ def binaryvle():
     graphJSON = initial.generate()
 
     return render_template("binaryvle.html", form=form, graphJSON=graphJSON, plot_type=plot_type, system=system, chemicals=chemicals, plots=plots, errors=errors, exceed=exceed)
+
+@app.route("/steam", methods=["GET","POST"])
+def steam():
+    if request.method == "GET":
+        system = Steam(50, 100)
+        system.instantiate()
+        return render_template("steam.html", v = system.v)
+    
+    else:
+        T = flask.request.values.get('T')
+        P = flask.request.values.get('P')
+        system = Steam(T, P)
+        system.instantiate()
+        return render_template("steam.html", v = system.v)
 
 
 if __name__ == "__main__":
