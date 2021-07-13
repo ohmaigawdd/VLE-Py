@@ -1,6 +1,9 @@
 import math
+import random
 import warnings
 from scipy import optimize
+from pyXSteam.XSteam import XSteam
+steamTable = XSteam(XSteam.UNIT_SYSTEM_MKS)
 solve = optimize.fsolve
 
 class RachfordRice:
@@ -354,33 +357,160 @@ class VanDerWaalsEOS:
             return True
         return False
 
+class Steam:
 
-    
-    
-# # Test functions
-# test = RachfordRice(2, -100, 500, ['n-Octane','n-Octane'], [0.3,0.7])
-# print(test.params['Tmax'])
-# print(test.get_dets())
-# print(test.x)
-# print(test.y)
-# print(test.v)
-# print(test.checkState())
+    def __init__(self,T,P): # T in degrees C, P in kPa
+        self.T = T
+        self.P = P
+        self.Pbar = P/100
+        self.H = None # kJ/kg
+        self.S = None  # kJ/kgC
+        self.v = None
+        self.G = None
+        self.vapvol = None
+        self.liqvol = None
 
-## Testing add_chemical function
-# dict = {'n-Decane': [0, -9760.45703, 13.80354, -0.71470, 0, 0, 5.79]}
-# test.add_chemical(dict)
-# print(test.McWilliam_Coeff)
+    def getT(self):
+        return self.T
 
-# test = RachfordRice(2, 50, 105, ['n-Octane','Ethane'], [0.3,0.7])
-# print(test.getPureComponentBoilingTemp('Ethane', 105))
-# print(test.getPureComponentBoilingPressure('Ethane', 500))
+    def getP(self):
+        self.P = self.Pbar / 100
+        return self.P
 
-# print("hi")
+    def getH(self):
+        return self.H
 
-#a = RachfordRice(2, 150, 101.3, ['Ethane','n-Octane'], [0.4,0.6])
-# print(a.getPureComponentBoilingPressure(a.components[0], a.T))
-# print(a.getPureComponentBoilingPressure(a.components[1], a.T))
+    def getmeanH(self):
+        if self.v < 1 and self.v > 0:
+            return self.v*self.H[1] + (1-self.v)*self.H[0]
+        return self.H
 
-# ant = Antoine('n-Octane', 60, 105)
-# print(ant.calc_Psat())
-# print(ant.setT(50))
+    def getS(self):
+        return self.S
+
+    def getmeanS(self):
+        if self.v < 1 and self.v > 0:
+            return self.v*self.S[1] + (1-self.v)*self.S[0]
+        return self.S
+
+    def getVapFrac(self):
+        return self.v
+
+    def getG(self):
+        return self.G
+
+    def getTotalVol(self):
+        return self.vapvol + self.liqvol
+
+    def getboilingT(self):
+        return steamTable.tsat_p(self.Pbar)
+
+    def getboilingP(self):
+        return steamTable.psat_t(self.T)
+
+    def instantiate(self):
+        if self.T != self.getboilingT():
+            self.H = steamTable.h_pt(self.Pbar, self.T)
+            self.S = steamTable.s_pt(self.Pbar, self.T)
+            self.v = steamTable.x_ph(self.Pbar, self.H)
+            if self.v == 0:
+                self.liqvol = steamTable.v_pt(self.Pbar, self.T)
+            else:
+                self.vapvol = steamTable.v_pt(self.Pbar, self.T)
+            
+        else:
+            self.H = [steamTable.hL_p(self.Pbar), steamTable.hV_p(self.Pbar)]
+            self.S = [steamTable.sL_p(self.Pbar), steamTable.sV_p(self.Pbar)]
+            self.v = random.random()
+            self.vapvol = steamTable.vV_p(self.Pbar)*self.v
+            self.liqvol = steamTable.vL_p(self.Pbar)*(1-self.v)
+            
+        self.G = self.getmeanH() - (273.15+self.T)*self.getmeanS()
+        
+    def addH(self):
+        meanH = self.getmeanH()
+        meanH += 10
+        if meanH > steamTable.hL_p(self.Pbar) and meanH < steamTable.hV_p(self.Pbar):
+            self.v = (meanH - steamTable.hL_p(self.Pbar)) / (steamTable.hV_p(self.Pbar) - steamTable.hL_p(self.Pbar))
+            self.H = [steamTable.hL_p(self.Pbar), steamTable.hV_p(self.Pbar)]
+
+        else: 
+            self.H += 10
+
+    def minusH(self):
+        meanH = self.getmeanH()
+        meanH -= 10
+        if meanH > steamTable.hL_p(self.Pbar) and meanH < steamTable.hV_p(self.Pbar):
+            self.v = (meanH - steamTable.hL_p(self.Pbar)) / (steamTable.hV_p(self.Pbar) - steamTable.hL_p(self.Pbar))
+        else: 
+            self.H -= 10
+
+    def minusVol(self):
+        if self.v == 0:
+            pass
+        elif self.vapvol < 0.001:
+            self.vapvol = 0
+            self.liqvol = steamTable.vL_p(self.Pbar)
+            self.v = 0
+            self.Pbar = steamTable.psat_t(self.T)
+            self.S = steamTable.sL_t(self.T)
+        elif self.v < 1:
+            self.vapvol -= 0.001
+            vol1 = self.vapvol
+            self.vapvol -= 0.001
+            self.Pbar = self.Pbar*vol1/self.vapvol
+            self.v = steamTable.x_ph(self.Pbar, self.getmeanH())
+            if self.v < 1 and self.v > 0:
+                self.S = [steamTable.sL_t(self.T), steamTable.sV_t(self.T)]
+            else:
+                self.S = steamTable.s_ph(self.Pbar, self.getmeanH())
+        self.G = self.getmeanH() - (273.15+self.T)*self.getmeanS()
+
+    def addVol(self):
+        vol1 = self.vapvol
+        self.vapvol += 0.001
+        self.Pbar = self.Pbar*vol1/self.vapvol
+        print(self.Pbar)
+        self.v = steamTable.x_ph(self.Pbar, self.getmeanH())
+        if self.v < 1 and self.v > 0:
+            self.S = [steamTable.sL_t(self.T), steamTable.sV_t(self.T)]
+        else:
+            print(self.v, self.getmeanH())
+            self.S = steamTable.s_ph(self.Pbar, self.getmeanH())
+        self.G = self.getmeanH() - (273.15+self.T)*self.getmeanS()
+
+    def addP(self):
+        self.Pbar += 0.25
+
+    def minusP(self):
+        self.Pbar -= 0.25
+
+    def calculate_fixP(self, type):  # includes the adding/subtracting
+        if type == "add":
+            self.addH()
+        else:
+            self.minusH()
+        self.T = steamTable.t_ph(self.Pbar, self.getmeanH())
+        if self.v < 1 and self.v > 0:
+            self.S = [steamTable.sL_p(self.Pbar), steamTable.sV_p(self.Pbar)]
+            self.vapvol = steamTable.vV_p(self.Pbar)*self.v
+            self.liqvol = steamTable.vL_p(self.Pbar)*(1-self.v)
+        else:
+            self.S = steamTable.s_ph(self.Pbar, self.H)
+            if self.v == 0:
+                self.liqvol = steamTable.v_pt(self.Pbar, self.T)
+            else:
+                self.vapvol = steamTable.v_pt(self.Pbar, self.T)
+        self.G = self.getmeanH() - (273.15+self.T)*self.getmeanS()
+        
+
+    def calculate_fixT(self, type):
+        if type == "add":
+            self.addVol()
+        else:
+            self.minusVol()
+           
+
+a = Steam(200,100)
+a.instantiate()
+print(a.v)
