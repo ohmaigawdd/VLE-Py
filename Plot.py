@@ -1,5 +1,5 @@
 ## Only import below if testing code ##
-from VLECalculations import RachfordRice, Antoine
+from VLECalculations import RachfordRice, Antoine, Steam
 import plotly
 import json
 import plotly.graph_objects as go
@@ -401,11 +401,43 @@ class plot_pure:
     show = plot.__dict__["show"]
 
 
-# Things to add on:
-# (1) TieLine
-# (2) Show selected option marker. Best if use fig.add_annotation(current)
-# (3) Senior's one able to show live update if increase T/P/z. Since we doing rerendering 
-#     should consider showing the previous plot to compare
+class plot_steam:
+    def __init__(self,sys):
+        self.sys = sys #sys is based on Steam class in VLE calculations e.g Steam(T,P)
+
+    def generate_Tpoints(self):
+        points = []
+        Tmax = 375
+        Tmin = -50
+        step = round((Tmax - Tmin) / 425)
+
+        tempobject = Steam(self.sys.T, self.sys.P)
+        for i in range(round(Tmin), round(Tmax), step):
+            points.append([tempobject.T,tempobject.setT(i)])
+
+        points = sorted(points)
+        return points
+
+    def plot_steamVLE(self):
+        self.create_plot()
+        self.points = self.generate_Tpoints()
+        T_arr = []
+        P_arr = []
+        for i in range(0,len(self.points)):
+            T_arr.append(self.points[i][0])
+            P_arr.append(self.points[i][1])
+        
+        self.fig.add_trace(go.Scatter(x=T_arr, y=P_boil_arr,
+                                        mode="lines", name="Boiling Equilibrium Line", line_color = "#FF00FF",
+                                        hovertemplate =
+                                        'T: %{x:.2f} C' +
+                                        '<br>P: %{y:.2f} kPa'))
+        self.fig.update_xaxes(showspikes=True)
+        self.fig.update_yaxes(showspikes=True)
+
+    create_plot = plot.__dict__["create_plot"]
+    generate = plot.__dict__["generate"]
+    show = plot.__dict__["show"]
 
 # Testing functions
 # plot = plot(RachfordRice(2, 150, 101.3, ['n-Hexane','n-Octane'], [0.6,0.4]))
@@ -413,9 +445,9 @@ class plot_pure:
 # plot.show()
 # print(plot.RR.x, plot.RR.y, plot.RR.v)
 
-# plot = plot_pure(Antoine('n-Octane', 50, 105))
-# plot.plot_pureVLE()
-# plot.show()
+plot = plot_steam(Steam(100, 100))
+plot.plot_steamVLE()
+plot.show()
 
 '''
 x = np.arange(10)
