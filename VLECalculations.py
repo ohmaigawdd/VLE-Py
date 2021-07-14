@@ -399,6 +399,10 @@ class Steam:
     def getG(self):
         return self.G
 
+    def setT(self,T):
+        self.T = T
+        return self.getboilingP()*100
+    
     def getTotalVol(self):
         return self.vapvol + self.liqvol
 
@@ -511,6 +515,6 @@ class Steam:
             self.minusVol()
            
 
-a = Steam(200,100)
+a = Steam(100,100)
 a.instantiate()
-print(a.v)
+print(a.getboilingP()*100)
