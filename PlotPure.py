@@ -17,7 +17,7 @@ class plotPure:
         self.fig = go.Figure()
         self.fig.update_layout(template='plotly_dark', paper_bgcolor='rgba(0,0,0,0)')
 
-    def create_isotherm(self):
+    def create_vapcurve(self):
         self.create_plot()
         P_points, V_points = [],[]
         P = self.sys.P

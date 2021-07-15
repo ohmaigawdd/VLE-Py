@@ -405,35 +405,57 @@ class plot_steam:
     def __init__(self,sys):
         self.sys = sys #sys is based on Steam class in VLE calculations e.g Steam(T,P)
 
-    def generate_Tpoints(self):
-        points = []
-        Tmax = 375
-        Tmin = -50
-        step = round((Tmax - Tmin) / 425)
+    def generate_vapcurve(self):
+        Tmin = self.sys.triplePointT()
+        Pmax = self.sys.Pcrit()
+        Pmin = self.sys.triplePointP()
 
-        tempobject = Steam(self.sys.T, self.sys.P)
-        for i in range(round(Tmin), round(Tmax), step):
-            points.append([tempobject.T,tempobject.setT(i)])
+        P_ls, T_ls = [Pmin], [Tmin]
+        for i in np.arange(Pmin, Pmax, 0.01):
+            P_ls.append(i)
+            T = self.sys.getvapcurveT(i)
+            T_ls.append(T)
 
-        points = sorted(points)
-        return points
+        return [np.array(T_ls), np.array(P_ls)*100]
 
     def plot_steamVLE(self):
         self.create_plot()
-        self.points = self.generate_Tpoints()
-        T_arr = []
-        P_arr = []
-        for i in range(0,len(self.points)):
-            T_arr.append(self.points[i][0])
-            P_arr.append(self.points[i][1])
+        self.points = self.generate_vapcurve()
+
+        self.fig.update_layout(
+            title="<b>Vaporization Curve of Water</b>",
+            xaxis_title = "Temperature" + chr(176) + "C",
+            yaxis_title="Pressure (kPa)",
+            legend=dict(
+                title = 'Legend',
+                orientation="h",
+                yanchor="bottom",
+                y=1.02,
+                xanchor="right",
+                x=1
+            ),
+            font=dict(
+                family="Helvetica Neue, monospace",
+                size=12,
+                color="#FFFFFF"
+            )
+        )
         
-        self.fig.add_trace(go.Scatter(x=T_arr, y=P_boil_arr,
-                                        mode="lines", name="Boiling Equilibrium Line", line_color = "#FF00FF",
+        self.fig.add_trace(go.Scatter(x=self.points[0], y=self.points[1],
+                                        mode="lines", name="Vaporization Curve", line_color = "#FF00FF",
                                         hovertemplate =
                                         'T: %{x:.2f} C' +
                                         '<br>P: %{y:.2f} kPa'))
+
+        self.fig.add_trace(go.Scatter(x=[self.sys.T], y=[self.sys.P], mode='markers', name="Current",
+                                      marker = dict(size=10),
+                                      hovertemplate =
+                                      'x: %{x:.2f}' +
+                                      '<br>y: %{y:.2f}<br>'))
+
         self.fig.update_xaxes(showspikes=True)
         self.fig.update_yaxes(showspikes=True)
+
 
     create_plot = plot.__dict__["create_plot"]
     generate = plot.__dict__["generate"]
@@ -445,9 +467,9 @@ class plot_steam:
 # plot.show()
 # print(plot.RR.x, plot.RR.y, plot.RR.v)
 
-# plot = plot_steam(Steam(100, 100))
-# plot.plot_steamVLE()
-# plot.show()
+plot = plot_steam(Steam(100, 100))
+plot.plot_steamVLE()
+plot.show()
 
 '''
 x = np.arange(10)
