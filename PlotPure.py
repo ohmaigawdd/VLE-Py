@@ -58,4 +58,4 @@ class plotPure:
 # plot.create_isotherm()
 # plot.show()
 
-# print(plot.sys.component, plot.sys.get_a(), plot.sys.get_b())
+# print(plot.sys.componentt, plot.sys.get_a(), plot.sys.get_b())
