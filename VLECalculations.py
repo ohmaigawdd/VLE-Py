@@ -513,4 +513,4 @@ class Steam:
 
 a = Steam(200,100)
 a.instantiate()
-print(a.v)
+print(a.liqvol)

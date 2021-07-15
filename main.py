@@ -12,35 +12,29 @@ app.config["SECRET_KEY"] = "mykey"
 def home():
     return render_template("home.html")
 
-# PURE VLE PAGE
+# PURE VLE PAGE (WATER)
 @app.route("/purevle", methods=["GET","POST"])
 def purevle():
 
     form = PureForm()
 
-    chemicals = dict([('met','Methane'),('ethy','Ethylene'),('eth','Ethane'),('propy','Propylene'),
-    ('prop','Propane'), ('isob','Isobutane') , ('nbut','n-Butane'), ('isop','Isopentane'), ('npent','n-Pentane'),
-    ('nhex','n-Hexane'), ('nhep','n-Heptane'), ('noct','n-Octane'),('nnon','n-Nonane'), ('ndec','n-Decane'), ("none", "Not initialised")])
-
     if form.T.data==None and form.P.data==None:
-        component = "met"
-        T = 100
-        P = 500
+        T = 50
+        P = 100
         errors = False
     elif not form.validate_on_submit():
-        component = form.component.data
-        T = 100
-        P = 500
+        T = 50
+        P = 100
         errors = True
     #if form is 100% okay
     elif form.validate_on_submit():
-        component = form.component.data
         T = form.T.data
         P = form.P.data
         errors = False
     
-    system = Antoine(chemicals[component], T, P)
-    return render_template("purevle.html", errors=errors, form=form, chemicals=chemicals, system=system)
+    system = Steam(T, P)
+    system.instantiate()
+    return render_template("purevle.html", errors=errors, form=form, system=system)
 
 # BINARY VLE PAGE
 @app.route("/binaryvle", methods=["GET","POST"])
@@ -99,21 +93,6 @@ def binaryvle():
     graphJSON = initial.generate()
 
     return render_template("binaryvle.html", form=form, graphJSON=graphJSON, plot_type=plot_type, system=system, chemicals=chemicals, plots=plots, errors=errors, exceed=exceed)
-
-@app.route("/steam", methods=["GET","POST"])
-def steam():
-    if request.method == "GET":
-        system = Steam(50, 100)
-        system.instantiate()
-        return render_template("steam.html", v = system.v)
-    
-    else:
-        T = flask.request.values.get('T')
-        P = flask.request.values.get('P')
-        system = Steam(T, P)
-        system.instantiate()
-        return render_template("steam.html", v = system.v)
-
 
 if __name__ == "__main__":
     app.run(debug=True)
