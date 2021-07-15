@@ -4,10 +4,10 @@ from wtforms.validators import NumberRange
 
 class PureForm(FlaskForm):
 
+    #Range of T and P as given by Pyxsteam
+    T = FloatField("Temperature (T): ", validators=[NumberRange(0, 2000, message=("Temperature out of range!"))])
 
-    T = FloatField("Temperature (T): ", validators=[NumberRange(-70, 200, message=("Temperature out of range!"))])
-
-    P = FloatField("Pressure (P): ", validators=[NumberRange(101.3, 6000, message=("Pressure out of range!"))])
+    P = FloatField("Pressure (P): ", validators=[NumberRange(0, 100000, message=("Pressure out of range!"))])
 
     submit = SubmitField("Submit") 
 

@@ -461,15 +461,18 @@ class plot_steam:
     generate = plot.__dict__["generate"]
     show = plot.__dict__["show"]
 
+    def generate(self):
+        return json.dumps(self.fig, cls=plotly.utils.PlotlyJSONEncoder)
+
 # Testing functions
 # plot = plot(RachfordRice(2, 150, 101.3, ['n-Hexane','n-Octane'], [0.6,0.4]))
 # plot.plot_Pxy()
 # plot.show()
 # print(plot.RR.x, plot.RR.y, plot.RR.v)
 
-plot = plot_steam(Steam(100, 100))
-plot.plot_steamVLE()
-plot.show()
+# plot = plot_steam(Steam(100, 100))
+# plot.plot_steamVLE()
+# plot.show()
 
 '''
 x = np.arange(10)

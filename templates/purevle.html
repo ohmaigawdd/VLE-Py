@@ -14,7 +14,7 @@
 	Visualisation of Pure VLE System (Water)
 	</p>
 	<p class="mainText">
-	This tool utilises information on the parameters of a pure component (water) system to generate a molecular representation of the system, as well as the vaporisation curve.
+	This tool utilises information on the parameters of a pure component system to generate a molecular representation of the system, as well as the vaporisation curve.
 	</p>
 </div>
 
@@ -86,6 +86,15 @@
 </div>
 
 {% if errors == False %}
+<div id='scatterchart' class='information rounded' style='margin-right: 35px; margin-top: 0px; height: 720px; padding: 0px;'>
+    <!-- import plotly library -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script>
+        var graphs = {{ graphJSON | safe }}
+        Plotly.plot('scatterchart',graphs,{})
+    </script>
+    </div>
+
 <div id="animateMolecules" style='position: float;'>
     <script>
         var number = 100;
@@ -93,6 +102,19 @@
         var crossedOver = 0;
     </script>
     <script src="{{url_for('static', filename='app2.js')}}"></script>
+        <div class='legend rounded' style='margin-top: 0px;'>
+        <table>
+            <tr>
+                <td><p class='informationHeader' style='margin-bottom: 0px;'>Legend</p></td>
+                <td class='tableHeader' style='padding-bottom: 0px; padding-left: 60px;'>Vapour: </td>
+                <td class='tableText' style='padding-bottom: 0px;'><img src='static/images/vap.png' style='height: 15px; width: auto; margin-bottom: 5px;'></td>
+                <td class='tableHeader' style='padding-bottom: 0px;'>Liquid: </td>
+                <td class='tableText' style='padding-bottom: 0px;'><img src='static/images/liq.png' style='height: 15px; width: auto; margin-bottom: 5px;'></td>
+                <td class='tableHeader' style='padding-bottom: 0px;'>Molecule: </td>
+                <td class='tableText' style='padding-bottom: 0px;'><img src='static/images/blue.png' style='height: 15px; width: auto; margin-bottom: 5px;'></td>
+            </tr>
+        </table>
+    </div>
 </div>
 {% else %}
 <div style='height: 350px; width: 100%'></div>
