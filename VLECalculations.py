@@ -399,6 +399,18 @@ class Steam:
     def getG(self):
         return self.G
 
+    def triplePointT(self):
+        return 0.01  # T1
+
+    def triplePointP(self):
+        return steamTable.psat_t(0.01)
+
+    def Tcrit(self):
+        return 373.946 
+
+    def Pcrit(self):
+        return 220.6  # bar
+
     def setT(self,T):
         self.T = T
         return self.getboilingP()*100
@@ -408,6 +420,9 @@ class Steam:
 
     def getboilingT(self):
         return steamTable.tsat_p(self.Pbar)
+
+    def getvapcurveT(self,P):
+        return steamTable.tsat_p(P)
 
     def getboilingP(self):
         return steamTable.psat_t(self.T)
@@ -419,8 +434,10 @@ class Steam:
             self.v = steamTable.x_ph(self.Pbar, self.H)
             if self.v == 0:
                 self.liqvol = steamTable.v_pt(self.Pbar, self.T)
+                self.vapvol = 0
             else:
                 self.vapvol = steamTable.v_pt(self.Pbar, self.T)
+                self.liqvol = 0
             
         else:
             self.H = [steamTable.hL_p(self.Pbar), steamTable.hV_p(self.Pbar)]
@@ -515,6 +532,6 @@ class Steam:
             self.minusVol()
            
 
-# a = Steam(100,100)
-# a.instantiate()
-# print(a.getboilingP()*100)
+a = Steam(50,102)
+a.instantiate()
+print(a.liqvol)
