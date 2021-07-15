@@ -54,8 +54,8 @@ class plotPure:
         self.fig.update_yaxes(showspikes=True)
         self.fig.show()
 
-plot = plotPure(VanDerWaalsEOS(-100, 150, 'n-Octane'))
-plot.create_isotherm()
-plot.show()
+# plot = plotPure(VanDerWaalsEOS(-100, 150, 'n-Octane'))
+# plot.create_isotherm()
+# plot.show()
 
-print(plot.sys.component, plot.sys.get_a(), plot.sys.get_b())
+# print(plot.sys.component, plot.sys.get_a(), plot.sys.get_b())

@@ -11,10 +11,10 @@
 {% block content %}
 <div>
 	<p class="mainHeader">
-	Visualisation of Pure VLE Systems
+	Visualisation of Pure VLE System (Water)
 	</p>
 	<p class="mainText">
-	This tool utilises information on the parameters of a given pure component system to generate a molecular representation of the system, as well as a desired graphical plot.
+	This tool utilises information on the parameters of a pure component (water) system to generate a molecular representation of the system, as well as the vaporisation curve.
 	</p>
 </div>
 
@@ -37,17 +37,29 @@
     <p class='informationHeader'>Current System Parameters</p>
     <br>
     <table>
-        <tr>
-            <td class='tableHeader'><strong>Component:</strong></td> 
-            <td class='tableText'>{{ system.component }}</td>
-        </tr>
         <tr >
             <td class='tableHeader'><strong>Temperature (T):</strong></td> 
-            <td class='tableText'>{{ "%0.2f" % system.T }} degree Celcius</td>
+            <td class='tableText'>{{ "%0.2f" % system.T }} <sup>o</sup>C</td>
+            <td class='tableHeader'><strong>Enthalpy (H):</strong></td> 
+            <td class='tableText'>{{ "%0.2f" % system.H }} kJ/kg</td>
         </tr>
         <tr>
             <td class='tableHeader'><strong>Pressure (P):</strong></td> 
             <td class='tableText'>{{ "%0.2f" % system.P }} kPa</td>
+            <td class='tableHeader'><strong>Entropy (S):</strong></td> 
+            <td class='tableText'>{{ "%0.2f" % system.S }} kJ/kg<sup>o</sup>C</td>
+        </tr>
+        <tr>
+            <td class='tableHeader'><strong>Volume of Vapour:</strong></td> 
+            <td class='tableText'>Still Buggy</td>
+            <td class='tableHeader'><strong>Volume of Liquid:</strong></td> 
+            <td class='tableText'>Still Buggy</td>
+        </tr>
+        <tr>
+            <td class='tableHeader'><strong>Molar Gibbs (G):</strong></td> 
+            <td class='tableText'>{{ "%0.2f" % system.G }} kJ/kg</td>
+            <td class='tableHeader'><strong>Vapour Fraction:</strong></td> 
+            <td class='tableText'>{{ "%0.2f" % system.v }}</td>
         </tr>
     </table>
 </div>
@@ -57,10 +69,6 @@
         <p class='informationHeader'>Reset Parameters</p>
         {{ form.hidden_tag() }}
         <table>
-            <tr class='informationText'>
-                <td><strong>{{ form.component.label }}</td> 
-                <td>{{ form.component() }}</td>
-            </tr>
             <tr class='informationText'>
                 <td><strong>{{ form.T.label  }}</strong></td>
                 <td>{{ form.T() }} <sup>o</sup>C</td>
@@ -77,5 +85,18 @@
     </form>
 </div>
 
+{% if errors == False %}
+<div id="animateMolecules" style='position: float;'>
+    <script>
+        var number = 100;
+        var vapFrac = {{ system.v }};
+        var crossedOver = 0;
+    </script>
+    <script src="{{url_for('static', filename='app2.js')}}"></script>
+</div>
+{% else %}
 <div style='height: 350px; width: 100%'></div>
+{% endif %}
+
+
 {% endblock %}

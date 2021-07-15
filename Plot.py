@@ -445,9 +445,9 @@ class plot_steam:
 # plot.show()
 # print(plot.RR.x, plot.RR.y, plot.RR.v)
 
-plot = plot_steam(Steam(100, 100))
-plot.plot_steamVLE()
-plot.show()
+# plot = plot_steam(Steam(100, 100))
+# plot.plot_steamVLE()
+# plot.show()
 
 '''
 x = np.arange(10)
