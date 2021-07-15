@@ -83,13 +83,15 @@ class plot:
         # zA = composition of component A in VLE
         # Generates (x,y,P) values using zA data at constant T
         points = []
-        Tmax = self.RR.params['Tmax']
-        Tmin = self.RR.params['Tmin']
-        step = round((Tmax - Tmin) / 50)
 
         # @ selected zA, vary T to obtain [x,y,T,v] values
+        bps = [self.RR.getPureComponentBoilingTemp(self.RR.components[0],self.RR.P_psia), self.RR.getPureComponentBoilingTemp(self.RR.components[1],self.RR.P_psia)]
+        if bps[0] > bps[1]: # first component is lighter
+            bp_light, bp_heavy = bps[0], bps[1]
+        else: 
+            bp_light, bp_heavy = bps[1], bps[0]
         temporaryobject = RachfordRice(self.RR.n, self.RR.T, self.RR.P, self.RR.components, self.RR.z)
-        for i in range(Tmin, Tmax, step):
+        for i in np.linspace(bp_light, bp_heavy, num=50):
             temporaryobject.setT(i)
             if 0 <= temporaryobject.v and temporaryobject.v <= 1:
                 # points will have [[xA1,yA1,T1,v1],[xA1,yA1,T1,v1]]
@@ -114,13 +116,16 @@ class plot:
         # zA = composition of component A in VLE
         # Generates (x,y,P) values using zA data at constant T
         points = []
-        Pmax = self.RR.params['Pmax']
-        Pmin = self.RR.params['Pmin']
-        step = round((Pmax - Pmin) / 100)
 
         # @ selected zA, vary P to obtain [x,y,P,v] values
+        bps = [self.RR.getPureComponentBoilingPressure(self.RR.components[0], self.RR.T_degR), self.RR.getPureComponentBoilingPressure(self.RR.components[1],self.RR.T_degR)]
+            
+        if bps[0] < bps[1]: # first component is lighter
+            bp_light, bp_heavy = bps[0], bps[1]
+        else: 
+            bp_light, bp_heavy = bps[1], bps[0]
         temporaryobject = RachfordRice(self.RR.n, self.RR.T, self.RR.P, self.RR.components, self.RR.z)
-        for i in range(Pmin, Pmax, step):
+        for i in np.linspace(bp_heavy, bp_light, num = 50):
             temporaryobject.setP(i)
             if 0 <= temporaryobject.v and temporaryobject.v <= 1:
                 # points will have [[xA1,yA1,P1,v1],[xA2,yA2,P2,v2]]
