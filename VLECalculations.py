@@ -515,6 +515,6 @@ class Steam:
             self.minusVol()
            
 
-a = Steam(100,100)
-a.instantiate()
-print(a.getboilingP()*100)
+# a = Steam(100,100)
+# a.instantiate()
+# print(a.getboilingP()*100)
