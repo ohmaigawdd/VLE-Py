@@ -98,7 +98,7 @@ class plot:
         #Sorted according to x
         points = sorted(points)
         if points:
-            bps = [self.RR.getPureComponentBoilingTemp(self.RR.components[0],self.RR.P*0.145038), self.RR.getPureComponentBoilingTemp(self.RR.components[1],self.RR.P*0.145038)]
+            bps = [self.RR.getPureComponentBoilingTemp(self.RR.components[0],self.RR.P_psia), self.RR.getPureComponentBoilingTemp(self.RR.components[1],self.RR.P_psia)]
             if bps[0] > bps[1]: # first component is lighter
                 bp_light, bp_heavy = bps[0], bps[1]
                 points.insert(0,[0,0, bp_heavy, None])
@@ -129,7 +129,7 @@ class plot:
         #Sorted according to x
         points = sorted(points)
         if points:
-            bps = [self.RR.getPureComponentBoilingPressure(self.RR.components[0], self.RR.T*(9/5)+491.67), self.RR.getPureComponentBoilingPressure(self.RR.components[1],self.RR.T*(9/5)+491.67)]
+            bps = [self.RR.getPureComponentBoilingPressure(self.RR.components[0], self.RR.T_degR), self.RR.getPureComponentBoilingPressure(self.RR.components[1],self.RR.T_degR)]
             
             if bps[0] < bps[1]: # first component is lighter
                 bp_light, bp_heavy = bps[0], bps[1]

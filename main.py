@@ -1,16 +1,18 @@
-from flask import Flask, render_template, session
+from flask import Flask, render_template, session, request
 from resetParamForm import PureForm, BinaryForm
-from VLECalculations import RachfordRice, Antoine
+from VLECalculations import RachfordRice, Antoine, Steam
 from Plot import plot
 
 app = Flask(__name__)
 
 app.config["SECRET_KEY"] = "mykey"
 
+# HOME PAGE
 @app.route("/")
 def home():
     return render_template("home.html")
 
+# PURE VLE PAGE
 @app.route("/purevle", methods=["GET","POST"])
 def purevle():
 
@@ -40,7 +42,7 @@ def purevle():
     system = Antoine(chemicals[component], T, P)
     return render_template("purevle.html", errors=errors, form=form, chemicals=chemicals, system=system)
 
-
+# BINARY VLE PAGE
 @app.route("/binaryvle", methods=["GET","POST"])
 def binaryvle():
 
@@ -81,6 +83,10 @@ def binaryvle():
         errors = False
 
     system = RachfordRice(2, T, P, [chemicals[componentA], chemicals[componentB]], [z, 1-z])
+    #check if critical P and T are not exceeded:
+    if system.exceedT == True or system.exceedP == True:
+        exceed = True
+
     initial = plot(system)
     if plot_type == "yxP":
         initial.plot_yx_constP()
@@ -92,7 +98,21 @@ def binaryvle():
         initial.plot_Txy()
     graphJSON = initial.generate()
 
-    return render_template("binaryvle.html", form=form, graphJSON=graphJSON, plot_type=plot_type, system=system, chemicals=chemicals, plots=plots, errors=errors)
+    return render_template("binaryvle.html", form=form, graphJSON=graphJSON, plot_type=plot_type, system=system, chemicals=chemicals, plots=plots, errors=errors, exceed=exceed)
+
+@app.route("/steam", methods=["GET","POST"])
+def steam():
+    if request.method == "GET":
+        system = Steam(50, 100)
+        system.instantiate()
+        return render_template("steam.html", v = system.v)
+    
+    else:
+        T = flask.request.values.get('T')
+        P = flask.request.values.get('P')
+        system = Steam(T, P)
+        system.instantiate()
+        return render_template("steam.html", v = system.v)
 
 
 if __name__ == "__main__":

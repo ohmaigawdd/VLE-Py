@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+<!-- import p5/js library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.10.2/p5.js"></script>
+<title>Vapour Liquid Equilibrium (Pure)</title>
+{% endblock %}
+
+
+{% block content %}
+<div>
+	<p class="mainHeader">
+	Water
+	</p>
+	<p class="mainText">
+	This tool utilises information on the parameters of a given pure component system to generate a molecular representation of the system, as well as a desired graphical plot.
+	</p>
+</div>
+
+<div id="animateMolecules" style='position: float;'>
+    <script>
+        var number = 100;
+        var vapFrac = {{ v }};
+        var crossedOver = 0;
+    </script>
+    <script src="{{url_for('static', filename='app2.js')}}"></script>
+</div>
+
+{% endblock %}
