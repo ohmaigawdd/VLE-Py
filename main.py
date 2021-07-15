@@ -1,7 +1,7 @@
 from flask import Flask, render_template, session, request
 from resetParamForm import PureForm, BinaryForm
 from VLECalculations import RachfordRice, Antoine, Steam
-from PlotBinary import plot
+from Plot import plot, plot_steam
 
 app = Flask(__name__)
 
@@ -34,7 +34,10 @@ def purevle():
     
     system = Steam(T, P)
     system.instantiate()
-    return render_template("purevle.html", errors=errors, form=form, system=system)
+    plot = plot_steam(system)
+    plot.plot_steamVLE()
+    graphJSON = plot.generate()
+    return render_template("purevle.html", errors=errors, form=form, system=system, graphJSON=graphJSON)
 
 # BINARY VLE PAGE
 @app.route("/binaryvle", methods=["GET","POST"])
