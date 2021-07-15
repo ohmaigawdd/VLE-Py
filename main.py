@@ -1,7 +1,7 @@
 from flask import Flask, render_template, session, request
 from resetParamForm import PureForm, BinaryForm
 from VLECalculations import RachfordRice, Antoine, Steam
-from Plot import plot
+from PlotBinary import plot
 
 app = Flask(__name__)
 

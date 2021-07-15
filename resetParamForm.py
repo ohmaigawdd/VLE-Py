@@ -4,9 +4,6 @@ from wtforms.validators import NumberRange
 
 class PureForm(FlaskForm):
 
-    component = SelectField("Component: ", choices = [('met','Methane'),('ethy','Ethylene'),('eth','Ethane'),('propy','Propylene'),
-    ('prop','Propane'), ('isob','Isobutane') , ('nbut','n-Butane'), ('isop','Isopentane'), ('npent','n-Pentane'),
-    ('nhex','n-Hexane'), ('nhep','n-Heptane'), ('noct','n-Octane'),('nnon','n-Nonane'), ('ndec','n-Decane')])
 
     T = FloatField("Temperature (T): ", validators=[NumberRange(-70, 200, message=("Temperature out of range!"))])
 
