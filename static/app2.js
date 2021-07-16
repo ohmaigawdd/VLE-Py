@@ -132,7 +132,7 @@ function countBalls(box, color) {
 var ballArray = [];
 var vapNumber = Math.round(number * vapFrac)
 var liqNumber = number - vapNumber;
-var height = 625
+var height = 240
 var width = 630
 
 for (var i = 0; i < vapNumber; i++) {
@@ -146,8 +146,9 @@ for (var i = 0; i < liqNumber; i++) {
 }
 
 function setup() {
-    var animation = createCanvas(630,625);
-    animation.parent("animateMolecules")
+    var animation = createCanvas(630,240);
+    animation.parent("animateMolecules2")
+    animation.id('animateMolecules2');
 }
 
 function rectFillColor(state) {

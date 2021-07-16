@@ -1,13 +1,15 @@
 from flask_wtf import FlaskForm
-from wtforms.fields import SelectField, SubmitField, FloatField
+from wtforms.fields import SelectField, SubmitField, FloatField, IntegerField
 from wtforms.validators import NumberRange
 
 class PureForm(FlaskForm):
 
     #Range of T and P as given by Pyxsteam
-    T = FloatField("Temperature (T): ", validators=[NumberRange(0, 2000, message=("Temperature out of range!"))])
+    T = IntegerField("Start Temperature (T): ", validators=[NumberRange(1, 374, message=("Temperature out of range!"))])
 
-    P = FloatField("Pressure (P): ", validators=[NumberRange(0, 100000, message=("Pressure out of range!"))])
+    P = IntegerField("Start Pressure (P): ", validators=[NumberRange(100, 22100, message=("Pressure out of range!"))])
+
+    processType = SelectField("Process: ", choices = [("Isotherm","Isothermal"), ("Isobar","Isobaric")])
 
     submit = SubmitField("Submit") 
 

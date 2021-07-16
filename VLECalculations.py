@@ -1,7 +1,9 @@
 import math
 import random
 import warnings
+import plotly.graph_objects as go
 from scipy import optimize
+import numpy as np
 from pyXSteam.XSteam import XSteam
 steamTable = XSteam(XSteam.UNIT_SYSTEM_MKS)
 solve = optimize.fsolve
@@ -530,8 +532,8 @@ class Steam:
             self.addVol()
         else:
             self.minusVol()
-           
 
-a = Steam(50,102)
-a.instantiate()
-print(a.liqvol)
+
+# a = Steam(50,102)
+# a.instantiate()
+# print(a.liqvol)

@@ -4,6 +4,8 @@ import plotly
 import json
 import plotly.graph_objects as go
 import numpy as np
+from pyXSteam.XSteam import XSteam
+steamTable = XSteam(XSteam.UNIT_SYSTEM_MKS)
 
 # Params is a dictionary with divID, Tmin/max, Pmin/max, numpoints
 #self.params = params
@@ -452,12 +454,6 @@ class plot_steam:
                                         'T: %{x:.2f} C' +
                                         '<br>P: %{y:.2f} kPa'))
 
-        self.fig.add_trace(go.Scatter(x=[self.sys.T], y=[self.sys.P], mode='markers', name="Current",
-                                      marker = dict(size=10),
-                                      hovertemplate =
-                                      'x: %{x:.2f}' +
-                                      '<br>y: %{y:.2f}<br>'))
-
         self.fig.update_xaxes(showspikes=True)
         self.fig.update_yaxes(showspikes=True)
 
@@ -468,6 +464,88 @@ class plot_steam:
 
     def generate(self):
         return json.dumps(self.fig, cls=plotly.utils.PlotlyJSONEncoder)
+
+def GvsP(T): #ISOTHERMAL T in degC
+    total_range = np.array([i for i in range(1, 221)])
+    G = {}
+    for pressure in total_range:
+        enthalpy = steamTable.h_pt(pressure, T)
+        entropy = steamTable.s_pt(pressure, T)
+        G[pressure*100] = (enthalpy - (273.15+T) * entropy)
+    
+    fig = go.Figure()
+    fig.update_layout(template='plotly_dark', 
+        paper_bgcolor='rgba(0,0,0,0)',
+        title="<b>Molar Gibbs vs P</b>",
+        xaxis_title = "Pressure (kPa)",
+        yaxis_title="Gibbs (kJ/kg)",
+        legend=dict(
+            title = 'Legend',
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            xanchor="right",
+            x=1
+        ),
+        font=dict(
+            family="Helvetica Neue, monospace",
+            size=12,
+            color="#FFFFFF"
+        ))
+    fig.add_trace(go.Scatter(x=[pressure*100 for pressure in total_range], y=list(G.values()),
+                        mode='lines+markers', 
+                        name='Gibbs',
+                        showlegend=True,
+                        hovertemplate =
+                        'P: %{x:.2f} kPa' +
+                        '<br>G: %{y:.2f} kJ/kg'))
+
+    return (json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder), G)
+
+def GvsT(P): # ISOBARIC P in bar
+    total_range = np.array([i for i in range(1, 374)])
+    G = {}
+    for temperature in total_range:
+        enthalpy = steamTable.h_pt(P, temperature)
+        entropy = steamTable.s_pt(P, temperature)
+        G[temperature] = (enthalpy - (273.15+temperature) * entropy)
+
+    fig = go.Figure()
+    fig.update_layout(template='plotly_dark', 
+            paper_bgcolor='rgba(0,0,0,0)',
+            title="<b>Vaporization Curve of Water</b>",
+            xaxis_title = "Temperature" + chr(176) + "C",
+            yaxis_title="Gibbs (kJ/kj)",
+            legend=dict(
+                title = 'Legend',
+                orientation="h",
+                yanchor="bottom",
+                y=1.02,
+                xanchor="right",
+                x=1
+            ),
+            font=dict(
+                family="Helvetica Neue, monospace",
+                size=12,
+                color="#FFFFFF"
+            ))
+    fig.add_trace(go.Scatter(x=total_range, y=list(G.values()),
+                        mode='lines+markers', 
+                        name='Gibbs',
+                        showlegend=True,
+                        hovertemplate =
+                        'T: %{x:.2f} C' +
+                        '<br>G: %{y:.2f} kJ/kg'))
+    
+    return (json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder), G)
+        
+
+
+#Test at 250degC: Transition is at 40Bar or 4000kPa
+# GvsP(250)
+
+#Test at 40Bar: Transition is at 250degC
+# GvsT(40)
 
 # Testing functions
 # plot = plot(RachfordRice(2, 150, 101.3, ['n-Hexane','n-Octane'], [0.6,0.4]))
