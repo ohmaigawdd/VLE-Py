@@ -1,7 +1,7 @@
 from flask import Flask, render_template, session, request
 from resetParamForm import PureForm, BinaryForm
 from VLECalculations import RachfordRice, Antoine, Steam
-from Plot import plot, plot_steam
+from Plot import plot, plot_steam, GvsP, GvsT
 
 app = Flask(__name__)
 
@@ -18,18 +18,21 @@ def purevle():
 
     form = PureForm()
 
-    if form.T.data==None and form.P.data==None:
+    if form.T.data==None and form.P.data==None and form.processType.data==None:
         T = 50
         P = 100
+        processType = "Isotherm"
         errors = False
     elif not form.validate_on_submit():
         T = 50
         P = 100
+        processType = form.processType.data
         errors = True
     #if form is 100% okay
     elif form.validate_on_submit():
         T = form.T.data
         P = form.P.data
+        processType = form.processType.data
         errors = False
     
     system = Steam(T, P)
@@ -37,7 +40,11 @@ def purevle():
     plot = plot_steam(system)
     plot.plot_steamVLE()
     graphJSON = plot.generate()
-    return render_template("purevle.html", errors=errors, form=form, system=system, graphJSON=graphJSON)
+    if processType == "Isotherm":
+        Ggraph = GvsP(T)
+    else:
+        Ggraph = GvsT(P)
+    return render_template("purevle.html", errors=errors, form=form, system=system, graphJSON=graphJSON, Ggraph=Ggraph, processType=processType)
 
 # BINARY VLE PAGE
 @app.route("/binaryvle", methods=["GET","POST"])
@@ -83,6 +90,8 @@ def binaryvle():
     #check if critical P and T are not exceeded:
     if system.exceedT == True or system.exceedP == True:
         exceed = True
+    else:
+        exceed = False
 
     initial = plot(system)
     if plot_type == "yxP":
