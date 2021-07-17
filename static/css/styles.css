@@ -10,6 +10,7 @@ html {
 /* To modify <body> by Bootstrap a little */
 .container {
 	background-color: black;
+	height: auto;
 }
 
 /* For the main content for each page right now */
@@ -137,10 +138,4 @@ td {
 	border-radius: 50%;
 	background: #04AA6D;
 	cursor: pointer;
-}
-
-/* Adjusts the animation for the water system Pure VLE */
-#animateMolecules2 {
-	margin-left: 35px;
-	margin-bottom: 15px;
 }

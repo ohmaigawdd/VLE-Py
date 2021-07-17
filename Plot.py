@@ -476,7 +476,7 @@ def GvsP(T): #ISOTHERMAL T in degC
     fig = go.Figure()
     fig.update_layout(template='plotly_dark', 
         paper_bgcolor='rgba(0,0,0,0)',
-        title="<b>Molar Gibbs vs P</b>",
+        title="<b>Molar Gibbs vs Pressure</b>",
         xaxis_title = "Pressure (kPa)",
         yaxis_title="Gibbs (kJ/kg)",
         legend=dict(
@@ -513,7 +513,7 @@ def GvsT(P): # ISOBARIC P in bar
     fig = go.Figure()
     fig.update_layout(template='plotly_dark', 
             paper_bgcolor='rgba(0,0,0,0)',
-            title="<b>Vaporization Curve of Water</b>",
+            title="<b>Molar Gibbs vs Temperature</b>",
             xaxis_title = "Temperature" + chr(176) + "C",
             yaxis_title="Gibbs (kJ/kj)",
             legend=dict(

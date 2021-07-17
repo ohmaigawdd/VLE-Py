@@ -10,12 +10,12 @@
 
 {% block content %}
 <div>
-	<p class="mainHeader">
-	Visualisation of Pure VLE System (Water)
-	</p>
-	<p class="mainText">
-	This tool utilises information on the parameters of a pure component system to generate a molecular representation of the system, as well as the vaporisation curve.
-	</p>
+    <p class="mainHeader">
+    Visualisation of Pure VLE System (Water)
+    </p>
+    <p class="mainText">
+    This tool utilises information on the parameters of a pure component system to generate a molecular representation of the system, as well as the vaporisation curve.
+    </p>
 </div>
 
 {% if errors == True %}
@@ -33,7 +33,7 @@
     </div>
 {% endif %}
 
-<div class='information rounded'>
+<div class='information rounded' style="margin-right: 35px">
     <form method="POST">
         <p class='informationHeader'>Reset Parameters</p>
         {{ form.hidden_tag() }}
@@ -72,18 +72,18 @@
                 slider.oninput = function() {
                     output.innerHTML = this.value;
                     // Update Vaporisation curve and Gibbs plot
-                    Plotly.deleteTraces('scatterchart', [-1]);
+                    Plotly.deleteTraces('vapCurve', [-1]);
                     if ("{{ processType }}" == "Isotherm") {
                         var newP = Math.round(this.value/100) * 100
-                        Plotly.addTraces('scatterchart',{x: [{{ system.T }}, {{ system.T }}], y: [{{ system.P }}, this.value], name: "{{ processType }}",text: ["Start", "End"], hovertemplate: '<br><b>%{text}</b></br>' + 'T: %{x:.2f}' + '<br>P: %{y:.2f}<br>'});
+                        Plotly.addTraces('vapCurve',{x: [{{ system.T }}, {{ system.T }}], y: [{{ system.P }}, this.value], name: "{{ processType }}",text: ["Start", "End"], hovertemplate: '<br><b>%{text}</b></br>' + 'T: %{x:.2f}' + '<br>P: %{y:.2f}<br>'});
                         Plotly.deleteTraces('Gplot', [-1]);
-                    Plotly.addTraces('Gplot',{x: [newP], y: [{{ Ggraph[1] }}[newP]], name: "End System", hovertemplate: 'P: %{x:.2f} kPa' + '<br>G: %{y:.2f} kJ/kg'});
+                        Plotly.addTraces('Gplot',{x: [newP], y: [{{ Ggraph[1] }}[newP]], name: "End System", hovertemplate: 'P: %{x:.2f} kPa' + '<br>G: %{y:.2f} kJ/kg'});
                     }
                     else {
                         var newT = this.value
-                        Plotly.addTraces('scatterchart',{x: [{{ system.T }},this.value], y: [{{ system.P }}, {{ system.P }}], name: "{{ processType }}",text: ["Start", "End"], hovertemplate: '<br><b>%{text}</b></br>' + 'T: %{x:.2f}' + '<br>P: %{y:.2f}<br>'});
+                        Plotly.addTraces('vapCurve',{x: [{{ system.T }},this.value], y: [{{ system.P }}, {{ system.P }}], name: "{{ processType }}",text: ["Start", "End"], hovertemplate: '<br><b>%{text}</b></br>' + 'T: %{x:.2f}' + '<br>P: %{y:.2f}<br>'});
                         Plotly.deleteTraces('Gplot', [-1]);
-                    Plotly.addTraces('Gplot',{x: [newT], y: [{{ Ggraph[1] }}[newT]], name: "End System", hovertemplate: 'T: %{x:.2f} C' + '<br>G: %{y:.2f} kJ/kg'});
+                        Plotly.addTraces('Gplot',{x: [newT], y: [{{ Ggraph[1] }}[newT]], name: "End System", hovertemplate: 'T: %{x:.2f} C' + '<br>G: %{y:.2f} kJ/kg'});
                     }
                 }
             </script>
@@ -98,7 +98,7 @@
         var crossedOver = 0;
     </script>
     <script src="{{url_for('static', filename='app2.js')}}"></script>
-        <div class='legend rounded' style='margin-left: 35px; margin-top: 15px;'>
+        <div class='legend rounded' style='margin-top: 15px;'>
         <table>
             <tr>
                 <td><p class='informationHeader' style='margin-bottom: 0px;'>Legend</p></td>
@@ -114,7 +114,7 @@
 </div>
 
 {% if errors == False %}
-<div id='Gplot' class='information rounded' style='height: 720px; padding: 0px'>
+<div class='information rounded' id='Gplot' style='margin-right: 35px; margin-top: 0px; height: 720px; padding: 0px'>
     <!-- import plotly library -->
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script>
@@ -131,17 +131,15 @@
     </script>
 </div>
 
-<div id='scatterchart' class='information rounded' style='margin-left: 35px; height: 720px; padding: 0px'>
-    <!-- import plotly library -->
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<div class='information rounded' id='vapCurve' style='height: 720px; margin-top: 0px; padding: 0px;'>
     <script>
         var graphs2 = {{ graphJSON | safe }}
-        Plotly.plot('scatterchart',graphs2,{})
-        Plotly.addTraces('scatterchart',{x: [{{ system.T }}, {{ system.T }}], y: [ {{ system.P }}, {{ system.P }}], name: "{{ processType }}",text: ["End", "Start"], hovertemplate: '<br><b>%{text}</b></br>' + 'T: %{x:.2f}' + '<br>P: %{y:.2f}<br>'});
+        Plotly.plot('vapCurve',graphs2,{})
+        Plotly.addTraces('vapCurve',{x: [{{ system.T }}, {{ system.T }}], y: [ {{ system.P }}, {{ system.P }}], name: "{{ processType }}",text: ["End", "Start"], hovertemplate: '<br><b>%{text}</b></br>' + 'T: %{x:.2f}' + '<br>P: %{y:.2f}<br>'});
     </script>
- </div>
- <div style='height: 750px; width: 100%'></div>
+</div>
 
+<br style="clear: both" >
 {% endif %}
 
 
