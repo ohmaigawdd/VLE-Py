@@ -38,7 +38,7 @@
         {% endfor %}
     </div>
 {% endif %}
-
+<br>
 {% if exceed == True%}
     {% set exceedList = [] %}
     {% if system.exceedT == True %}
@@ -131,14 +131,14 @@
 {% if errors == False %}
 <div id='scatterchart' class='information rounded' style='margin-right: 35px; margin-top: 0px; height: 720px; padding: 0px;'>
 <!-- import plotly library -->
-<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-<script>
-    var graphs = {{ graphJSON | safe }}
-    Plotly.plot('scatterchart',graphs,{})
-</script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script>
+        var graphs = {{ graphJSON | safe }}
+        Plotly.plot('scatterchart',graphs,{})
+    </script>
 </div>
 
-<div id="animateMolecules" style='position: float;'>
+<div id="animateMolecules">
     <script>
         var number = 100;
         var liqArray = {{ system.x }};
@@ -162,7 +162,7 @@
     </div>
 </div>
 {% else %}
-<div style='height: 350px; width: 100%'></div>
+<br style="clear: both" >
 {% endif %}
 
 {% endblock %}
