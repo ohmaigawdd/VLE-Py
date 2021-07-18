@@ -423,7 +423,7 @@ class plot_steam:
             T = self.sys.getvapcurveT(i)
             T_ls.append(T)
 
-        return [np.array(T_ls), np.array(P_ls)*100]
+        return [np.array(T_ls), np.array(P_ls)*100] # T in degC and P in kPa
 
     def plot_steamVLE(self):
         self.create_plot()
@@ -538,8 +538,10 @@ def GvsT(P): # ISOBARIC P in bar
                         '<br>G: %{y:.2f} kJ/kg'))
     
     return (json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder), G)
-        
-
+    
+plot = plot_steam(Steam(200,1000))
+plot.plot_steamVLE()
+print(plot.points[0])
 
 #Test at 250degC: Transition is at 40Bar or 4000kPa
 # GvsP(250)

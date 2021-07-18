@@ -68,22 +68,34 @@
                 var output = document.getElementById("demo");
                 output.innerHTML = slider.value; // Display the default slider value
 
-                // Update the current slider value (each time you drag the slider handle)
+                // UPDATES ON SLIDER MOVEMENT
                 slider.oninput = function() {
                     output.innerHTML = this.value;
-                    // Update Vaporisation curve and Gibbs plot
+                    // Update Vaporisation curve, Gibbs plot and Animation
                     Plotly.deleteTraces('vapCurve', [-1]);
                     if ("{{ processType }}" == "Isotherm") {
                         var newP = Math.round(this.value/100) * 100
                         Plotly.addTraces('vapCurve',{x: [{{ system.T }}, {{ system.T }}], y: [{{ system.P }}, this.value], name: "{{ processType }}",text: ["Start", "End"], hovertemplate: '<br><b>%{text}</b></br>' + 'T: %{x:.2f}' + '<br>P: %{y:.2f}<br>'});
                         Plotly.deleteTraces('Gplot', [-1]);
                         Plotly.addTraces('Gplot',{x: [newP], y: [{{ Ggraph[1] }}[newP]], name: "End System", hovertemplate: 'P: %{x:.2f} kPa' + '<br>G: %{y:.2f} kJ/kg'});
+                        if (newP <= {{ equi }} && vapFrac == 0) { // if gas->liq
+                            transition =  true
+                        }
+                        else if (newP >= {{ equi }} && vapFrac == 1) { // if liq->gas
+                            transition =  true
+                        }
                     }
                     else {
                         var newT = this.value
                         Plotly.addTraces('vapCurve',{x: [{{ system.T }},this.value], y: [{{ system.P }}, {{ system.P }}], name: "{{ processType }}",text: ["Start", "End"], hovertemplate: '<br><b>%{text}</b></br>' + 'T: %{x:.2f}' + '<br>P: %{y:.2f}<br>'});
                         Plotly.deleteTraces('Gplot', [-1]);
                         Plotly.addTraces('Gplot',{x: [newT], y: [{{ Ggraph[1] }}[newT]], name: "End System", hovertemplate: 'T: %{x:.2f} C' + '<br>G: %{y:.2f} kJ/kg'});
+                        if (newT <= {{ equi }} && vapFrac == 0) { // if gas->liq
+                            transition =  true
+                        }
+                        else if (newT >= {{ equi }} && vapFrac == 1) { // if liq->gas
+                            transition =  true
+                        }
                     }
                 }
             </script>
@@ -93,9 +105,10 @@
 
 <div id="animateMolecules2" style='position: float;'>
     <script>
-        var number = 100;
+        var number = 50;
         var vapFrac = {{ system.v }};
         var crossedOver = 0;
+        let transition = false;
     </script>
     <script src="{{url_for('static', filename='app2.js')}}"></script>
         <div class='legend rounded' style='margin-top: 15px;'>
