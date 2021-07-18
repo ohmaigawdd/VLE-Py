@@ -12,7 +12,12 @@ app.config["SECRET_KEY"] = "mykey"
 def home():
     return render_template("home.html")
 
-# PURE VLE PAGE
+# PURE VLE WRITE UP
+@app.route("/purevleinfo")
+def purevleinfo():
+    return render_template("purevleinfo.html")
+
+# PURE VLE APP
 @app.route("/purevle", methods=["GET","POST"])
 def purevle():
 
@@ -47,6 +52,11 @@ def purevle():
         Ggraph = GvsT(P/100)
         equi = int(system.getboilingT())
     return render_template("purevle.html", equi=equi, errors=errors, form=form, system=system, graphJSON=graphJSON, Ggraph=Ggraph, processType=processType)
+
+# BINARY VLE WRITE UP
+@app.route("/binaryvleinfo")
+def binaryvleinfo():
+    return render_template("binaryvleinfo.html")
 
 # BINARY VLE PAGE
 @app.route("/binaryvle", methods=["GET","POST"])

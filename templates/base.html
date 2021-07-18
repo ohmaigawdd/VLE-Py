@@ -22,12 +22,21 @@
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav mr-auto">
 					<li class="nav-item dropdown">
-						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-							Vapour-Liquid Equilibrium
+						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							Pure Vapour-Liquid Equilibrium
 						</a>
-						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
-							<a class="dropdown-item" href="{{ url_for('purevle') }}">Pure VLE</a>
-							<a class="dropdown-item" href="{{ url_for('binaryvle') }}">Binary VLE</a>
+						<div class="dropdown-menu" aria-labelledby="navbarDropdown1">
+							<a class="dropdown-item" href="{{ url_for('purevleinfo') }}">Pure VLE Introduction</a>
+							<a class="dropdown-item" href="{{ url_for('purevle') }}">Pure VLE Application</a>
+						</div>
+					</li>
+					<li class="navbar-nav mr-auto">
+						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							Binary Vapour-Liquid Equilibrium
+						</a>
+						<div class="dropdown-menu" aria-labelledby="navbarDropdown2">
+							<a class="dropdown-item" href="{{ url_for('binaryvleinfo') }}">Binary VLE Introduction</a>
+							<a class="dropdown-item" href="{{ url_for('binaryvle') }}">Binary VLE Application</a>
 						</div>
 					</li>
 				</ul>
