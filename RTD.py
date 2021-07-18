@@ -22,12 +22,15 @@ import plotly as plot
 import rtdpy
 import time
 
+types = ['pulse', 'step']
 
-class pulse:
-    def __init__(self,V_reactor,flow):
-        self.V_reactor = V_reactor
-        self.flow = flow
-        self.tau = self.V_reactor / self.flow
+class RTD:
+    def __init__(self,V_reactor,flow, type):
+        if type in types:
+            self.V_reactor = V_reactor
+            self.flow = flow
+            self.tau = self.V_reactor / self.flow
+            self.type = type
 
     '''
     def exptRTD(self,t,c):
@@ -56,34 +59,68 @@ class pulse:
 
     def PFR(self):
 
+        # xdata = []
+        # ydata = []
+
+        # plt.show()
+        
+        # axes = plt.gca()
+        # axes.set_xlim(0, 100)
+        # axes.set_ylim(0,1.4)
+        # line, = axes.plot(xdata, ydata, 'r-')
+        # plt.margins(0.1,0.1)
+        # plt.xlabel('Time')
+        # plt.ylabel('E',rotation=0)
+        # plt.grid(True)
+        # plt.title('PFR - Pulse: E against T')
+
+        # for i in range(100):
+        #     if i != self.tau:
+        #         xdata.append(i)
+        #         ydata.append(0)
+        #     else:
+        #         xdata.append(i)
+        #         ydata.append(1)
+        #     line.set_xdata(xdata)
+        #     line.set_ydata(ydata)
+        #     plt.draw()
+        #     plt.pause(1e-20)
+        #     time.sleep(0.1)
+
+        # plt.show()
+
         xdata = []
         ydata = []
+        fig, axes = plt.subplots()
 
-        plt.show()
-        
-        axes = plt.gca()
-        axes.set_xlim(0, 100)
-        axes.set_ylim(0,1.4)
         line, = axes.plot(xdata, ydata, 'r-')
         plt.margins(0.1,0.1)
         plt.xlabel('Time')
         plt.ylabel('E',rotation=0)
         plt.grid(True)
         plt.title('PFR - Pulse: E against T')
+        handles = []
 
-        for i in range(100):
-            if i != self.tau:
-                xdata.append(i)
-                ydata.append(0)
-            else:
-                xdata.append(i)
-                ydata.append(1)
+        PFR = rtdpy.Pfr(tau=self.tau, dt=.01, time_end=self.tau*2)
+        x = PFR.time
+        if self.type == 'pulse':
+            y = PFR.exitage
+        else:
+            y = PFR.stepresponse
+
+        x = x[::100]
+        y = y[::100]
+        plt.legend("PFR")
+        for i in range(len(x[0:200000])):
+            xdata.append(x[i])
+            ydata.append(y[i])
             line.set_xdata(xdata)
             line.set_ydata(ydata)
-            plt.draw()
+            # plt.plot(xdata[i], ydata[i], color='green', marker='o', linestyle='dashed', linewidth=2, markersize=1)
+            plt.plot(xdata[i], ydata[i])
+            # plt.draw()
             plt.pause(1e-20)
-            time.sleep(0.1)
-
+            # time.sleep(0.00001)
         plt.show()
 
     def CSTR(self,n):
@@ -108,7 +145,10 @@ class pulse:
             ydata = []
             CSTR = rtdpy.Ncstr(tau=self.tau, n=n, dt=.01, time_end=5*self.tau)
             x = CSTR.time
-            y = CSTR.exitage
+            if self.type == 'pulse':
+                y = CSTR.exitage
+            else:
+                y = CSTR.stepresponse
             x = x[::100]
             y = y[::100]
             handles = "n = " + str(n)
@@ -136,7 +176,10 @@ class pulse:
             for count, elem in enumerate(n):
                 CSTR[elem] = rtdpy.Ncstr(tau=self.tau, n=elem, dt=.01, time_end=5*self.tau)
                 x[elem] = CSTR[elem].time[::100]
-                y[elem] = CSTR[elem].exitage[::100]
+                if self.type == "pulse":
+                    y[elem] = CSTR[elem].exitage[::100]
+                else:
+                    y[elem] = CSTR[elem].stepresponse[::100]
 
             for i in range(len(x[n[0]][0:200000])):
                 for j in range(len(n)):   
@@ -217,6 +260,6 @@ class pulse:
 
     
 
-a = pulse(50,1)
+a = RTD(50,2,'pulse')  # esp for PFR, ONLY INTEGER VALUES
 print(a.tau)
-a.CSTR([1,8,20])
+a.PFR()
