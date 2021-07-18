@@ -40,11 +40,13 @@ def purevle():
     plot = plot_steam(system)
     plot.plot_steamVLE()
     graphJSON = plot.generate()
-    if processType == "Isotherm":
+    if processType == "Isotherm": #if isothermal
         Ggraph = GvsP(T)
-    else:
+        equi = int(system.getboilingP()*100)
+    else: #if isobaric
         Ggraph = GvsT(P)
-    return render_template("purevle.html", errors=errors, form=form, system=system, graphJSON=graphJSON, Ggraph=Ggraph, processType=processType)
+        equi = int(system.getboilingT())
+    return render_template("purevle.html", equi=equi, errors=errors, form=form, system=system, graphJSON=graphJSON, Ggraph=Ggraph, processType=processType)
 
 # BINARY VLE PAGE
 @app.route("/binaryvle", methods=["GET","POST"])

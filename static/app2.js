@@ -54,7 +54,7 @@ class Ball{
     }
 
     evaporate() {
-        if (this.speedY <= -1.8) {
+        if (this.speedY <= 0) {
             return true;
         }
         return false;
@@ -70,13 +70,12 @@ class Ball{
                 this.bounce("right", "slow");
             } 
 
-            if (this.evaporate() && vapFrac != 0) {
+            if (vapFrac != 0) {
                 if (this.getY() > height-this.size/2) {
                     this.bounce("up", "slow");
                 } else if (this.getY() <= height*vapFrac + this.size/2) {
                     this.y = height*vapFrac - this.size/2 - 0.01 + this.speedY
                     crossedOver++;
-                    console.log(crossedOver)
                 }
             } 
             else {
@@ -94,14 +93,13 @@ class Ball{
             } else if (this.getX() < this.size/2) {
                 this.bounce("right", "fast");
             }
-            if (crossedOver> 0) {
+            if (vapFrac != 1) {
                 if (this.getY() < this.size/2) {
                     this.bounce("down", "fast");
                 } else if (this.getY() >= height*vapFrac-this.size/2) {
-                    this.y = height*vapFrac + 0.01
-                    this.y = height*vapFrac + this.size/2 + 0.01 - this.speedY
+                    this.y = height*vapFrac + 0.1
+                    this.y = height*vapFrac + this.size/2 + 0.1 - this.speedY
                     crossedOver--;
-                    console.log(crossedOver)
                 }
             } else {
                 if (this.getY() >= height*vapFrac-this.size/2) {
@@ -132,6 +130,8 @@ function countBalls(box, color) {
 var ballArray = [];
 var vapNumber = Math.round(number * vapFrac)
 var liqNumber = number - vapNumber;
+var crossedOver = 0
+var upOrDown = null
 var height = 240
 var width = 630
 
@@ -179,6 +179,22 @@ function drawRect(type, minX, minY, maxX, maxY) {
 }
 
 function draw() {
+    if (transition == true) {
+        if (vapFrac == 1) { // gas->liq
+            vapFrac -= 0.01;
+            upOrDown = "up";
+        }
+        else if (vapFrac == 0) { // liq->gas
+            vapFrac += 0.01;
+            upOrDown = "down";
+        }
+        else if (upOrDown == "up") {
+            vapFrac -= 0.01;
+        }
+        else if (upOrDown == "down") {
+            vapFrac += 0.01;
+        }
+    }
     var vaporRectx1 = 0;
     var vaporRecty1 = 0;
     var vaporRectx2 = width;
@@ -207,5 +223,16 @@ function draw() {
     
     for (var i = 0; i < ballArray.length; i++) {
         ballArray[i].update();
+    }
+
+    if (vapFrac > 1) {
+        vapFrac = 1;
+        transition = false;
+        upOrDown = null;
+    }
+    else if (vapFrac < 0) {
+        vapFrac = 0;
+        transition = false;
+        upOrDown = null;
     }
 }
