@@ -46,6 +46,7 @@ def purevle():
     else: #if isobaric
         Ggraph = GvsT(P)
         equi = int(system.getboilingT())
+        print(equi)
     return render_template("purevle.html", equi=equi, errors=errors, form=form, system=system, graphJSON=graphJSON, Ggraph=Ggraph, processType=processType)
 
 # BINARY VLE PAGE

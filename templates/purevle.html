@@ -60,7 +60,7 @@
             <input type="range" min="100" max="22000" value="{{"%0.2f" % system.P}}" class="slider" id="myRange" oninput="adjustValue(this.value)">
             <span style="color: white;">Use this slider to adjust P: <span id="demo" style="color: white;"></span> kPa</span>
             {% else %}
-            <input type="range" min="0" max="374" value="{{"%0.2f" % system.T}}" class="slider" id="myRange" oninput="adjustValue(this.value)">
+            <input type="range" min="1" max="374" value="{{"%0.2f" % system.T}}" class="slider" id="myRange" oninput="adjustValue(this.value)">
             <span style="color: white;">Use this slider to adjust T: <span id="demo" style="color: white;"></span> <sup>o</sup>C
             {% endif %}
             <script>
@@ -73,11 +73,11 @@
                     output.innerHTML = this.value;
                     // Update Vaporisation curve, Gibbs plot and Animation
                     Plotly.deleteTraces('vapCurve', [-1]);
+                    Plotly.deleteTraces('Gplot', [-1]);
                     if ("{{ processType }}" == "Isotherm") {
                         var newP = Math.round(this.value/100) * 100
-                        Plotly.addTraces('vapCurve',{x: [{{ system.T }}, {{ system.T }}], y: [{{ system.P }}, this.value], name: "{{ processType }}",text: ["Start", "End"], hovertemplate: '<br><b>%{text}</b></br>' + 'T: %{x:.2f}' + '<br>P: %{y:.2f}<br>'});
-                        Plotly.deleteTraces('Gplot', [-1]);
-                        Plotly.addTraces('Gplot',{x: [newP], y: [{{ Ggraph[1] }}[newP]], name: "End System", hovertemplate: 'P: %{x:.2f} kPa' + '<br>G: %{y:.2f} kJ/kg'});
+                        Plotly.addTraces('vapCurve',{x: [{{ system.T }}, {{ system.T }}], y: [{{ system.P }}, this.value], name: "{{ processType }}",text: ["Start", "End"], hovertemplate: '<br><b>%{text}</b></br>' + 'T: %{x:.2f} C' + '<br>P: %{y:.2f} kPa'});
+                        Plotly.addTraces('Gplot',{x: [newP], y: [{{ Ggraph[1] }}[newP]], name: "End System", mode: "markers", marker: {size: 15}, hovertemplate: 'P: %{x:.2f} kPa' + '<br>G: %{y:.2f} kJ/kg'});
                         if (newP <= {{ equi }} && vapFrac == 0) { // if gas->liq
                             transition =  true
                         }
@@ -87,13 +87,12 @@
                     }
                     else {
                         var newT = this.value
-                        Plotly.addTraces('vapCurve',{x: [{{ system.T }},this.value], y: [{{ system.P }}, {{ system.P }}], name: "{{ processType }}",text: ["Start", "End"], hovertemplate: '<br><b>%{text}</b></br>' + 'T: %{x:.2f}' + '<br>P: %{y:.2f}<br>'});
-                        Plotly.deleteTraces('Gplot', [-1]);
-                        Plotly.addTraces('Gplot',{x: [newT], y: [{{ Ggraph[1] }}[newT]], name: "End System", hovertemplate: 'T: %{x:.2f} C' + '<br>G: %{y:.2f} kJ/kg'});
-                        if (newT <= {{ equi }} && vapFrac == 0) { // if gas->liq
+                        Plotly.addTraces('vapCurve',{x: [{{ system.T }},this.value], y: [{{ system.P }}, {{ system.P }}], name: "{{ processType }}",text: ["Start", "End"], hovertemplate: '<br><b>%{text}</b></br>' + 'T: %{x:.2f} C' + '<br>P: %{y:.2f} kPa'});
+                        Plotly.addTraces('Gplot',{x: [newT], y: [{{ Ggraph[1] }}[newT]], name: "End System", mode: "markers", marker: {size: 15}, hovertemplate: 'T: %{x:.2f} C' + '<br>G: %{y:.2f} kJ/kg'});
+                        if (newT <= {{ equi }} && vapFrac == 1) { // if liq->gas
                             transition =  true
                         }
-                        else if (newT >= {{ equi }} && vapFrac == 1) { // if liq->gas
+                        else if (newT >= {{ equi }} && vapFrac == 0) { // if gas->liq
                             transition =  true
                         }
                     }
@@ -135,11 +134,11 @@
         Plotly.plot('Gplot',graphs1,{});
         if ("{{ processType }}" == "Isotherm") {
         var initP = Math.round({{system.P}}/100) * 100
-        Plotly.addTraces('Gplot',{x: [initP], y: [{{ Ggraph[1] }}[initP]], name: "Starting System", hovertemplate: 'P: %{x:.2f} kPa' + '<br>G: %{y:.2f} kJ/kg'});
+        Plotly.addTraces('Gplot',{x: [initP], y: [{{ Ggraph[1] }}[initP]], name: "Starting System", mode: "markers", marker: {size: 15},hovertemplate: 'P: %{x:.2f} kPa' + '<br>G: %{y:.2f} kJ/kg'});
         }
         else {
         var initT = {{system.T}}
-        Plotly.addTraces('Gplot',{x: [initT], y: [{{ Ggraph[1] }}[initT]], name: "Starting System", hovertemplate: 'T: %{x:.2f} C' + '<br>G: %{y:.2f} kJ/kg'});
+        Plotly.addTraces('Gplot',{x: [initT], y: [{{ Ggraph[1] }}[initT]], name: "Starting System", mode: "markers", marker: {size: 15}, hovertemplate: 'T: %{x:.2f} C' + '<br>G: %{y:.2f} kJ/kg'});
         }
     </script>
 </div>
@@ -148,7 +147,7 @@
     <script>
         var graphs2 = {{ graphJSON | safe }}
         Plotly.plot('vapCurve',graphs2,{})
-        Plotly.addTraces('vapCurve',{x: [{{ system.T }}, {{ system.T }}], y: [ {{ system.P }}, {{ system.P }}], name: "{{ processType }}",text: ["End", "Start"], hovertemplate: '<br><b>%{text}</b></br>' + 'T: %{x:.2f}' + '<br>P: %{y:.2f}<br>'});
+        Plotly.addTraces('vapCurve',{x: [{{ system.T }}, {{ system.T }}], y: [ {{ system.P }}, {{ system.P }}], name: "{{ processType }}",text: ["End", "Start"], hovertemplate: '<br><b>%{text}</b></br>' + 'T: %{x:.2f} C' + '<br>P: %{y:.2f} kPa'});
     </script>
 </div>
 
