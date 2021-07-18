@@ -71,7 +71,7 @@ class RTD:
         y = y[::25]
         frames = []
         for i in range(len(x)-1):
-            frame = go.Frame(data=[go.Scatter(x=[x[i] for i in range(i)], y=[y[i] for i in range(i)])])
+            frame = go.Frame(data=[go.Scatter(x=[x[i] for i in range(i)], y=[y[i] for i in range(i)], mode = 'lines')])
             frames.append(frame)
 
         fig = go.Figure(
@@ -119,7 +119,7 @@ class RTD:
         y = y[::25]
         frames = []
         for i in range(len(x)-1):
-            frame = go.Frame(data=[go.Scatter(x=[x[i] for i in range(i)], y=[y[i] for i in range(i)])])
+            frame = go.Frame(data=[go.Scatter(x=[x[i] for i in range(i)], y=[y[i] for i in range(i)], mode = 'lines')])
             frames.append(frame)
 
         fig = go.Figure(
