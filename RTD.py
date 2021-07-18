@@ -88,10 +88,75 @@ class pulse:
 
     def CSTR(self,n):
         #n = number of tanks, so we can allow them to select number of CSTRs
+
+        #plt.show()
         xdata = []
         ydata = []
-        #plt.show()
+        fig, axes = plt.subplots()
+        # axes.set_xlim(0, 100)
+        # axes.set_ylim(0,0.05)
+        line, = axes.plot(xdata, ydata, 'r-')
+        plt.margins(0.1,0.1)
+        plt.xlabel('Time')
+        plt.ylabel('E',rotation=0)
+        plt.grid(True)
+        plt.title('nCSTR - Pulse: E against T')
+        handles = []
 
+        if type(n) == int:
+            xdata = []
+            ydata = []
+            CSTR = rtdpy.Ncstr(tau=self.tau, n=n, dt=.01, time_end=5*self.tau)
+            x = CSTR.time
+            y = CSTR.exitage
+            x = x[::100]
+            y = y[::100]
+            handles = "n = " + str(n)
+            plt.legend([handles])
+            for i in range(len(x[0:200000])):
+                xdata.append(x[i])
+                ydata.append(y[i])
+                line.set_xdata(xdata)
+                line.set_ydata(ydata)
+                # plt.plot(xdata[i], ydata[i], color='green', marker='o', linestyle='dashed', linewidth=2, markersize=1)
+                plt.plot(xdata[i], ydata[i])
+                # plt.draw()
+                plt.pause(1e-20)
+                # time.sleep(0.00001)
+            plt.show()
+
+        elif type(n) == list or type(n) == tuple:
+            CSTR = {}
+            x = {}
+            y = {}
+            xdata= [[] for i in range(len(n))]
+            ydata= [[] for i in range(len(n))]
+            handles = [("n = " + str(i)) for i in n]
+
+            for count, elem in enumerate(n):
+                CSTR[elem] = rtdpy.Ncstr(tau=self.tau, n=elem, dt=.01, time_end=5*self.tau)
+                x[elem] = CSTR[elem].time[::100]
+                y[elem] = CSTR[elem].exitage[::100]
+
+            for i in range(len(x[n[0]][0:200000])):
+                for j in range(len(n)):   
+                    xdata[j].append(x[n[j]][i])
+                    ydata[j].append(y[n[j]][i])
+                    line.set_xdata(xdata)
+                    line.set_ydata(ydata)
+                for j in range(len(n)):
+                    plt.plot(xdata[j], ydata[j])
+                    
+
+                plt.pause(1e-20)
+            plt.show()
+        else:
+            pass
+
+
+    def CSTR1(self,n):
+       #n = number of tanks, so we can allow them to select number of CSTRs
+        xdata, ydata = [], []
         axes = plt.gca()
         axes.set_xlim(0, 100)
         axes.set_ylim(0,0.05)
@@ -104,35 +169,27 @@ class pulse:
         plt.legend()
 
         if type(n) == int:
-            CSTR = rtdpy.Ncstr(tau=self.tau, n=n, dt=.01, time_end=100)
-            for i in range(len(CSTR.time)):
-                xdata.append(CSTR.time[i])
-                ydata.append(CSTR.exitage[i])
-                print(xdata)
-                print(ydata)
+            CSTR = rtdpy.Ncstr(tau=self.tau, n=n, dt=.01, time_end=6*self.tau)
+            x = CSTR.time
+            y = CSTR.exitage
+            for i in range(100):
+                xdata.append(x[i])
+                ydata.append(y[i])
                 line.set_xdata(xdata)
                 line.set_ydata(ydata)
                 plt.draw()
                 plt.pause(1e-20)
                 time.sleep(0.1)
-            #plt.show()
-        if type(n) == list or type(n) == tuple:
-            for n in n:
-                CSTR = rtdpy.Ncstr(tau=self.tau, n=n, dt=.01, time_end=100)
-                plt.plot(CSTR.time, CSTR.exitage, label=f"n={n}")
-        else:
-            pass
+            plt.show()
 
-
-    def CSTR1(self,n):
-       #n = number of tanks, so we can allow them to select number of CSTRs
-        if type(n) == int:
-            CSTR = rtdpy.Ncstr(tau=self.tau, n=n, dt=.01, time_end=100)
-            plt.plot(CSTR.time, CSTR.exitage, label=f"n={n}")
+            # plt.plot(CSTR.time, CSTR.exitage, label=f"n={n}")
         if type(n) == list or type(n) == tuple:
+            CSTR = {}
             for n in n:
-                CSTR = rtdpy.Ncstr(tau=self.tau, n=n, dt=.01, time_end=100)
-                plt.plot(CSTR.time, CSTR.exitage, label=f"n={n}")
+                CSTR[n] = rtdpy.Ncstr(tau=self.tau, n=n, dt=.01, time_end=6*self.tau)
+                CSTR = rtdpy.Ncstr(tau=self.tau, n=n, dt=.01, time_end=6*self.tau)
+
+                # plt.plot(CSTR.time, CSTR.exitage, label=f"n={n}")
         else:
             pass
 
@@ -141,7 +198,25 @@ class pulse:
         plt.legend()
         plt.show()
 
+    def CSTR2(self, n):
+        CSTR = rtdpy.Ncstr(tau=self.tau, n=n, dt=.01, time_end=100)
+        x = CSTR.time
+        y = CSTR.exitage
+
+        plt.axis([0, 100, 0, 100])
+        plt.xlabel('Time')
+        plt.ylabel('E',rotation=0)
+        plt.grid(True)
+        plt.title('nCSTR - Pulse: E against T')
+
+        for i in range(len(x)):
+            plt.plot(x[i], y[i], color='green', marker='o', linestyle='dashed', linewidth=2, markersize=5)
+            plt.pause(0.15)
+
+        plt.show()
+
     
 
 a = pulse(50,1)
-a.CSTR1(1)
+print(a.tau)
+a.CSTR([1,8,20])
