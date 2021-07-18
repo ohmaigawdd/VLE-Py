@@ -17,7 +17,7 @@ import scipy
 from scipy.integrate import simps
 from scipy import signal
 import matplotlib.pyplot as plt
-import plotly as plot
+import plotly.graph_objects as go
 #Instasll rtdpy first! (TRY INSTALL MANUALLY INSTEAD OF PIP) idk why it installed older version
 import rtdpy
 import time
@@ -59,207 +59,132 @@ class RTD:
 
     def PFR(self):
 
-        # xdata = []
-        # ydata = []
-
-        # plt.show()
-        
-        # axes = plt.gca()
-        # axes.set_xlim(0, 100)
-        # axes.set_ylim(0,1.4)
-        # line, = axes.plot(xdata, ydata, 'r-')
-        # plt.margins(0.1,0.1)
-        # plt.xlabel('Time')
-        # plt.ylabel('E',rotation=0)
-        # plt.grid(True)
-        # plt.title('PFR - Pulse: E against T')
-
-        # for i in range(100):
-        #     if i != self.tau:
-        #         xdata.append(i)
-        #         ydata.append(0)
-        #     else:
-        #         xdata.append(i)
-        #         ydata.append(1)
-        #     line.set_xdata(xdata)
-        #     line.set_ydata(ydata)
-        #     plt.draw()
-        #     plt.pause(1e-20)
-        #     time.sleep(0.1)
-
-        # plt.show()
-
         xdata = []
         ydata = []
-        fig, axes = plt.subplots()
-
-        line, = axes.plot(xdata, ydata, 'r-')
-        plt.margins(0.1,0.1)
-        plt.xlabel('Time')
-        plt.ylabel('E',rotation=0)
-        plt.grid(True)
-        plt.title('PFR - Pulse: E against T')
-        handles = []
-
         PFR = rtdpy.Pfr(tau=self.tau, dt=.01, time_end=self.tau*2)
         x = PFR.time
         if self.type == 'pulse':
             y = PFR.exitage
         else:
-            y = PFR.stepresponse
+            y = PFR.stepresponse        
+        x = x[::25]
+        y = y[::25]
+        frames = []
+        for i in range(len(x)-1):
+            frame = go.Frame(data=[go.Scatter(x=[x[i] for i in range(i)], y=[y[i] for i in range(i)])])
+            frames.append(frame)
 
-        x = x[::100]
-        y = y[::100]
-        plt.legend("PFR")
-        for i in range(len(x[0:200000])):
-            xdata.append(x[i])
-            ydata.append(y[i])
-            line.set_xdata(xdata)
-            line.set_ydata(ydata)
-            # plt.plot(xdata[i], ydata[i], color='green', marker='o', linestyle='dashed', linewidth=2, markersize=1)
-            plt.plot(xdata[i], ydata[i])
-            # plt.draw()
-            plt.pause(1e-20)
-            # time.sleep(0.00001)
-        plt.show()
+        fig = go.Figure(
+            data=[go.Scatter(x=xdata, y=ydata, name = "PFR")],
+            layout=go.Layout(template='plotly_dark',
+                xaxis=dict(range=[0, self.tau*2], autorange=False),
+                yaxis=dict(range=[0, max(y)*1.1], autorange=False),
+                xaxis_title="Time",
+                yaxis_title = "Exit Age Function",
+                title="PFR E against time",
+                updatemenus=[dict(
+                    bgcolor = 'grey',
+                    font = dict(color = 'black', family="Helvetica Neue, monospace", size = 12),
+                    type="buttons",
+                    buttons=[dict(label="Play",
+                                method="animate",
+                                args = [None, {"frame": {"duration": 50, 
+                                                            "redraw": False},
+                                                                    "fromcurrent": True, 
+                                                                    "transition": {"duration": 0}}])])],
+                    legend=dict(title='Legend',
+                                orientation="h",
+                                yanchor="bottom",
+                                y=1.02,
+                                xanchor="right",
+                                x=1
+            ),
+            ),
+            frames=frames
+        )
+
+        fig.show()
 
     def CSTR(self,n):
-        #n = number of tanks, so we can allow them to select number of CSTRs
 
-        #plt.show()
         xdata = []
         ydata = []
-        fig, axes = plt.subplots()
-        # axes.set_xlim(0, 100)
-        # axes.set_ylim(0,0.05)
-        line, = axes.plot(xdata, ydata, 'r-')
-        plt.margins(0.1,0.1)
-        plt.xlabel('Time')
-        plt.ylabel('E',rotation=0)
-        plt.grid(True)
-        plt.title('nCSTR - Pulse: E against T')
-        handles = []
-
-        if type(n) == int:
-            xdata = []
-            ydata = []
-            CSTR = rtdpy.Ncstr(tau=self.tau, n=n, dt=.01, time_end=5*self.tau)
-            x = CSTR.time
-            if self.type == 'pulse':
-                y = CSTR.exitage
-            else:
-                y = CSTR.stepresponse
-            x = x[::100]
-            y = y[::100]
-            handles = "n = " + str(n)
-            plt.legend([handles])
-            for i in range(len(x[0:200000])):
-                xdata.append(x[i])
-                ydata.append(y[i])
-                line.set_xdata(xdata)
-                line.set_ydata(ydata)
-                # plt.plot(xdata[i], ydata[i], color='green', marker='o', linestyle='dashed', linewidth=2, markersize=1)
-                plt.plot(xdata[i], ydata[i])
-                # plt.draw()
-                plt.pause(1e-20)
-                # time.sleep(0.00001)
-            plt.show()
-
-        elif type(n) == list or type(n) == tuple:
-            CSTR = {}
-            x = {}
-            y = {}
-            xdata= [[] for i in range(len(n))]
-            ydata= [[] for i in range(len(n))]
-            handles = [("n = " + str(i)) for i in n]
-
-            for count, elem in enumerate(n):
-                CSTR[elem] = rtdpy.Ncstr(tau=self.tau, n=elem, dt=.01, time_end=5*self.tau)
-                x[elem] = CSTR[elem].time[::100]
-                if self.type == "pulse":
-                    y[elem] = CSTR[elem].exitage[::100]
-                else:
-                    y[elem] = CSTR[elem].stepresponse[::100]
-
-            for i in range(len(x[n[0]][0:200000])):
-                for j in range(len(n)):   
-                    xdata[j].append(x[n[j]][i])
-                    ydata[j].append(y[n[j]][i])
-                    line.set_xdata(xdata)
-                    line.set_ydata(ydata)
-                for j in range(len(n)):
-                    plt.plot(xdata[j], ydata[j])
-                    
-
-                plt.pause(1e-20)
-            plt.show()
-        else:
-            pass
-
-
-    def CSTR1(self,n):
-       #n = number of tanks, so we can allow them to select number of CSTRs
-        xdata, ydata = [], []
-        axes = plt.gca()
-        axes.set_xlim(0, 100)
-        axes.set_ylim(0,0.05)
-        line, = axes.plot(xdata, ydata, 'r-')
-        plt.margins(0.1,0.1)
-        plt.xlabel('Time')
-        plt.ylabel('E',rotation=0)
-        plt.grid(True)
-        plt.title('nCSTR - Pulse: E against T')
-        plt.legend()
-
-        if type(n) == int:
-            CSTR = rtdpy.Ncstr(tau=self.tau, n=n, dt=.01, time_end=6*self.tau)
-            x = CSTR.time
-            y = CSTR.exitage
-            for i in range(100):
-                xdata.append(x[i])
-                ydata.append(y[i])
-                line.set_xdata(xdata)
-                line.set_ydata(ydata)
-                plt.draw()
-                plt.pause(1e-20)
-                time.sleep(0.1)
-            plt.show()
-
-            # plt.plot(CSTR.time, CSTR.exitage, label=f"n={n}")
-        if type(n) == list or type(n) == tuple:
-            CSTR = {}
-            for n in n:
-                CSTR[n] = rtdpy.Ncstr(tau=self.tau, n=n, dt=.01, time_end=6*self.tau)
-                CSTR = rtdpy.Ncstr(tau=self.tau, n=n, dt=.01, time_end=6*self.tau)
-
-                # plt.plot(CSTR.time, CSTR.exitage, label=f"n={n}")
-        else:
-            pass
-
-        plt.xlabel('Time')
-        plt.ylabel('E',rotation=0)
-        plt.legend()
-        plt.show()
-
-    def CSTR2(self, n):
-        CSTR = rtdpy.Ncstr(tau=self.tau, n=n, dt=.01, time_end=100)
+        CSTR = rtdpy.Ncstr(tau=self.tau, n = n, dt=.01, time_end=self.tau*5)
         x = CSTR.time
-        y = CSTR.exitage
+        if self.type == 'pulse':
+            y = CSTR.exitage
+        else:
+            y = CSTR.stepresponse
+        x = x[::25]
+        y = y[::25]
+        frames = []
+        for i in range(len(x)-1):
+            frame = go.Frame(data=[go.Scatter(x=[x[i] for i in range(i)], y=[y[i] for i in range(i)])])
+            frames.append(frame)
 
-        plt.axis([0, 100, 0, 100])
-        plt.xlabel('Time')
-        plt.ylabel('E',rotation=0)
-        plt.grid(True)
-        plt.title('nCSTR - Pulse: E against T')
+        fig = go.Figure(
+            data=[go.Scatter(x=xdata, y=ydata, name = "n = " + str(n))],
+            layout=go.Layout(template='plotly_dark',
+                xaxis=dict(range=[0, self.tau*5], autorange=False),
+                yaxis=dict(range=[0, max(y)*1.1], autorange=False),
+                xaxis_title="Time",
+                yaxis_title = "Exit Age Function",
+                title="nCSTR E against time, n=" + str(n),
+                updatemenus=[dict(
+                    bgcolor = 'grey',
+                    font = dict(color = 'black', family="Helvetica Neue, monospace", size = 12),
+                    type="buttons",
+                    buttons=[dict(label="Play",
+                                method="animate",
+                                args = [None, {"frame": {"duration": 50, 
+                                                            "redraw": False},
+                                                                    "fromcurrent": True, 
+                                                                    "transition": {"duration": 0}}])])],
+                    legend=dict(title='Legend',
+                                orientation="h",
+                                yanchor="bottom",
+                                y=1.02,
+                                xanchor="right",
+                                x=1
+            ),
+            ),
+            frames=frames
+        )
 
-        for i in range(len(x)):
-            plt.plot(x[i], y[i], color='green', marker='o', linestyle='dashed', linewidth=2, markersize=5)
-            plt.pause(0.15)
-
-        plt.show()
+        fig.show()
 
     
 
-a = RTD(50,2,'pulse')  # esp for PFR, ONLY INTEGER VALUES
-print(a.tau)
+        # elif type(n) == list or type(n) == tuple:
+        #     CSTR = {}
+        #     x = {}
+        #     y = {}
+        #     xdata= [[] for i in range(len(n))]
+        #     ydata= [[] for i in range(len(n))]
+        #     handles = [("n = " + str(i)) for i in n]
+
+        #     for count, elem in enumerate(n):
+        #         CSTR[elem] = rtdpy.Ncstr(tau=self.tau, n=elem, dt=.01, time_end=5*self.tau)
+        #         x[elem] = CSTR[elem].time[::100]
+        #         if self.type == "pulse":
+        #             y[elem] = CSTR[elem].exitage[::100]
+        #         else:
+        #             y[elem] = CSTR[elem].stepresponse[::100]
+
+        #     for i in range(len(x[n[0]][0:200000])):
+        #         for j in range(len(n)):   
+        #             xdata[j].append(x[n[j]][i])
+        #             ydata[j].append(y[n[j]][i])
+        #             line.set_xdata(xdata)
+        #             line.set_ydata(ydata)
+        #         for j in range(len(n)):
+        #             plt.plot(xdata[j], ydata[j])
+                    
+
+        #         plt.pause(1e-20)
+        #     plt.show()
+        # else:
+        #     pass
+
+a = RTD(50,2,'step')  # esp for PFR, ONLY INTEGER VALUES
 a.PFR()
