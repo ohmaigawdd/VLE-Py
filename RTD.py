@@ -18,8 +18,8 @@ from scipy.integrate import simps
 from scipy import signal
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
-import json
 import plotly
+import json
 #Instasll rtdpy first! (TRY INSTALL MANUALLY INSTEAD OF PIP) idk why it installed older version
 import rtdpy
 import time
@@ -71,6 +71,8 @@ class RTD:
             y = PFR.stepresponse        
         x = x[::25]
         y = y[::25]
+        self.x = list(x).copy()
+        self.y = list(y).copy()
         frames = []
         for i in range(len(x)-1):
             frame = go.Frame(data=[go.Scatter(x=[x[i] for i in range(i)], y=[y[i] for i in range(i)], mode = 'lines')])
@@ -79,30 +81,13 @@ class RTD:
         fig = go.Figure(
             data=[go.Scatter(x=xdata, y=ydata, name = "PFR")],
             layout=go.Layout(template='plotly_dark',
+                paper_bgcolor='rgba(0,0,0,0)',
                 xaxis=dict(range=[0, self.tau*2], autorange=False),
                 yaxis=dict(range=[0, max(y)*1.1], autorange=False),
-                xaxis_title="Time",
+                xaxis_title="Time (s)",
                 yaxis_title = "Exit Age Function",
-                title="PFR E against time",
-                updatemenus=[dict(
-                    bgcolor = 'grey',
-                    font = dict(color = 'black', family="Helvetica Neue, monospace", size = 12),
-                    type="buttons",
-                    buttons=[dict(label="Play",
-                                method="animate",
-                                args = [None, {"frame": {"duration": 50, 
-                                                            "redraw": False},
-                                                                    "fromcurrent": True, 
-                                                                    "transition": {"duration": 0}}])])],
-                    legend=dict(title='Legend',
-                                orientation="h",
-                                yanchor="bottom",
-                                y=1.02,
-                                xanchor="right",
-                                x=1
+                title="PFR: Plot of E against Time",
             ),
-            ),
-            frames=frames
         )
         self.fig = fig
 
@@ -118,6 +103,8 @@ class RTD:
             y = CSTR.stepresponse
         x = x[::25]
         y = y[::25]
+        self.x = list(x).copy()
+        self.y = list(y).copy()
         frames = []
         for i in range(len(x)-1):
             frame = go.Frame(data=[go.Scatter(x=[x[i] for i in range(i)], y=[y[i] for i in range(i)], mode = 'lines')])
@@ -126,37 +113,20 @@ class RTD:
         fig = go.Figure(
             data=[go.Scatter(x=xdata, y=ydata, name = "n = " + str(n))],
             layout=go.Layout(template='plotly_dark',
+                paper_bgcolor='rgba(0,0,0,0)',
                 xaxis=dict(range=[0, self.tau*5], autorange=False),
                 yaxis=dict(range=[0, max(y)*1.1], autorange=False),
-                xaxis_title="Time",
+                xaxis_title="Time (s)",
                 yaxis_title = "Exit Age Function",
-                title="n CSTR E against time, n=" + str(n),
-                updatemenus=[dict(
-                    bgcolor = 'grey',
-                    font = dict(color = 'black', family="Helvetica Neue, monospace", size = 12),
-                    type="buttons",
-                    buttons=[dict(label="Play",
-                                method="animate",
-                                args = [None, {"frame": {"duration": 50, 
-                                                            "redraw": False},
-                                                                    "fromcurrent": True, 
-                                                                    "transition": {"duration": 0}}])])],
-                    legend=dict(title='Legend',
-                                orientation="h",
-                                yanchor="bottom",
-                                y=1.02,
-                                xanchor="right",
-                                x=1
-            ),
-            ),
-            frames=frames
+                title="n CSTR: Plot of E against Time, n=" + str(n),
+            )
         )
         self.fig = fig
-
+    
     def generate(self):
         return json.dumps(self.fig, cls=plotly.utils.PlotlyJSONEncoder)
 
-    
+
 
         # elif type(n) == list or type(n) == tuple:
         #     CSTR = {}

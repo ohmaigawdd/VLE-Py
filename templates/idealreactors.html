@@ -53,11 +53,56 @@
             <td class='tableText'>{{ system.flow }} m<sup>3</sup>/s</td>
         </tr>
     </table>
+    <br>
+    <button id="Start" onclick="requestAnimationFrame(animateStart)">Start Animation</button>
+    <button id="Pause" onclick="animatePause()">Pause Animation</button>
+    <button id="Reset" onclick="animateReset()">Reset Animation</button>
+    <script>
+        let idx = 1;
+        let flag = false;
+        let running = false;
+        function animateReset() {
+            flag = false;
+            running = false;
+            idx = 1;
+            Plotly.animate("Eplot", {
+                data: [{x: [], y: [], mode: "lines"}]
+            },
+            {
+                transition: {duration: 0},
+                frame: {duration: 20,
+                        redraw: false}})
+        };
+        function animatePause() {
+            if (running == true) {
+                flag = true;
+            }
+        };
+        function animateStart() {
+            running = true;
+            Plotly.animate("Eplot", {
+                data: [{x: {{system.x}}.slice(0,idx), y: {{system.y}}.slice(0,idx), mode: "lines"}]
+            },
+            {
+                transition: {duration: 0},
+                frame: {duration: 1,
+                        redraw: false}})
+            
+            idx++
+            if (flag == false) {
+                requestAnimationFrame(animateStart);
+            }
+            else {
+                flag = false;
+                running = false;
+            }
+        }
+    </script>
 </div>
 
 <div class='information rounded'>
     <form method="POST">
-        <p class='informationHeader'>Reset Parameters</p>
+        <p class='informationHeader'>Reset System Parameters</p>
         {{ form.hidden_tag() }}
         <table>
             <tr class='informationText'>
@@ -80,7 +125,6 @@
                 <td>{{ form.submit() }}</td>
             </tr>
         </table>
-        <br>
     </form>
 </div>
 
@@ -89,8 +133,8 @@
     <!-- import plotly library -->
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script>
-        var graphs1 = {{ Egraph | safe }};
-        Plotly.plot('Eplot',graphs1,{});
+        var Egraph = {{ Egraph | safe }}
+        Plotly.newPlot('Eplot',Egraph, {})
     </script>
 </div>
 {% endif %}

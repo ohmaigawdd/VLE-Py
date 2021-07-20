@@ -168,9 +168,7 @@ def idealreactors():
         system = RTD(reactorVol, reactorFlow, tracerType)
         Egraph = False
 
-    print(errors)
-
-    return render_template("idealreactors.html", reactorType=reactorType, system=system, form=form, Egraph=Egraph, errors=errors)
+    return render_template("idealreactors.html", reactorType=reactorType, system=system, form=form, errors=errors, Egraph=Egraph)
 
 # REAL PFR/CSTR PAGE
 @app.route("/realreactors", methods=["GET","POST"])
