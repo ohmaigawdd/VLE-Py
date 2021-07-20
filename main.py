@@ -7,10 +7,14 @@ app = Flask(__name__)
 
 app.config["SECRET_KEY"] = "mykey"
 
+###############################################################
+
 # HOME PAGE
 @app.route("/")
 def home():
     return render_template("home.html")
+
+###############################################################
 
 # PURE VLE WRITE UP
 @app.route("/purevleinfo")
@@ -52,6 +56,8 @@ def purevle():
         Ggraph = GvsT(P/100)
         equi = int(system.getboilingT())
     return render_template("purevle.html", equi=equi, errors=errors, form=form, system=system, graphJSON=graphJSON, Ggraph=Ggraph, processType=processType)
+
+###############################################################
 
 # BINARY VLE WRITE UP
 @app.route("/binaryvleinfo")
@@ -118,6 +124,24 @@ def binaryvle():
 
     return render_template("binaryvle.html", form=form, graphJSON=graphJSON, plot_type=plot_type, system=system, chemicals=chemicals, plots=plots, errors=errors, exceed=exceed)
 
+###############################################################
+
+# REACTOR DESIGN AND ANALYSIS WRITE UP
+@app.route("/reactorwriteup")
+def reactorwriteup():
+    return render_template("reactorwriteup.html")
+
+# IDEAL PFR/CSTR PAGE
+@app.route("/idealreactors", methods=["GET","POST"])
+def idealreactors():
+    return render_template("idealreactors.html")
+
+# REAL PFR/CSTR PAGE
+@app.route("/realreactors", methods=["GET","POST"])
+def realreactors():
+    return render_template("realreactors.html")
+
+###############################################################
 
 if __name__ == "__main__":
     app.run(debug=True)
