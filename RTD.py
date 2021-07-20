@@ -18,6 +18,8 @@ from scipy.integrate import simps
 from scipy import signal
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
+import json
+import plotly
 #Instasll rtdpy first! (TRY INSTALL MANUALLY INSTEAD OF PIP) idk why it installed older version
 import rtdpy
 import time
@@ -103,8 +105,6 @@ class RTD:
             frames=frames
         )
 
-        fig.show()
-
     def CSTR(self,n):
 
         xdata = []
@@ -151,7 +151,8 @@ class RTD:
             frames=frames
         )
 
-        fig.show()
+    def generate(self):
+        return json.dumps(self.fig, cls=plotly.utils.PlotlyJSONEncoder)
 
     
 
