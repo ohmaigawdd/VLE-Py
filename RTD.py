@@ -187,5 +187,5 @@ class RTD:
         # else:
         #     pass
 
-a = RTD(50,2,'step')  # esp for PFR, ONLY INTEGER VALUES
-a.PFR()
+# a = RTD(50,2,'step')  # esp for PFR, ONLY INTEGER VALUES
+# a.PFR()
