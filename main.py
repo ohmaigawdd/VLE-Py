@@ -1,7 +1,8 @@
 from flask import Flask, render_template, session, request
-from resetParamForm import PureForm, BinaryForm
+from resetParamForm import PureForm, BinaryForm, IdealReactorForm
 from VLECalculations import RachfordRice, Antoine, Steam
 from Plot import plot, plot_steam, GvsP, GvsT
+from RTD import RTD
 
 app = Flask(__name__)
 
@@ -134,7 +135,42 @@ def reactorwriteup():
 # IDEAL PFR/CSTR PAGE
 @app.route("/idealreactors", methods=["GET","POST"])
 def idealreactors():
-    return render_template("idealreactors.html")
+
+    form = IdealReactorForm()
+
+    if form.reactorType.data==None:
+        reactorType = "cstr"
+        reactorVol = 50
+        reactorFlow = 2
+        tracerType = "pulse"
+        errors = False
+    elif not form.validate_on_submit():
+        reactorType = "cstr"
+        reactorVol = 50
+        reactorFlow = 2
+        tracerType = "pulse"
+        errors = True
+    elif form.validate_on_submit():
+        reactorType = form.reactorType.data
+        reactorVol = form.reactorVol.data
+        reactorFlow = form.reactorFlow.data
+        tracerType = form.tracerType.data
+        errors = False
+    
+    if errors == False:
+        system = RTD(reactorVol, reactorFlow, tracerType)
+        if reactorType == "cstr":
+            system.CSTR(1) #note that code now has this as "n"
+        elif reactorType == "pfr":
+            system.PFR()
+        Egraph = system.generate()
+    else:
+        system = RTD(reactorVol, reactorFlow, tracerType)
+        Egraph = False
+
+    print(errors)
+
+    return render_template("idealreactors.html", reactorType=reactorType, system=system, form=form, Egraph=Egraph, errors=errors)
 
 # REAL PFR/CSTR PAGE
 @app.route("/realreactors", methods=["GET","POST"])

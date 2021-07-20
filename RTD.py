@@ -24,10 +24,10 @@ import plotly
 import rtdpy
 import time
 
-types = ['pulse', 'step']
-
 class RTD:
+    
     def __init__(self,V_reactor,flow, type):
+        types = ['pulse', 'step']
         if type in types:
             self.V_reactor = V_reactor
             self.flow = flow
@@ -104,6 +104,7 @@ class RTD:
             ),
             frames=frames
         )
+        self.fig = fig
 
     def CSTR(self,n):
 
@@ -129,7 +130,7 @@ class RTD:
                 yaxis=dict(range=[0, max(y)*1.1], autorange=False),
                 xaxis_title="Time",
                 yaxis_title = "Exit Age Function",
-                title="nCSTR E against time, n=" + str(n),
+                title="n CSTR E against time, n=" + str(n),
                 updatemenus=[dict(
                     bgcolor = 'grey',
                     font = dict(color = 'black', family="Helvetica Neue, monospace", size = 12),
@@ -150,6 +151,7 @@ class RTD:
             ),
             frames=frames
         )
+        self.fig = fig
 
     def generate(self):
         return json.dumps(self.fig, cls=plotly.utils.PlotlyJSONEncoder)
