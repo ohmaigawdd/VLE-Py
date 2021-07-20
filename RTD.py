@@ -74,10 +74,7 @@ class RTD:
         self.x = list(x).copy()
         self.y = list(y).copy()
         frames = []
-        for i in range(len(x)-1):
-            frame = go.Frame(data=[go.Scatter(x=[x[i] for i in range(i)], y=[y[i] for i in range(i)], mode = 'lines')])
-            frames.append(frame)
-
+        
         fig = go.Figure(
             data=[go.Scatter(x=xdata, y=ydata, name = "PFR")],
             layout=go.Layout(template='plotly_dark',
@@ -105,10 +102,6 @@ class RTD:
         y = y[::25]
         self.x = list(x).copy()
         self.y = list(y).copy()
-        frames = []
-        for i in range(len(x)-1):
-            frame = go.Frame(data=[go.Scatter(x=[x[i] for i in range(i)], y=[y[i] for i in range(i)], mode = 'lines')])
-            frames.append(frame)
 
         fig = go.Figure(
             data=[go.Scatter(x=xdata, y=ydata, name = "n = " + str(n))],
