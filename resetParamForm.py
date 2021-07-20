@@ -2,6 +2,18 @@ from flask_wtf import FlaskForm
 from wtforms.fields import SelectField, SubmitField, FloatField, IntegerField
 from wtforms.validators import NumberRange
 
+class IdealReactorForm(FlaskForm):
+    
+    reactorType = SelectField("Type of Reactor: ", choices = [("cstr","CSTR"), ("pfr","PFR")])
+
+    reactorVol = IntegerField("Reactor Volume (V): ", validators=[NumberRange(0, 500, message=("Volume out of range!"))])
+
+    reactorFlow = IntegerField("Flow Rate (Q): ", validators=[NumberRange(0, 500, message=("Flow rate out of range!"))])
+
+    tracerType = SelectField("Type of Tracer Input: ", choices = [("pulse","Pulse"), ("step","Step")])
+
+    submit = SubmitField("Submit") 
+
 class PureForm(FlaskForm):
 
     #Range of T and P as given by Pyxsteam

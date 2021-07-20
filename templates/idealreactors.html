@@ -13,7 +13,88 @@
 	Visualisation of Residence Time Distribution <br> (Ideal Reactors)
     </p>
     <p class="mainText">
-	Lorem, ipsum dolor sit amet consectetur adipisicing elit. Alias rerum quos deserunt excepturi, dicta, consectetur rem fugit nemo, explicabo cum id deleniti? Mollitia, voluptatum. Laborum est excepturi inventore quo ipsam.
+	This application allows users to generate the residence time distribution for an ideal reactor given specified system parameters.
     </p>
 </div>
+
+{% if errors == True %}
+    {% set errorList = [] %}
+    {% if form.reactorVol.errors %}
+        {{ errorList.append(form.reactorVol.errors[0]) or "" }}
+    {% endif %}
+    {% if form.reactorFlow.errors %}
+        {{ errorList.append(form.reactorFlow.errors[0]) or "" }}
+    {% endif %}
+    <div class="alert alert-warning rounded" role="alert" style='padding-bottom: 0px; margin-bottom: 0px;'>
+        {% for error in errorList %}
+            <ul>{{ error }}</ul>
+        {% endfor %}
+    </div>
+{% endif %}
+
+<div class="information rounded" style='margin-right: 35px;'>
+    <p class='informationHeader'>Current System Parameters</p>
+    <br>
+    <table>
+        <tr >
+            <td class='tableHeader'><strong>Tracer Type (T):</strong></td> 
+            <td class='tableText'>{{ system.type.capitalize() }}</td>
+        </tr>
+        <tr>
+            <td class='tableHeader'><strong>Reactor Type:</strong></td> 
+            <td class='tableText'>{{ reactorType.upper() }}</td>
+        </tr>
+        <tr >
+            <td class='tableHeader'><strong>Reactor Volume (V):</strong></td> 
+            <td class='tableText'>{{ system.V_reactor }} m<sup>3</sup></td>
+        </tr>
+        <tr>
+            <td class='tableHeader'><strong>Flow Rate (Q):</strong></td> 
+            <td class='tableText'>{{ system.flow }} m<sup>3</sup>/s</td>
+        </tr>
+    </table>
+</div>
+
+<div class='information rounded'>
+    <form method="POST">
+        <p class='informationHeader'>Reset Parameters</p>
+        {{ form.hidden_tag() }}
+        <table>
+            <tr class='informationText'>
+                <td><strong>{{ form.tracerType.label  }}</strong></td>
+                <td>{{ form.tracerType() }}</td>
+            </tr>
+            <tr class='informationText'>
+                <td><strong>{{ form.reactorType.label }}</strong></td> 
+                <td>{{ form.reactorType() }}</td>
+            </tr>
+            <tr class='informationText'>
+                <td><strong>{{ form.reactorVol.label }}</strong></td>
+                <td>{{ form.reactorVol() }} m<sup>3</sup></td>
+            </tr>
+            <tr class='informationText'>
+                <td><strong>{{ form.reactorFlow.label  }}</strong></td>
+                <td>{{ form.reactorFlow() }} m<sup>3</sup>/s</td>
+            </tr>
+            <tr>
+                <td>{{ form.submit() }}</td>
+            </tr>
+        </table>
+        <br>
+    </form>
+</div>
+
+{% if errors == False %}
+<div class='information rounded' id='Eplot' style='margin-right: 35px; margin-top: 0px; height: 720px; padding: 0px'>
+    <!-- import plotly library -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script>
+        var graphs1 = {{ Egraph | safe }};
+        Plotly.plot('Eplot',graphs1,{});
+    </script>
+</div>
+{% endif %}
+
+<br style="clear: both">
+
 {% endblock %}
