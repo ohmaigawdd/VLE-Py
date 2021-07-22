@@ -3,6 +3,7 @@
 
 {% block title %}
 <!-- import p5/js library -->
+<link rel="stylesheet" href="static/css/reactor.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.10.2/p5.js"></script>
 <title>Ideal Reactors Application</title>
 {% endblock %}
@@ -54,13 +55,42 @@
         </tr>
     </table>
     <br>
-    <button id="Start" onclick="requestAnimationFrame(animateStart)">Start Animation</button>
-    <button id="Pause" onclick="animatePause()">Pause Animation</button>
-    <button id="Reset" onclick="animateReset()">Reset Animation</button>
+    <button id="Start" onclick="requestAnimationFrame(animateStart);playAnimation();">Start Animation</button>
+    <button id="Pause" onclick="animatePause();pauseAnimation();">Pause Animation</button>
+    <button id="Reset" onclick="animateReset();resetAnimation()">Reset Animation</button>
     <script>
         let idx = 1;
         let flag = false;
         let running = false;
+        function playAnimation() {
+            if ("{{reactorType}}" == "cstr"){
+                document.getElementById("cstr").style.animation = "bgcolor-change {{ system.tau/10 }}s";
+                document.getElementById("cstr").style.animationPlayState = "running";
+            } else {
+                document.getElementById("pfr-plugflow").style.animation = "plugflow {{ system.tau/10 }}s";
+                document.getElementById("pfr-plugflow").style.animationPlayState = "running";
+            }
+            }
+        function pauseAnimation() {
+            if ("{{reactorType}}" == "cstr"){
+                document.getElementById("cstr").style.animationPlayState = "paused";
+            } else {
+                document.getElementById("pfr-plugflow").style.animationPlayState = "paused";
+            }
+            }
+        function resetAnimation() {
+            if ("{{reactorType}}" == "cstr"){
+                document.getElementById("cstr").style.animation = 'none';
+                document.getElementById("cstr").offsetWidth;
+                document.getElementById("cstr").style.animation = "bgcolor-change {{ system.tau }}s";
+                document.getElementById("cstr").style.animationPlayState = "paused";
+            } else {
+                document.getElementById("pfr-plugflow").style.animation = 'none';
+                document.getElementById("pfr-plugflow").offsetWidth;
+                document.getElementById("pfr-plugflow").style.animation = "plugflow {{ system.tau }}s";
+                document.getElementById("pfr-plugflow").style.animationPlayState = "paused";
+            }
+            }
         function animateReset() {
             flag = false;
             running = false;
@@ -70,7 +100,7 @@
             },
             {
                 transition: {duration: 0},
-                frame: {duration: 20,
+                frame: {duration: 1,
                         redraw: false}})
         };
         function animatePause() {
@@ -136,6 +166,28 @@
         var Egraph = {{ Egraph | safe }}
         Plotly.newPlot('Eplot',Egraph, {})
     </script>
+</div>
+{% endif %}
+
+{% if errors == False %}
+<div class='information rounded' id='reactor-animation' style='height: 720px; margin-top: 0px; padding: 0px;'>
+    {% if reactorType == "cstr" %}
+        <div id="cstr"></div>
+        <div id="impeller-stick"></div>
+        <div id="inflow"></div>
+        <div id="outflow"></div>
+        <div id="in-line"></div>
+        <div id="out-line"></div>
+        <div id="impeller-blades-left"></div>
+        <div id="impeller-blades-right"></div>
+    {% else %}
+        <div id="pfr"></div>
+        <div id="inflow-pfr"></div>
+        <div id="outflow-pfr"></div>
+        <div id="in-line-pfr"></div>
+        <div id="out-line-pfr"></div>
+        <div id="pfr-plugflow"></div>
+    {% endif %}
 </div>
 {% endif %}
 
