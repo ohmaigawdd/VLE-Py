@@ -1,0 +1,190 @@
+@keyframes impeller-anim {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+}
+
+@keyframes inflow {
+    from {left: 50px;}
+    to {left: 140px;}
+}
+
+@keyframes outflow {
+    from {left: 480px;}
+    to {left: 570px;}
+}
+
+@keyframes bgcolor-change {
+    from {background-color: red;}
+    to {background-color: #cae9F5;}
+}
+
+@keyframes plugflow {
+    from {left: -145px}
+    to {left: 145px}
+}
+
+/* body {
+    margin: 0;
+}
+ */
+
+
+#fullpage-wrapper {
+    width: 100%;
+    height: 100vh;
+    background: 'black';
+    display: flex;
+}
+
+#reactor-container {
+    position: relative;
+    width: 500px;
+    height: 600px;
+    margin: auto;
+    border: 1px dashed #888;
+}
+
+#cstr {
+    position: relative;
+    width: 300px;
+    height: 400px;
+    top: 200px;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+    border: 1px solid #1b4e5f;
+    background-color: #cae9F5;
+    animation: bgcolor-change 5s;
+    animation-play-state: paused;
+    animation-fill-mode: forwards;
+}
+
+#pfr {
+    position: relative;
+    width: 300px;
+    height: 100px;
+    top: 250px;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+    border: 1px solid #1b4e5f;
+    background-color: #cae9F5;
+}
+
+#pfr-plugflow {
+    position: relative;
+    width: 10px;
+    height: 98px;
+    top: 129px;
+    left: 145px;
+    right: unset;
+    bottom: 0;
+    margin: auto;
+    background-color: red;
+    animation: plugflow 5s;
+    animation-play-state: paused;
+}
+
+#impeller-blades-right, #impeller-blades-left {
+    position: relative;
+    width: 30px;
+    height: 15px;
+    margin: auto;
+    border: 1px solid #1b4e5f;
+    border-radius: 50%;
+    background-color: #f8efae;
+    animation-name: impeller-anim;
+    animation-duration: 0.5s;
+    animation-iteration-count: infinite;
+}
+
+#impeller-blades-right {
+    left: 16px;
+    bottom: 345px;
+    transform-origin: left;
+}
+
+#impeller-blades-left {
+    right: 16px;
+    bottom: 330px;
+    transform-origin: right;
+}
+
+#impeller-stick {
+    position: relative;
+    width: 1px;
+    height: 200px;
+    bottom: 300px;
+    margin: auto;
+    border: 1px solid #1b4e5f;
+    background-color: #f8efae;
+}
+
+#inflow, #outflow, #inflow-pfr, #outflow-pfr {
+    position: relative;
+    width: 10px;
+    height: 10px;
+    border: 2px solid #b9d770;
+    border-left: 0;
+    border-top: 0;
+    transform: rotate(315deg);
+    animation-iteration-count: infinite;
+    animation-duration: 2s;
+}
+
+#inflow {
+    bottom: 385px;
+    left: 40px;
+    animation-name: inflow;
+}
+
+#inflow-pfr {
+    top: 195px;
+    left: 20px;
+    animation-name: inflow;
+}
+
+#outflow {
+    bottom: 15px;
+    left: 500px;
+    animation-name: outflow;
+}
+
+#outflow-pfr {
+    top: 186px;
+    left: 500px;
+    animation-name: outflow;
+}
+
+#in-line, #out-line, #in-line-pfr, #out-line-pfr {
+    position: relative;
+    width: 140px;
+    height: 1px;
+    background-color: #b9d770;
+}
+
+#in-line {
+    bottom: 400px;
+    left: 20px;
+}
+
+#in-line-pfr {
+    top: 180px;
+    left: 20px;
+}
+
+#out-line {
+    bottom: 22px;
+    left: 460px;
+}
+
+#out-line-pfr {
+    top: 180px;
+    left: 460px;
+}
