@@ -66,6 +66,9 @@
             <script>
                 var slider = document.getElementById("myRange");
                 var output = document.getElementById("demo");
+                var gibbsGas = document.getElementById("gibbsGas")
+                var gibbsLiq = document.getElementById("gibbsLiq")
+                var gibbsSys = document.getElementById("gibbsSys")
                 output.innerHTML = slider.value; // Display the default slider value
 
                 // UPDATES ON SLIDER MOVEMENT
@@ -75,7 +78,7 @@
                     Plotly.deleteTraces('vapCurve', [-1]);
                     Plotly.deleteTraces('Gplot', [-1]);
                     if ("{{ processType }}" == "Isotherm") {
-                        var newP = Math.round(this.value/100) * 100
+                        var newP = Math.round(this.value/100) * 100;
                         Plotly.addTraces('vapCurve',{x: [{{ system.T }}, {{ system.T }}], y: [{{ system.P }}, this.value], name: "{{ processType }}",text: ["Start", "End"], hovertemplate: '<br><b>%{text}</b></br>' + 'T: %{x:.2f} C' + '<br>P: %{y:.2f} kPa'});
                         Plotly.addTraces('Gplot',{x: [newP], y: [{{ Ggraph[1] }}[newP]], name: "End System", mode: "markers", marker: {size: 15}, hovertemplate: 'P: %{x:.2f} kPa' + '<br>G: %{y:.2f} kJ/kg'});
                         if (newP <= {{ equi }} && vapFrac == 0) { // if gas->liq

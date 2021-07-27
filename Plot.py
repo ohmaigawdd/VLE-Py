@@ -466,12 +466,23 @@ class plot_steam:
         return json.dumps(self.fig, cls=plotly.utils.PlotlyJSONEncoder)
 
 def GvsP(T): #ISOTHERMAL T in degC
+    #useful link: https://chem.libretexts.org/Bookshelves/Physical_and_Theoretical_Chemistry_Textbook_Maps/Map%3A_Physical_Chemistry_(McQuarrie_and_Simon)/23%3A_Phase_Equilibria/23.02%3A_Gibbs_Energies_and_Phase_Diagrams
     total_range = np.array([i for i in range(1, 221)])
     G = {}
+    Ggas = {}
+    Gliq = {}
     for pressure in total_range:
         enthalpy = steamTable.h_pt(pressure, T)
         entropy = steamTable.s_pt(pressure, T)
         G[pressure*100] = (enthalpy - (273.15+T) * entropy)
+
+        Hgas = steamTable.h_tx(T, 1)
+        Sgas = steamTable.s_ph(pressure, Hgas)
+        Ggas[pressure*100] = (Hgas - (273.15+T) * Sgas)
+
+        Hliq = steamTable.h_tx(T, 0)
+        Sliq = steamTable.s_ph(pressure, Hliq)
+        Gliq[pressure*100] = (Hliq - (273.15+T) * Sliq)
     
     fig = go.Figure()
     fig.update_layout(template='plotly_dark', 
@@ -492,23 +503,48 @@ def GvsP(T): #ISOTHERMAL T in degC
             size=12,
             color="#FFFFFF"
         ))
+    fig.add_trace(go.Scatter(x=[pressure*100 for pressure in total_range], y=list(Ggas.values()),
+                    mode='lines+markers', 
+                    name='Gibbs (Vap)',
+                    showlegend=True,
+                    hovertemplate =
+                    'P: %{x:.2f} kPa' +
+                    '<br>G: %{y:.2f} kJ/kg'))
+    fig.add_trace(go.Scatter(x=[pressure*100 for pressure in total_range], y=list(Gliq.values()),
+                    mode='lines+markers', 
+                    name='Gibbs (Liq)',
+                    showlegend=True,
+                    hovertemplate =
+                    'P: %{x:.2f} kPa' +
+                    '<br>G: %{y:.2f} kJ/kg'))
     fig.add_trace(go.Scatter(x=[pressure*100 for pressure in total_range], y=list(G.values()),
                         mode='lines+markers', 
-                        name='Gibbs',
+                        name='Gibbs (System)',
                         showlegend=True,
                         hovertemplate =
                         'P: %{x:.2f} kPa' +
                         '<br>G: %{y:.2f} kJ/kg'))
 
-    return (json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder), G)
+    return (json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder), G, Ggas, Gliq)
 
 def GvsT(P): # ISOBARIC P in bar
+    #useful link: https://chem.libretexts.org/Bookshelves/Physical_and_Theoretical_Chemistry_Textbook_Maps/Map%3A_Physical_Chemistry_(McQuarrie_and_Simon)/23%3A_Phase_Equilibria/23.02%3A_Gibbs_Energies_and_Phase_Diagrams
     total_range = np.array([i for i in range(1, 374)])
     G = {}
+    Ggas = {}
+    Gliq = {}
     for temperature in total_range:
         enthalpy = steamTable.h_pt(P, temperature)
         entropy = steamTable.s_pt(P, temperature)
         G[temperature] = (enthalpy - (273.15+temperature) * entropy)
+
+        Hgas = steamTable.h_tx(temperature, 1)
+        Sgas = steamTable.s_ph(P, Hgas)
+        Ggas[temperature] = (Hgas - (273.15+temperature) * Sgas)
+
+        Hliq = steamTable.h_tx(temperature, 0)
+        Sliq = steamTable.s_ph(P, Hliq)
+        Gliq[temperature] = (Hliq - (273.15+temperature) * Sliq)
 
     fig = go.Figure()
     fig.update_layout(template='plotly_dark', 
@@ -529,21 +565,30 @@ def GvsT(P): # ISOBARIC P in bar
                 size=12,
                 color="#FFFFFF"
             ))
+    fig.add_trace(go.Scatter(x=total_range, y=list(Ggas.values()),
+                    mode='lines+markers', 
+                    name='Gibbs (Vap)',
+                    showlegend=True,
+                    hovertemplate =
+                    'P: %{x:.2f} kPa' +
+                    '<br>G: %{y:.2f} kJ/kg'))
+    fig.add_trace(go.Scatter(x=total_range, y=list(Gliq.values()),
+                    mode='lines+markers', 
+                    name='Gibbs (Liq)',
+                    showlegend=True,
+                    hovertemplate =
+                    'P: %{x:.2f} kPa' +
+                    '<br>G: %{y:.2f} kJ/kg'))
     fig.add_trace(go.Scatter(x=total_range, y=list(G.values()),
                         mode='lines+markers', 
-                        name='Gibbs',
+                        name='Gibbs (System)',
                         showlegend=True,
                         hovertemplate =
-                        'T: %{x:.2f} C' +
+                        'P: %{x:.2f} kPa' +
                         '<br>G: %{y:.2f} kJ/kg'))
     
-    return (json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder), G)
+    return (json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder), G, Ggas, Gliq)
 
-#Test at 250degC: Transition is at 40Bar or 4000kPa
-# GvsP(250)
-
-#Test at 40Bar: Transition is at 250degC
-# GvsT(40)
 
 # Testing functions
 # plot = plot(RachfordRice(2, 150, 101.3, ['n-Hexane','n-Octane'], [0.6,0.4]))
