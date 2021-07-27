@@ -92,6 +92,7 @@ class RTD:
 
         xdata = []
         ydata = []
+
         CSTR = rtdpy.Ncstr(tau=self.tau, n = n, dt=.01, time_end=self.tau*5)
         x = CSTR.time
         if self.type == 'pulse':
@@ -100,6 +101,7 @@ class RTD:
             y = CSTR.stepresponse
         x = x[::25]
         y = y[::25]
+
         self.x = list(x).copy()
         self.y = list(y).copy()
 
@@ -115,6 +117,37 @@ class RTD:
             )
         )
         self.fig = fig
+
+    # def CSTRstep(self, n):
+    #     xdata = []
+    #     ydata = []
+    #     ysum = [0]
+    #     CSTR = rtdpy.Ncstr(tau=self.tau, n = n, dt=.01, time_end=self.tau*5)
+    #     x = CSTR.time
+    #     if self.type == 'pulse':
+    #         y = CSTR.exitage
+    #     else:
+    #         y = CSTR.stepresponse
+    #     x = x[::25]
+    #     y = y[::25]
+    #     for i in range(len(x)):
+    #         ysum.append(ysum[-1] + y[i])
+    #     self.x = list(x).copy()
+    #     self.y = list(ysum).copy()
+
+    #     fig = go.Figure(
+    #         data=[go.Scatter(x=xdata, y=ysum, name = "n = " + str(n))],
+    #         layout=go.Layout(template='plotly_dark',
+    #             paper_bgcolor='rgba(0,0,0,0)',
+    #             xaxis=dict(range=[0, self.tau*5], autorange=False),
+    #             yaxis=dict(range=[0, max(y)*1.1], autorange=False),
+    #             xaxis_title="Time (s)",
+    #             yaxis_title = "Exit Age Function",
+    #             title="n CSTR: Plot of E against Time, n=" + str(n),
+    #         )
+    #     )
+    #     # self.fig = fig
+    #     fig.show()
     
     def generate(self):
         return json.dumps(self.fig, cls=plotly.utils.PlotlyJSONEncoder)
@@ -152,5 +185,5 @@ class RTD:
         # else:
         #     pass
 
-# a = RTD(50,2,'step')  # esp for PFR, ONLY INTEGER VALUES
-# a.PFR()
+# a = RTD(50,2,'pulse')  # esp for PFR, ONLY INTEGER VALUES
+# a.CSTR(1)
