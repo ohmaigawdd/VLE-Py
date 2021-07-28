@@ -487,7 +487,7 @@ def GvsP(T): #ISOTHERMAL T in degC
     fig = go.Figure()
     fig.update_layout(template='plotly_dark', 
         paper_bgcolor='rgba(0,0,0,0)',
-        title="<b>Molar Gibbs vs Pressure</b>",
+        title="<b>Gibbs Energy vs Pressure</b>",
         xaxis_title = "Pressure (kPa)",
         yaxis_title="Gibbs (kJ/kg)",
         legend=dict(
@@ -505,21 +505,21 @@ def GvsP(T): #ISOTHERMAL T in degC
         ))
     fig.add_trace(go.Scatter(x=[pressure*100 for pressure in total_range], y=list(Ggas.values()),
                     mode='lines+markers', 
-                    name='Gibbs (Vap)',
+                    name='G<sub>vap</sub>',
                     showlegend=True,
                     hovertemplate =
                     'P: %{x:.2f} kPa' +
                     '<br>G: %{y:.2f} kJ/kg'))
     fig.add_trace(go.Scatter(x=[pressure*100 for pressure in total_range], y=list(Gliq.values()),
                     mode='lines+markers', 
-                    name='Gibbs (Liq)',
+                    name='G<sub>liq</sub>',
                     showlegend=True,
                     hovertemplate =
                     'P: %{x:.2f} kPa' +
                     '<br>G: %{y:.2f} kJ/kg'))
     fig.add_trace(go.Scatter(x=[pressure*100 for pressure in total_range], y=list(G.values()),
                         mode='lines+markers', 
-                        name='Gibbs (System)',
+                        name='G<sub>final</sub>',
                         showlegend=True,
                         hovertemplate =
                         'P: %{x:.2f} kPa' +
@@ -549,7 +549,7 @@ def GvsT(P): # ISOBARIC P in bar
     fig = go.Figure()
     fig.update_layout(template='plotly_dark', 
             paper_bgcolor='rgba(0,0,0,0)',
-            title="<b>Molar Gibbs vs Temperature</b>",
+            title="<b>Gibbs Energy vs Temperature</b>",
             xaxis_title = "Temperature" + chr(176) + "C",
             yaxis_title="Gibbs (kJ/kj)",
             legend=dict(
@@ -567,21 +567,21 @@ def GvsT(P): # ISOBARIC P in bar
             ))
     fig.add_trace(go.Scatter(x=total_range, y=list(Ggas.values()),
                     mode='lines+markers', 
-                    name='Gibbs (Vap)',
+                    name='G<sub>vap</sub>',
                     showlegend=True,
                     hovertemplate =
                     'P: %{x:.2f} kPa' +
                     '<br>G: %{y:.2f} kJ/kg'))
     fig.add_trace(go.Scatter(x=total_range, y=list(Gliq.values()),
                     mode='lines+markers', 
-                    name='Gibbs (Liq)',
+                    name='G<sub>liq</sub>',
                     showlegend=True,
                     hovertemplate =
                     'P: %{x:.2f} kPa' +
                     '<br>G: %{y:.2f} kJ/kg'))
     fig.add_trace(go.Scatter(x=total_range, y=list(G.values()),
                         mode='lines+markers', 
-                        name='Gibbs (System)',
+                        name='G<sub>final</sub>',
                         showlegend=True,
                         hovertemplate =
                         'P: %{x:.2f} kPa' +
