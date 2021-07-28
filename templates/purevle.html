@@ -58,10 +58,16 @@
         <div class="slidecontainer">
             {% if processType == "Isotherm" %}
             <input type="range" min="100" max="22000" value="{{"%0.2f" % system.P}}" class="slider" id="myRange" oninput="adjustValue(this.value)">
-            <span style="color: white;">Use this slider to adjust P: <span id="demo" style="color: white;"></span> kPa</span>
+            <span style="color: white;">Use this slider to adjust P: 
+                <span id="demo"></span> kPa
+            </span>
+            <div style="color: white;">The system has a boiling pressure at {{'%0.2f'| format(system.getboilingP() * 100|float)}} kPa at {{system.T}} <sup>o</sup>C</div>
             {% else %}
             <input type="range" min="1" max="374" value="{{"%0.2f" % system.T}}" class="slider" id="myRange" oninput="adjustValue(this.value)">
-            <span style="color: white;">Use this slider to adjust T: <span id="demo" style="color: white;"></span> <sup>o</sup>C
+            <span style="color: white;">Use this slider to adjust T: 
+                <span id="demo" style="color: white;"></span> <sup>o</sup>C
+            </span>
+            <div style="color: white;">The system has a boiling temperature at {{'%0.2f'| format(system.getboilingT()|float)}} <sup>o</sup>C at {{'%0.2f'| format(system.P|float)}} kPa</div>
             {% endif %}
             <script>
                 var slider = document.getElementById("myRange");

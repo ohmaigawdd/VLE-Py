@@ -420,13 +420,13 @@ class Steam:
     def getTotalVol(self):
         return self.vapvol + self.liqvol
 
-    def getboilingT(self): #isothermal
+    def getboilingT(self):
         return steamTable.tsat_p(self.Pbar)
 
     def getvapcurveT(self,P):
         return steamTable.tsat_p(P)
 
-    def getboilingP(self): #isobaric
+    def getboilingP(self): 
         return steamTable.psat_t(self.T)
 
     def instantiate(self):
