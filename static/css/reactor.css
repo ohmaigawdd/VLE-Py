@@ -18,8 +18,15 @@
 }
 
 @keyframes bgcolor-change {
-    from {background-color: red;}
-    to {background-color: #cae9F5;}
+    0% {
+        background-color: #cae9F5;
+    }
+    0.1% {
+        background-color: red;
+    }
+    100% {
+        background-color: #cae9F5;
+    }
 }
 
 @keyframes plugflow {
@@ -91,10 +98,9 @@
     animation-play-state: paused;
 }
 
-#impeller-blades-right, #impeller-blades-left {
+#impeller-blades-right, #impeller-blades-left, #impeller-blades-left-ideal, #impeller-blades-right-ideal {
     position: relative;
-    width: 30px;
-    height: 15px;
+    
     margin: auto;
     border: 1px solid #1b4e5f;
     border-radius: 50%;
@@ -105,22 +111,53 @@
 }
 
 #impeller-blades-right {
+    width: 30px;
+    height: 15px;
     left: 16px;
     bottom: 345px;
     transform-origin: left;
 }
 
 #impeller-blades-left {
+    width: 30px;
+    height: 15px;
     right: 16px;
     bottom: 330px;
     transform-origin: right;
 }
+
+#impeller-blades-right-ideal {
+    width: 90px;
+    height: 45px;
+    left: 46px;
+    bottom: 295px;
+    transform-origin: left;
+}
+
+#impeller-blades-left-ideal {
+    width: 90px;
+    height: 45px;
+    right: 46px;
+    bottom: 242px;
+    transform-origin: right;
+}
+
 
 #impeller-stick {
     position: relative;
     width: 1px;
     height: 200px;
     bottom: 300px;
+    margin: auto;
+    border: 1px solid #1b4e5f;
+    background-color: #f8efae;
+}
+
+#impeller-stick-ideal {
+    position: relative;
+    width: 1px;
+    height: 200px;
+    bottom: 200px;
     margin: auto;
     border: 1px solid #1b4e5f;
     background-color: #f8efae;
