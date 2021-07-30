@@ -472,10 +472,6 @@ def GvsP(T): #ISOTHERMAL T in degC
     Ggas = {}
     Gliq = {}
     for pressure in total_range:
-        enthalpy = steamTable.h_pt(pressure, T)
-        entropy = steamTable.s_pt(pressure, T)
-        G[pressure*100] = (enthalpy - (273.15+T) * entropy)
-
         Hgas = steamTable.h_tx(T, 1)
         Sgas = steamTable.s_ph(pressure, Hgas)
         Ggas[pressure*100] = (Hgas - (273.15+T) * Sgas)
@@ -483,6 +479,8 @@ def GvsP(T): #ISOTHERMAL T in degC
         Hliq = steamTable.h_tx(T, 0)
         Sliq = steamTable.s_ph(pressure, Hliq)
         Gliq[pressure*100] = (Hliq - (273.15+T) * Sliq)
+
+        G[pressure*100] = min(Ggas[pressure*100], Gliq[pressure*100])
     
     fig = go.Figure()
     fig.update_layout(template='plotly_dark', 
@@ -534,10 +532,6 @@ def GvsT(P): # ISOBARIC P in bar
     Ggas = {}
     Gliq = {}
     for temperature in total_range:
-        enthalpy = steamTable.h_pt(P, temperature)
-        entropy = steamTable.s_pt(P, temperature)
-        G[temperature] = (enthalpy - (273.15+temperature) * entropy)
-
         Hgas = steamTable.h_tx(temperature, 1)
         Sgas = steamTable.s_ph(P, Hgas)
         Ggas[temperature] = (Hgas - (273.15+temperature) * Sgas)
@@ -545,6 +539,8 @@ def GvsT(P): # ISOBARIC P in bar
         Hliq = steamTable.h_tx(temperature, 0)
         Sliq = steamTable.s_ph(P, Hliq)
         Gliq[temperature] = (Hliq - (273.15+temperature) * Sliq)
+
+        G[temperature] = min(Ggas[temperature], Gliq[temperature])
 
     fig = go.Figure()
     fig.update_layout(template='plotly_dark', 
