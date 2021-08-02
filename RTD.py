@@ -94,8 +94,14 @@ class RTD:
         y = PFR.exitage    
         x = x[::25]
         y = y[::25]
-        self.x = list(x).copy()
-        self.y = list(y).copy()
+
+        frames = []
+
+        for i in range(len(x)-1):
+            fx = [x[i], x[i+1]]
+            fy = [y[i], y[i+1]]
+            frame = go.Frame(data=[go.Scatter(x=fx, y=fy)])
+            frames.append(frame)
         
         fig = go.Figure(
             data=[go.Scatter(x=xdata, y=ydata, name = "PFR")],
@@ -106,9 +112,15 @@ class RTD:
                 xaxis_title="Time (s)",
                 yaxis_title = "Exit Age Function",
                 title="PFR: Plot of E against Time",
-            ),
+                updatemenus=[dict(
+                type="buttons",
+                buttons=[dict(label="Play",
+                            method="animate",
+                            args=[None])])]
+            ), frames = frames
         )
-        self.fig = fig
+        
+        fig.show()
 
     def PFR_F(self):
         PFR = rtdpy.Pfr(tau=self.tau, dt=.01, time_end=self.tau*2)
@@ -116,8 +128,14 @@ class RTD:
         y = PFR.stepresponse 
         x = x[::25]
         y = y[::25]
-        self.x = list(x).copy()
-        self.y = list(y).copy()
+
+        frames = []
+
+        for i in range(len(x)-1):
+            fx = [x[i], x[i+1]]
+            fy = [y[i], y[i+1]]
+            frame = go.Frame(data=[go.Scatter(x=fx, y=fy)])
+            frames.append(frame)
         
         fig = go.Figure(
             data=[go.Scatter(x=xdata, y=ydata, name = "PFR")],
@@ -128,8 +146,14 @@ class RTD:
                 xaxis_title="Time (s)",
                 yaxis_title = "Cumulative Distribution Function",
                 title="PFR: Plot of F against Time",
-            ),
-        )
+                updatemenus=[dict(
+                type="buttons",
+                buttons=[dict(label="Play",
+                            method="animate",
+                            args=[None])])]
+            ), frames = frames
+        ),
+
         self.fig = fig
 
     def CSTR(self, n):
@@ -153,7 +177,7 @@ class RTD:
                 yaxis=dict(range=[0, max(y)*1.1], autorange=False),
                 xaxis_title="Time (s)",
                 yaxis_title = "Concentration",
-                title="n CSTR: Plot of Concentration against Time, n=" + str(n),
+                title="n CSTR: Plot of Concentration against Time, n=" + str(n)
             )
         )
         self.fig = fig
@@ -167,9 +191,6 @@ class RTD:
         #     c = (100/self.V_reactor)*math.exp((-1)*self.flow*t/self.V_reactor)
         #     y.append(c)
 
-        xdata = []
-        ydata = []
-
         CSTR = rtdpy.Ncstr(tau=self.tau, n = n, dt=.01, time_end=self.tau*5)
         x = CSTR.time
 
@@ -178,8 +199,13 @@ class RTD:
         x = x[::25]
         y = y[::25]
 
-        self.x = list(x).copy()
-        self.y = list(y).copy()
+        frames = []
+
+        for i in range(len(x)-1):
+            fx = [x[i], x[i+1]]
+            fy = [y[i], y[i+1]]
+            frame = go.Frame(data=[go.Scatter(x=fx, y=fy)])
+            frames.append(frame)
 
         fig = go.Figure(
             data=[go.Scatter(x=xdata, y=ydata, name = "n = " + str(n))],
@@ -190,9 +216,14 @@ class RTD:
                 xaxis_title="Time (s)",
                 yaxis_title = "Exit Age Function",
                 title="n CSTR: Plot of E against Time, n=" + str(n),
-            )
+                updatemenus=[dict(
+                type="buttons",
+                buttons=[dict(label="Play",
+                            method="animate",
+                            args=[None])])]
+            ), frames = frames
         )
-        self.fig = fig
+        fig.show()
 
 
     def CSTR_F(self,n):
@@ -204,18 +235,19 @@ class RTD:
         #     c = (100/self.V_reactor)*math.exp((-1)*self.flow*t/self.V_reactor)
         #     y.append(c)
 
-        xdata = []
-        ydata = []
-
         CSTR = rtdpy.Ncstr(tau=self.tau, n = n, dt=.01, time_end=self.tau*5)
         x = CSTR.time
-
         y = CSTR.stepresponse
         x = x[::25]
         y = y[::25]
 
-        self.x = list(x).copy()
-        self.y = list(y).copy()
+        frames = []
+
+        for i in range(len(x)-1):
+            fx = [x[i], x[i+1]]
+            fy = [y[i], y[i+1]]
+            frame = go.Frame(data=[go.Scatter(x=fx, y=fy)])
+            frames.append(frame)
 
         fig = go.Figure(
             data=[go.Scatter(x=xdata, y=ydata, name = "n = " + str(n))],
@@ -226,7 +258,15 @@ class RTD:
                 xaxis_title="Time (s)",
                 yaxis_title = "Cumulative Distribution Function",
                 title="n CSTR: Plot of F against Time, n=" + str(n),
-            )
+                updatemenus=[dict(
+                type="buttons",
+                buttons=[dict(label="Display",
+                            method="animate",
+                            [None, {"frame": {"duration": 0, 
+                                    "redraw": False},
+                            "fromcurrent": True, 
+                            "transition": {"duration": 0}}])])]
+            ), frames = frames
         )
         self.fig = fig
 
