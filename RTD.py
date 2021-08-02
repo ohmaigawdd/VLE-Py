@@ -13,6 +13,7 @@ Experiment:
 4. Plot concentration profile
 '''
 import numpy as np
+import math
 import scipy
 from scipy.integrate import simps
 from scipy import signal
@@ -68,12 +69,33 @@ class RTD:
         if self.type == 'pulse':
             y = PFR.exitage
         else:
-            y = PFR.stepresponse        
+            y = PFR.stepresponse*100        
         x = x[::25]
         y = y[::25]
         self.x = list(x).copy()
         self.y = list(y).copy()
-        frames = []
+        
+        fig = go.Figure(
+            data=[go.Scatter(x=xdata, y=ydata, name = "PFR")],
+            layout=go.Layout(template='plotly_dark',
+                paper_bgcolor='rgba(0,0,0,0)',
+                xaxis=dict(range=[0, self.tau*2], autorange=False),
+                yaxis=dict(range=[0, max(y)*1.1], autorange=False),
+                xaxis_title="Time (s)",
+                yaxis_title = "Concentration",
+                title="PFR: Plot of Concentration against Time",
+            ),
+        )
+        self.fig = fig
+
+    def PFR_E(self):
+        PFR = rtdpy.Pfr(tau=self.tau, dt=.01, time_end=self.tau*2)
+        x = PFR.time
+        y = PFR.exitage    
+        x = x[::25]
+        y = y[::25]
+        self.x = list(x).copy()
+        self.y = list(y).copy()
         
         fig = go.Figure(
             data=[go.Scatter(x=xdata, y=ydata, name = "PFR")],
@@ -88,7 +110,62 @@ class RTD:
         )
         self.fig = fig
 
-    def CSTR(self,n):
+    def PFR_F(self):
+        PFR = rtdpy.Pfr(tau=self.tau, dt=.01, time_end=self.tau*2)
+        x = PFR.time
+        y = PFR.stepresponse 
+        x = x[::25]
+        y = y[::25]
+        self.x = list(x).copy()
+        self.y = list(y).copy()
+        
+        fig = go.Figure(
+            data=[go.Scatter(x=xdata, y=ydata, name = "PFR")],
+            layout=go.Layout(template='plotly_dark',
+                paper_bgcolor='rgba(0,0,0,0)',
+                xaxis=dict(range=[0, self.tau*2], autorange=False),
+                yaxis=dict(range=[0, max(y)*1.1], autorange=False),
+                xaxis_title="Time (s)",
+                yaxis_title = "Cumulative Distribution Function",
+                title="PFR: Plot of F against Time",
+            ),
+        )
+        self.fig = fig
+
+    def CSTR(self, n):
+        xdata = []
+        ydata = []
+        x = np.arange(0, self.tau*5, 0.25)
+        y = []
+
+        for t in x:
+            c = (100/self.V_reactor)*math.exp((-1)*self.flow*t/self.V_reactor)
+            y.append(c)
+
+        self.x = list(x).copy()
+        self.y = list(y).copy()
+
+        fig = go.Figure(
+            data=[go.Scatter(x=xdata, y=ydata, name = "n = " + str(n))],
+            layout=go.Layout(template='plotly_dark',
+                paper_bgcolor='rgba(0,0,0,0)',
+                xaxis=dict(range=[0, self.tau*5], autorange=False),
+                yaxis=dict(range=[0, max(y)*1.1], autorange=False),
+                xaxis_title="Time (s)",
+                yaxis_title = "Concentration",
+                title="n CSTR: Plot of Concentration against Time, n=" + str(n),
+            )
+        )
+        self.fig = fig
+
+    def CSTR_E(self,n):
+
+        # x = np.arange(0, self.tau*5, 0.25)
+        # y = []
+
+        # for t in x:
+        #     c = (100/self.V_reactor)*math.exp((-1)*self.flow*t/self.V_reactor)
+        #     y.append(c)
 
         xdata = []
         ydata = []
