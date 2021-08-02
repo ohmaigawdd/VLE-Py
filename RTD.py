@@ -76,7 +76,7 @@ class RTD:
         self.y = list(y).copy()
         
         fig = go.Figure(
-            data=[go.Scatter(x=xdata, y=ydata, name = "PFR")],
+            data=[go.Scatter(x=[], y=[], name = "PFR")],
             layout=go.Layout(template='plotly_dark',
                 paper_bgcolor='rgba(0,0,0,0)',
                 xaxis=dict(range=[0, self.tau*2], autorange=False),
@@ -86,7 +86,7 @@ class RTD:
                 title="PFR: Plot of Concentration against Time",
             ),
         )
-        self.fig = fig
+        return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
     def PFR_E(self):
         PFR = rtdpy.Pfr(tau=self.tau, dt=.01, time_end=self.tau*2)
@@ -104,7 +104,7 @@ class RTD:
             frames.append(frame)
         
         fig = go.Figure(
-            data=[go.Scatter(x=xdata, y=ydata, name = "PFR")],
+            data=[go.Scatter(x=x, y=y, name = "PFR")],
             layout=go.Layout(template='plotly_dark',
                 paper_bgcolor='rgba(0,0,0,0)',
                 xaxis=dict(range=[0, self.tau*2], autorange=False),
@@ -120,7 +120,7 @@ class RTD:
             ), frames = frames
         )
         
-        fig.show()
+        return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
     def PFR_F(self):
         PFR = rtdpy.Pfr(tau=self.tau, dt=.01, time_end=self.tau*2)
@@ -138,6 +138,7 @@ class RTD:
             frames.append(frame)
         
         fig = go.Figure(
+            data=[go.Scatter(x=x, y=y, name = "PFR")],
             data=[go.Scatter(x=xdata, y=ydata, name = "PFR")],
             layout=go.Layout(template='plotly_dark',
                 paper_bgcolor='rgba(0,0,0,0)',
@@ -154,7 +155,7 @@ class RTD:
             ), frames = frames
         ),
 
-        self.fig = fig
+        return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
     def CSTR(self, n):
         xdata = []
@@ -170,6 +171,7 @@ class RTD:
         self.y = list(y).copy()
 
         fig = go.Figure(
+            data=[go.Scatter(x=[], y=[], name = "n = " + str(n))],
             data=[go.Scatter(x=xdata, y=ydata, name = "n = " + str(n))],
             layout=go.Layout(template='plotly_dark',
                 paper_bgcolor='rgba(0,0,0,0)',
@@ -180,7 +182,8 @@ class RTD:
                 title="n CSTR: Plot of Concentration against Time, n=" + str(n)
             )
         )
-        self.fig = fig
+
+        return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
     def CSTR_E(self,n):
 
@@ -208,7 +211,7 @@ class RTD:
             frames.append(frame)
 
         fig = go.Figure(
-            data=[go.Scatter(x=xdata, y=ydata, name = "n = " + str(n))],
+            data=[go.Scatter(x=x, y=y, name = "n = " + str(n))],
             layout=go.Layout(template='plotly_dark',
                 paper_bgcolor='rgba(0,0,0,0)',
                 xaxis=dict(range=[0, self.tau*5], autorange=False),
@@ -223,7 +226,8 @@ class RTD:
                             args=[None])])]
             ), frames = frames
         )
-        fig.show()
+
+        return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
 
     def CSTR_F(self,n):
@@ -250,6 +254,7 @@ class RTD:
             frames.append(frame)
 
         fig = go.Figure(
+            data=[go.Scatter(x=x, y=y, name = "n = " + str(n))],
             data=[go.Scatter(x=xdata, y=ydata, name = "n = " + str(n))],
             layout=go.Layout(template='plotly_dark',
                 paper_bgcolor='rgba(0,0,0,0)',
@@ -262,13 +267,14 @@ class RTD:
                 type="buttons",
                 buttons=[dict(label="Display",
                             method="animate",
-                            [None, {"frame": {"duration": 0, 
+                            args=[None, {"frame": {"duration": 0, 
                                     "redraw": False},
                             "fromcurrent": True, 
                             "transition": {"duration": 0}}])])]
             ), frames = frames
         )
-        self.fig = fig
+        
+        return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
     # def CSTRstep(self, n):
     #     xdata = []
@@ -300,10 +306,6 @@ class RTD:
     #     )
     #     # self.fig = fig
     #     fig.show()
-    
-    def generate(self):
-        return json.dumps(self.fig, cls=plotly.utils.PlotlyJSONEncoder)
-
 
 
         # elif type(n) == list or type(n) == tuple:

@@ -38,7 +38,7 @@
     <br>
     <table>
         <tr >
-            <td class='tableHeader'><strong>Tracer Type (T):</strong></td> 
+            <td class='tableHeader'><strong>Tracer Type:</strong></td> 
             <td class='tableText'>{{ system.type.capitalize() }}</td>
         </tr>
         <tr>
@@ -95,7 +95,7 @@
             flag = false;
             running = false;
             idx = 1;
-            Plotly.animate("Eplot", {
+            Plotly.animate("Cplot", {
                 data: [{x: [], y: [], mode: "lines"}]
             },
             {
@@ -110,7 +110,7 @@
         };
         function animateStart() {
             running = true;
-            Plotly.animate("Eplot", {
+            Plotly.animate("Cplot", {
                 data: [{x: {{system.x}}.slice(0,idx), y: {{system.y}}.slice(0,idx), mode: "lines"}]
             },
             {
@@ -152,6 +152,7 @@
                 <td>{{ form.reactorFlow() }} m<sup>3</sup>/s</td>
             </tr>
             <tr>
+                <td></td>
                 <td>{{ form.submit() }}</td>
             </tr>
         </table>
@@ -159,17 +160,15 @@
 </div>
 
 {% if errors == False %}
-<div class='information rounded' id='Eplot' style='margin-right: 35px; margin-top: 0px; height: 720px; padding: 0px'>
+<div class='information rounded' id='Cplot' style='margin-right: 35px; margin-top: 0px; height: 720px; padding: 0px'>
     <!-- import plotly library -->
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script>
-        var Egraph = {{ Egraph | safe }}
-        Plotly.newPlot('Eplot',Egraph, {})
+        var Cgraph = {{ Cgraph | safe }}
+        Plotly.newPlot('Cplot',Cgraph, {})
     </script>
 </div>
-{% endif %}
 
-{% if errors == False %}
 <div class='information rounded' id='reactor-animation' style='height: 720px; margin-top: 0px; padding: 0px;'>
     {% if reactorType == "cstr" %}
         <div id="cstr"></div>
@@ -188,6 +187,20 @@
         <div id="out-line-pfr"></div>
         <div id="pfr-plugflow"></div>
     {% endif %}
+</div>
+
+<div class='information rounded' id='Eplot' style='margin-right: 35px; margin-top: 0px; height: 720px; padding: 0px'>
+    <script>
+        var Egraph = {{ Egraph | safe }}
+        Plotly.newPlot('Eplot',Egraph, {})
+    </script>
+</div>
+
+<div class='information rounded' id='Fplot' style='margin-top: 0px; height: 720px; padding: 0px'>
+    <script>
+        var Fgraph = {{ Fgraph | safe }}
+        Plotly.newPlot('Fplot',Fgraph, {})
+    </script>
 </div>
 {% endif %}
 
