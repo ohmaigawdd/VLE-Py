@@ -64,8 +64,22 @@
         let running = false;
         function playAnimation() {
             if ("{{reactorType}}" == "cstr"){
-                document.getElementById("cstr").style.animation = "bgcolor-change {{ system.tau/10 }}s";
-                document.getElementById("cstr").style.animationPlayState = "running";
+                if ("{{tracerType}}" == "pulse"){
+                    document.getElementById("cstr").style.animation = "bgcolor-change {{ system.tau/10 }}s";
+                    document.getElementById("pulse-arrow").style.animation = "pulse {{ system.tau/10 }}s";
+                    document.getElementById("pulse-line").style.animation = "pulse {{ system.tau/10 }}s";
+                    document.getElementById("cstr").style.animationPlayState = "running";
+                    document.getElementById("pulse-arrow").style.animationPlayState = "running";
+                    document.getElementById("pulse-line").style.animationPlayState = "running";
+                } else {
+                    document.getElementById("cstr").style.animation = "bgcolor-change {{ system.tau/10 }}s";
+                    document.getElementById("pulse-arrow").style.animation = "pulse {{ system.tau/10 }}s";
+                    document.getElementById("step-line").style.animation = "step {{ system.tau/10 }}s";
+                    document.getElementById("cstr").style.animationPlayState = "running";
+                    document.getElementById("pulse-arrow").style.animationPlayState = "running";
+                    document.getElementById("pulse-line").style.animationPlayState = "running";
+                }
+                
             } else {
                 document.getElementById("pfr-plugflow").style.animation = "plugflow {{ system.tau/10 }}s";
                 document.getElementById("pfr-plugflow").style.animationPlayState = "running";
@@ -171,21 +185,45 @@
 
 <div class='information rounded' id='reactor-animation' style='height: 720px; margin-top: 0px; padding: 0px;'>
     {% if reactorType == "cstr" %}
-        <div id="cstr"></div>
-        <div id="impeller-stick-ideal"></div>
-        <div id="inflow"></div>
-        <div id="outflow"></div>
-        <div id="in-line"></div>
-        <div id="out-line"></div>
-        <div id="impeller-blades-left-ideal"></div>
-        <div id="impeller-blades-right-ideal"></div>
+        {% if tracerType == "pulse" %}
+            <div id="cstr"></div>
+            <div id="impeller-stick-ideal"></div>
+            <div id="inflow"></div>
+            <div id="outflow"></div>
+            <div id="in-line"></div>
+            <div id="out-line"></div>
+            <div id="impeller-blades-left-ideal"></div>
+            <div id="impeller-blades-right-ideal"></div>
+            <div id="pulse-line"></div>
+            <div id="pulse-arrow"></div>
+        {% else %}
+            <div id="cstr"></div>
+            <div id="impeller-stick-ideal"></div>
+            <div id="inflow"></div>
+            <div id="outflow"></div>
+            <div id="in-line"></div>
+            <div id="out-line"></div>
+            <div id="impeller-blades-left-ideal"></div>
+            <div id="impeller-blades-right-ideal"></div>
+            <div id="step-line"></div>
+            <div id="pulse-arrow"></div>
+        {% endif %}
     {% else %}
-        <div id="pfr"></div>
-        <div id="inflow-pfr"></div>
-        <div id="outflow-pfr"></div>
-        <div id="in-line-pfr"></div>
-        <div id="out-line-pfr"></div>
-        <div id="pfr-plugflow"></div>
+        {% if tracerType == "pulse" %}
+            <div id="pfr"></div>
+            <div id="inflow-pfr"></div>
+            <div id="outflow-pfr"></div>
+            <div id="in-line-pfr"></div>
+            <div id="out-line-pfr"></div>
+            <div id="pfr-plugflow"></div>
+        {% else %}
+            <div id="pfr"></div>
+            <div id="inflow-pfr"></div>
+            <div id="outflow-pfr"></div>
+            <div id="in-line-pfr"></div>
+            <div id="out-line-pfr"></div>
+            <div id="pfr-plugflow"></div>
+        {% endif %}
     {% endif %}
 </div>
 
