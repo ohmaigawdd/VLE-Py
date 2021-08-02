@@ -160,15 +160,21 @@ def idealreactors():
     if errors == False:
         system = RTD(reactorVol, reactorFlow, tracerType)
         if reactorType == "cstr":
-            system.CSTR(1) #note that code now has this as "n"
+            Cgraph = system.CSTR(1) #note that code now has this as "n"
+            Egraph = system.CSTR_E(1)
+            Fgraph = system.CSTR_F(1)
         elif reactorType == "pfr":
-            system.PFR()
-        Egraph = system.generate()
+            Cgraph = system.PFR() #note that code now has this as "n"
+            Egraph = system.PFR_E()
+            Fgraph = system.PFR_F()
+
     else:
         system = RTD(reactorVol, reactorFlow, tracerType)
+        Cgraph = False
         Egraph = False
+        Fgraph = False
 
-    return render_template("idealreactors.html", reactorType=reactorType, system=system, form=form, errors=errors, Egraph=Egraph)
+    return render_template("idealreactors.html", reactorType=reactorType, system=system, form=form, errors=errors, Cgraph=Cgraph, Egraph=Egraph, Fgraph=Fgraph)
 
 # REAL PFR/CSTR PAGE
 @app.route("/realreactors", methods=["GET","POST"])

@@ -13,6 +13,7 @@ Experiment:
 4. Plot concentration profile
 '''
 import numpy as np
+import math
 import scipy
 from scipy.integrate import simps
 from scipy import signal
@@ -68,15 +69,43 @@ class RTD:
         if self.type == 'pulse':
             y = PFR.exitage
         else:
-            y = PFR.stepresponse        
+            y = PFR.stepresponse*100        
         x = x[::25]
         y = y[::25]
         self.x = list(x).copy()
         self.y = list(y).copy()
-        frames = []
         
         fig = go.Figure(
-            data=[go.Scatter(x=xdata, y=ydata, name = "PFR")],
+            data=[go.Scatter(x=[], y=[], name = "PFR")],
+            layout=go.Layout(template='plotly_dark',
+                paper_bgcolor='rgba(0,0,0,0)',
+                xaxis=dict(range=[0, self.tau*2], autorange=False),
+                yaxis=dict(range=[0, max(y)*1.1], autorange=False),
+                xaxis_title="Time (s)",
+                yaxis_title = "Concentration",
+                title="PFR: Plot of Concentration against Time",
+            ),
+        )
+        
+        return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+
+    def PFR_E(self):
+        PFR = rtdpy.Pfr(tau=self.tau, dt=.01, time_end=self.tau*2)
+        x = PFR.time
+        y = PFR.exitage    
+        x = x[::25]
+        y = y[::25]
+
+        frames = []
+
+        for i in range(len(x)-1):
+            fx = [x[i], x[i+1]]
+            fy = [y[i], y[i+1]]
+            frame = go.Frame(data=[go.Scatter(x=fx, y=fy)])
+            frames.append(frame)
+        
+        fig = go.Figure(
+            data=[go.Scatter(x=x, y=y, name = "PFR")],
             layout=go.Layout(template='plotly_dark',
                 paper_bgcolor='rgba(0,0,0,0)',
                 xaxis=dict(range=[0, self.tau*2], autorange=False),
@@ -84,29 +113,104 @@ class RTD:
                 xaxis_title="Time (s)",
                 yaxis_title = "Exit Age Function",
                 title="PFR: Plot of E against Time",
-            ),
+                updatemenus=[dict(
+                type="buttons",
+                buttons=[dict(label="Play",
+                            method="animate",
+                            args=[None])])]
+            ), frames = frames
         )
-        self.fig = fig
+        
+        return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
-    def CSTR(self,n):
-
-        xdata = []
-        ydata = []
-
-        CSTR = rtdpy.Ncstr(tau=self.tau, n = n, dt=.01, time_end=self.tau*5)
-        x = CSTR.time
-        if self.type == 'pulse':
-            y = CSTR.exitage
-        else:
-            y = CSTR.stepresponse
+    def PFR_F(self):
+        PFR = rtdpy.Pfr(tau=self.tau, dt=.01, time_end=self.tau*2)
+        x = PFR.time
+        y = PFR.stepresponse 
         x = x[::25]
         y = y[::25]
+
+        frames = []
+
+        for i in range(len(x)-1):
+            fx = [x[i], x[i+1]]
+            fy = [y[i], y[i+1]]
+            frame = go.Frame(data=[go.Scatter(x=fx, y=fy)])
+            frames.append(frame)
+        
+        fig = go.Figure(
+            data=[go.Scatter(x=x, y=y, name = "PFR")],
+            layout=go.Layout(template='plotly_dark',
+                paper_bgcolor='rgba(0,0,0,0)',
+                xaxis=dict(range=[0, self.tau*2], autorange=False),
+                yaxis=dict(range=[0, max(y)*1.1], autorange=False),
+                xaxis_title="Time (s)",
+                yaxis_title = "Cumulative Distribution Function",
+                title="PFR: Plot of F against Time",
+                updatemenus=[dict(
+                type="buttons",
+                buttons=[dict(label="Play",
+                            method="animate",
+                            args=[None])])]
+            ), frames = frames
+        ),
+
+        return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+
+    def CSTR(self, n):
+        xdata = []
+        ydata = []
+        x = np.arange(0, self.tau*5, 0.25)
+        y = []
+
+        for t in x:
+            c = (100/self.V_reactor)*math.exp((-1)*self.flow*t/self.V_reactor)
+            y.append(c)
 
         self.x = list(x).copy()
         self.y = list(y).copy()
 
         fig = go.Figure(
-            data=[go.Scatter(x=xdata, y=ydata, name = "n = " + str(n))],
+            data=[go.Scatter(x=[], y=[], name = "n = " + str(n))],
+            layout=go.Layout(template='plotly_dark',
+                paper_bgcolor='rgba(0,0,0,0)',
+                xaxis=dict(range=[0, self.tau*5], autorange=False),
+                yaxis=dict(range=[0, max(y)*1.1], autorange=False),
+                xaxis_title="Time (s)",
+                yaxis_title = "Concentration",
+                title="n CSTR: Plot of Concentration against Time, n=" + str(n)
+            )
+        )
+
+        return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+
+    def CSTR_E(self,n):
+
+        # x = np.arange(0, self.tau*5, 0.25)
+        # y = []
+
+        # for t in x:
+        #     c = (100/self.V_reactor)*math.exp((-1)*self.flow*t/self.V_reactor)
+        #     y.append(c)
+
+        CSTR = rtdpy.Ncstr(tau=self.tau, n = n, dt=.01, time_end=self.tau*5)
+        x = CSTR.time
+
+        y = CSTR.exitage
+
+        x = x[::25]
+        y = y[::25]
+
+        frames = []
+
+        for i in range(len(x)-1):
+            fx = [x[i], x[i+1]]
+            fy = [y[i], y[i+1]]
+            frame = go.Frame(data=[go.Scatter(x=fx, y=fy)])
+            frames.append(frame)
+
+        fig = go.Figure(
+            data=[go.Scatter(x=x, y=y, name = "n = " + str(n))],
             layout=go.Layout(template='plotly_dark',
                 paper_bgcolor='rgba(0,0,0,0)',
                 xaxis=dict(range=[0, self.tau*5], autorange=False),
@@ -114,9 +218,61 @@ class RTD:
                 xaxis_title="Time (s)",
                 yaxis_title = "Exit Age Function",
                 title="n CSTR: Plot of E against Time, n=" + str(n),
-            )
+                updatemenus=[dict(
+                type="buttons",
+                buttons=[dict(label="Play",
+                            method="animate",
+                            args=[None])])]
+            ), frames = frames
         )
-        self.fig = fig
+
+        return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+
+
+    def CSTR_F(self,n):
+
+        # x = np.arange(0, self.tau*5, 0.25)
+        # y = []
+
+        # for t in x:
+        #     c = (100/self.V_reactor)*math.exp((-1)*self.flow*t/self.V_reactor)
+        #     y.append(c)
+
+        CSTR = rtdpy.Ncstr(tau=self.tau, n = n, dt=.01, time_end=self.tau*5)
+        x = CSTR.time
+        y = CSTR.stepresponse
+        x = x[::25]
+        y = y[::25]
+
+        frames = []
+
+        for i in range(len(x)-1):
+            fx = [x[i], x[i+1]]
+            fy = [y[i], y[i+1]]
+            frame = go.Frame(data=[go.Scatter(x=fx, y=fy)])
+            frames.append(frame)
+
+        fig = go.Figure(
+            data=[go.Scatter(x=x, y=y, name = "n = " + str(n))],
+            layout=go.Layout(template='plotly_dark',
+                paper_bgcolor='rgba(0,0,0,0)',
+                xaxis=dict(range=[0, self.tau*5], autorange=False),
+                yaxis=dict(range=[0, max(y)*1.1], autorange=False),
+                xaxis_title="Time (s)",
+                yaxis_title = "Cumulative Distribution Function",
+                title="n CSTR: Plot of F against Time, n=" + str(n),
+                updatemenus=[dict(
+                type="buttons",
+                buttons=[dict(label="Display",
+                            method="animate",
+                            args=[None, {"frame": {"duration": 0, 
+                                    "redraw": False},
+                            "fromcurrent": True, 
+                            "transition": {"duration": 0}}])])]
+            ), frames = frames
+        )
+        
+        return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
     # def CSTRstep(self, n):
     #     xdata = []
@@ -148,10 +304,6 @@ class RTD:
     #     )
     #     # self.fig = fig
     #     fig.show()
-    
-    def generate(self):
-        return json.dumps(self.fig, cls=plotly.utils.PlotlyJSONEncoder)
-
 
 
         # elif type(n) == list or type(n) == tuple:
