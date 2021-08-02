@@ -172,10 +172,9 @@ class RTD:
 
         CSTR = rtdpy.Ncstr(tau=self.tau, n = n, dt=.01, time_end=self.tau*5)
         x = CSTR.time
-        if self.type == 'pulse':
-            y = CSTR.exitage
-        else:
-            y = CSTR.stepresponse
+
+        y = CSTR.exitage
+
         x = x[::25]
         y = y[::25]
 
@@ -191,6 +190,42 @@ class RTD:
                 xaxis_title="Time (s)",
                 yaxis_title = "Exit Age Function",
                 title="n CSTR: Plot of E against Time, n=" + str(n),
+            )
+        )
+        self.fig = fig
+
+
+    def CSTR_F(self,n):
+
+        # x = np.arange(0, self.tau*5, 0.25)
+        # y = []
+
+        # for t in x:
+        #     c = (100/self.V_reactor)*math.exp((-1)*self.flow*t/self.V_reactor)
+        #     y.append(c)
+
+        xdata = []
+        ydata = []
+
+        CSTR = rtdpy.Ncstr(tau=self.tau, n = n, dt=.01, time_end=self.tau*5)
+        x = CSTR.time
+
+        y = CSTR.stepresponse
+        x = x[::25]
+        y = y[::25]
+
+        self.x = list(x).copy()
+        self.y = list(y).copy()
+
+        fig = go.Figure(
+            data=[go.Scatter(x=xdata, y=ydata, name = "n = " + str(n))],
+            layout=go.Layout(template='plotly_dark',
+                paper_bgcolor='rgba(0,0,0,0)',
+                xaxis=dict(range=[0, self.tau*5], autorange=False),
+                yaxis=dict(range=[0, max(y)*1.1], autorange=False),
+                xaxis_title="Time (s)",
+                yaxis_title = "Cumulative Distribution Function",
+                title="n CSTR: Plot of F against Time, n=" + str(n),
             )
         )
         self.fig = fig
