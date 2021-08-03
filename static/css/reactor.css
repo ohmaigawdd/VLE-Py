@@ -29,9 +29,27 @@
     }
 }
 
+
 @keyframes plugflow {
     from {left: -145px}
     to {left: 145px}
+}
+
+@keyframes pulse {
+    0% {border-color: transparent;}
+    10% {border-color: red}
+    20% {border-color: transparent;}
+}
+
+@keyframes pulsein {
+    0% {border-color: transparent;}
+    10% {border-color: red}
+    20% {border-color: transparent;}
+}
+
+@keyframes step {
+    0% {border-color: transparent;}
+    10% {border-color: red}
 }
 
 /* body {
@@ -224,4 +242,45 @@
 #out-line-pfr {
     top: 180px;
     left: 460px;
+}
+
+#pulse-line {
+    position: relative;
+    width: 1px;
+    height: 100px;
+    bottom: 620px;
+    right: 130px;
+    margin: auto;
+    border: 1px solid black;
+    background-color: transparent;
+    animation-duration: 4s;
+    animation-play-state: paused;
+}
+
+#pulse-arrow {
+    position: relative;
+    width: 10px;
+    height: 10px;
+    bottom: 630px;
+    left: 175px;
+    border: 4px solid black;
+    border-left: 0;
+    border-top: 0;
+    transform: rotate(45deg);
+    animation-duration: 4s;
+    animation-play-state: paused;
+}
+
+#step-line {
+    position: relative;
+    width: 1px;
+    height: 100px;
+    bottom: 620px;
+    right: 130px;
+    margin: auto;
+    border: 1px solid red;
+    background-color: transparent;
+    animation-name: step;
+    animation-duration: 4s;
+    animation-play-state: paused;
 }
