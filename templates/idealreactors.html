@@ -64,7 +64,7 @@
         let running = false;
         function playAnimation() {
             if ("{{reactorType}}" == "cstr"){
-                if ("{{tracerType}}" == "pulse"){
+                if ("{{system.type}}" == "pulse"){
                     document.getElementById("cstr").style.animation = "bgcolor-change {{ system.tau/10 }}s";
                     document.getElementById("pulse-arrow").style.animation = "pulse {{ system.tau/10 }}s";
                     document.getElementById("pulse-line").style.animation = "pulse {{ system.tau/10 }}s";
@@ -77,7 +77,7 @@
                     document.getElementById("step-line").style.animation = "step {{ system.tau/10 }}s";
                     document.getElementById("cstr").style.animationPlayState = "running";
                     document.getElementById("pulse-arrow").style.animationPlayState = "running";
-                    document.getElementById("pulse-line").style.animationPlayState = "running";
+                    document.getElementById("step-line").style.animationPlayState = "running";
                 }
                 
             } else {
@@ -185,7 +185,7 @@
 
 <div class='information rounded' id='reactor-animation' style='height: 720px; margin-top: 0px; padding: 0px;'>
     {% if reactorType == "cstr" %}
-        {% if tracerType == "pulse" %}
+        {% if system.type == "pulse" %}
             <div id="cstr"></div>
             <div id="impeller-stick-ideal"></div>
             <div id="inflow"></div>
@@ -209,7 +209,7 @@
             <div id="pulse-arrow"></div>
         {% endif %}
     {% else %}
-        {% if tracerType == "pulse" %}
+        {% if system.type == "pulse" %}
             <div id="pfr"></div>
             <div id="inflow-pfr"></div>
             <div id="outflow-pfr"></div>
