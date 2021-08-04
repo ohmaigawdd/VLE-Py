@@ -65,24 +65,30 @@
         function playAnimation() {
             if ("{{reactorType}}" == "cstr"){
                 if ("{{system.type}}" == "pulse"){
-                    document.getElementById("cstr").style.animation = "bgcolor-change {{ system.tau/10 }}s";
+                    document.getElementById("cstr").style.animation = "bgcolor-change {{ system.tau/2 }}s";
                     document.getElementById("pulse-arrow").style.animation = "pulse {{ system.tau/10 }}s";
                     document.getElementById("pulse-line").style.animation = "pulse {{ system.tau/10 }}s";
                     document.getElementById("cstr").style.animationPlayState = "running";
                     document.getElementById("pulse-arrow").style.animationPlayState = "running";
                     document.getElementById("pulse-line").style.animationPlayState = "running";
                 } else {
-                    document.getElementById("cstr").style.animation = "bgcolor-change {{ system.tau/10 }}s";
-                    document.getElementById("pulse-arrow").style.animation = "pulse {{ system.tau/10 }}s";
+                    document.getElementById("cstr-step").style.animation = "bgcolor-change-step {{ system.tau/2 }}s";
+                    document.getElementById("step-arrow").style.animation = "step {{ system.tau/10 }}s";
                     document.getElementById("step-line").style.animation = "step {{ system.tau/10 }}s";
-                    document.getElementById("cstr").style.animationPlayState = "running";
-                    document.getElementById("pulse-arrow").style.animationPlayState = "running";
+                    document.getElementById("cstr-step").style.animationPlayState = "running";
+                    document.getElementById("step-arrow").style.animationPlayState = "running";
                     document.getElementById("step-line").style.animationPlayState = "running";
                 }
                 
             } else {
-                document.getElementById("pfr-plugflow").style.animation = "plugflow {{ system.tau/10 }}s";
-                document.getElementById("pfr-plugflow").style.animationPlayState = "running";
+                if ("{{system.type}}" == "pulse"){
+                    document.getElementById("pfr-plugflow").style.animation = "plugflow {{ system.tau/10 }}s";
+                    document.getElementById("pfr-plugflow").style.animationPlayState = "running";
+                } else {
+                    document.getElementById("pfr-plugflow-step").style.animation = "plugflow-step {{ system.tau/10 }}s";
+                    document.getElementById("pfr-plugflow-step").style.animationPlayState = "running";
+                }
+                
             }
             }
         function pauseAnimation() {
@@ -197,7 +203,7 @@
             <div id="pulse-line"></div>
             <div id="pulse-arrow"></div>
         {% else %}
-            <div id="cstr"></div>
+            <div id="cstr-step"></div>
             <div id="impeller-stick-ideal"></div>
             <div id="inflow"></div>
             <div id="outflow"></div>
@@ -206,7 +212,7 @@
             <div id="impeller-blades-left-ideal"></div>
             <div id="impeller-blades-right-ideal"></div>
             <div id="step-line"></div>
-            <div id="pulse-arrow"></div>
+            <div id="step-arrow"></div>
         {% endif %}
     {% else %}
         {% if system.type == "pulse" %}
@@ -222,7 +228,7 @@
             <div id="outflow-pfr"></div>
             <div id="in-line-pfr"></div>
             <div id="out-line-pfr"></div>
-            <div id="pfr-plugflow"></div>
+            <div id="pfr-plugflow-step"></div>
         {% endif %}
     {% endif %}
 </div>
