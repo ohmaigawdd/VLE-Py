@@ -140,13 +140,13 @@ def idealreactors():
 
     if form.reactorType.data==None:
         reactorType = "cstr"
-        reactorVol = 20
+        reactorVol = 10
         reactorFlow = 2
         tracerType = "pulse"
         errors = False
     elif not form.validate_on_submit():
         reactorType = "cstr"
-        reactorVol = 20
+        reactorVol = 10
         reactorFlow = 2
         tracerType = "pulse"
         errors = True
