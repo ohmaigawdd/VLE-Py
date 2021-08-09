@@ -70,11 +70,14 @@ class RTD:
             y = PFR.exitage
         else:
             y = PFR.stepresponse*100        
-        x = x[::25]
-        y = y[::25]
+        # x = x[::25]
+        # y = y[::25]
+
         self.x = list(x).copy()
         self.y = list(y).copy()
-        
+        self.length = self.x.index(float("{:.2f}".format(self.tau)))
+        self.length2 = len(self.x)
+
         fig = go.Figure(
             data=[go.Scatter(x=[], y=[], name = "PFR")],
             layout=go.Layout(template='plotly_dark',
@@ -93,8 +96,8 @@ class RTD:
         PFR = rtdpy.Pfr(tau=self.tau, dt=.01, time_end=self.tau*2)
         x = PFR.time
         y = PFR.exitage    
-        x = x[::25]
-        y = y[::25]
+        # x = x[::25]
+        # y = y[::25]
 
         frames = [go.Frame(data=[go.Scatter(x=[x[i] for i in range(len(x))], y=[y[i] for i in range(len(y))])])]
         
@@ -128,8 +131,8 @@ class RTD:
         PFR = rtdpy.Pfr(tau=self.tau, dt=.01, time_end=self.tau*2)
         x = PFR.time
         y = PFR.stepresponse 
-        x = x[::25]
-        y = y[::25]
+        # x = x[::25]
+        # y = y[::25]
 
         frames = [go.Frame(data=[go.Scatter(x=[x[i] for i in range(len(x))], y=[y[i] for i in range(len(y))])])]
 
@@ -161,9 +164,9 @@ class RTD:
         
 
     def CSTR(self, n):
-        xdata = []
-        ydata = []
-        x = np.arange(0, self.tau*5, 0.25)
+        CSTR = rtdpy.Ncstr(tau=self.tau, n = n, dt=.01, time_end=self.tau*5)
+        # x = np.arange(0, self.tau*5, 0.25)
+        x = CSTR.time
         y = []
 
         if self.type == "pulse":
@@ -177,6 +180,8 @@ class RTD:
 
         self.x = list(x).copy()
         self.y = list(y).copy()
+        self.length = self.x.index(float("{:.2f}".format(self.tau)))
+        self.length2 = len(self.x)
 
         fig = go.Figure(
             data=[go.Scatter(x=[], y=[], name = "n = " + str(n))],
@@ -204,11 +209,10 @@ class RTD:
         CSTR = rtdpy.Ncstr(tau=self.tau, n = n, dt=.01, time_end=self.tau*5)
         xdata, ydata = [], []
         x = CSTR.time
-
         y = CSTR.exitage
 
-        x = x[::25]
-        y = y[::25]
+        # x = x[::25]
+        # y = y[::25]
 
         # frames = []
 
@@ -258,8 +262,8 @@ class RTD:
         xdata, ydata = [], []
         x = CSTR.time
         y = CSTR.stepresponse
-        x = x[::25]
-        y = y[::25]
+        # x = x[::25]
+        # y = y[::25]
 
         # frames = []
 

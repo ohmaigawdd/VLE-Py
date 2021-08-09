@@ -65,16 +65,18 @@
         function playAnimation() {
             if ("{{reactorType}}" == "cstr"){
                 if ("{{system.type}}" == "pulse"){
-                    document.getElementById("cstr").style.animation = "bgcolor-change {{ system.tau/2 }}s";
-                    document.getElementById("pulse-arrow").style.animation = "pulse {{ system.tau/10 }}s";
-                    document.getElementById("pulse-line").style.animation = "pulse {{ system.tau/10 }}s";
+                  
+                    document.getElementById("cstr").style.animation = "bgcolor-change {{system.length2 * 0.0166}}s";
+                    document.getElementById("pulse-arrow").style.animation = "pulse 4s";
+                    document.getElementById("pulse-line").style.animation = "pulse 4s";
                     document.getElementById("cstr").style.animationPlayState = "running";
                     document.getElementById("pulse-arrow").style.animationPlayState = "running";
                     document.getElementById("pulse-line").style.animationPlayState = "running";
+                    
                 } else {
-                    document.getElementById("cstr-step").style.animation = "bgcolor-change-step {{ system.tau/2 }}s";
-                    document.getElementById("step-arrow").style.animation = "step {{ system.tau/10 }}s";
-                    document.getElementById("step-line").style.animation = "step {{ system.tau/10 }}s";
+                    document.getElementById("cstr-step").style.animation = "bgcolor-change-step {{system.length2 * 0.0166}}s";
+                    document.getElementById("step-arrow").style.animation = "step 4s";
+                    document.getElementById("step-line").style.animation = "step 4s";
                     document.getElementById("cstr-step").style.animationPlayState = "running";
                     document.getElementById("step-arrow").style.animationPlayState = "running";
                     document.getElementById("step-line").style.animationPlayState = "running";
@@ -82,33 +84,70 @@
                 
             } else {
                 if ("{{system.type}}" == "pulse"){
-                    document.getElementById("pfr-plugflow").style.animation = "plugflow {{ system.tau/10 }}s";
+                    document.getElementById("pfr-plugflow").style.animation = "plugflow {{system.length * 0.0166}}s";
+                    // 0.0166 is obtained by running a console.time() and consol.timeEnd() on the plotly code to find average time to plot a point on plotly
                     document.getElementById("pfr-plugflow").style.animationPlayState = "running";
+                    document.getElementById("pfr-plugflow").style.animationTimingFunction = "linear";
                 } else {
-                    document.getElementById("pfr-plugflow-step").style.animation = "plugflow-step {{ system.tau/10 }}s";
+                    document.getElementById("pfr-plugflow-step").style.animation = "plugflow-step {{system.length * 0.0166}}s";
                     document.getElementById("pfr-plugflow-step").style.animationPlayState = "running";
+                    document.getElementById("pfr-plugflow-step").style.animationTimingFunction = "linear";
                 }
                 
             }
             }
         function pauseAnimation() {
             if ("{{reactorType}}" == "cstr"){
-                document.getElementById("cstr").style.animationPlayState = "paused";
+                if ("{{system.type}}" == "pulse"){
+                    document.getElementById("cstr").style.animationPlayState = "paused";
+                } else {
+                    document.getElementById("cstr-step").style.animationPlayState = "paused";
+                }
             } else {
-                document.getElementById("pfr-plugflow").style.animationPlayState = "paused";
+                if ("{{system.type}}" == "pulse"){
+                    document.getElementById("pfr-plugflow").style.animationPlayState = "paused";
+                } else {
+                    document.getElementById("pfr-plugflow-step").style.animationPlayState = "paused";
+                }
             }
             }
         function resetAnimation() {
             if ("{{reactorType}}" == "cstr"){
-                document.getElementById("cstr").style.animation = 'none';
-                document.getElementById("cstr").offsetWidth;
-                document.getElementById("cstr").style.animation = "bgcolor-change {{ system.tau }}s";
-                document.getElementById("cstr").style.animationPlayState = "paused";
+                if ("{{system.type}}" == "pulse"){
+                    document.getElementById("cstr").style.animation = 'none';
+                    document.getElementById("pulse-arrow").style.animation = "none";
+                    document.getElementById("pulse-line").style.animation = "none";
+                    document.getElementById("cstr").offsetWidth;
+                    document.getElementById("cstr").style.animation = "bgcolor-change {{system.length2 * 0.0166}}s";
+                    document.getElementById("pulse-arrow").style.animation = "pulse 4s";
+                    document.getElementById("pulse-line").style.animation = "pulse 4s";
+                    document.getElementById("cstr").style.animationPlayState = "paused";
+                    document.getElementById("pulse-arrow").style.animationPlayState = "paused";
+                    document.getElementById("pulse-line").style.animationPlayState = "paused";
+                } else {
+                    document.getElementById("cstr-step").style.animation = 'none';
+                    document.getElementById("step-arrow").style.animation = "none";
+                    document.getElementById("step-line").style.animation = "none";
+                    document.getElementById("cstr-step").offsetWidth;
+                    document.getElementById("cstr-step").style.animation = "bgcolor-change {{system.length2 * 0.0166}}s";
+                    document.getElementById("step-arrow").style.animation = "step 4s";
+                    document.getElementById("step-line").style.animation = "step 4s";
+                    document.getElementById("cstr-step").style.animationPlayState = "paused";
+                    document.getElementById("step-arrow").style.animationPlayState = "paused";
+                    document.getElementById("step-line").style.animationPlayState = "paused";
+                }
             } else {
-                document.getElementById("pfr-plugflow").style.animation = 'none';
-                document.getElementById("pfr-plugflow").offsetWidth;
-                document.getElementById("pfr-plugflow").style.animation = "plugflow {{ system.tau }}s";
-                document.getElementById("pfr-plugflow").style.animationPlayState = "paused";
+                if ("{{system.type}}" == "pulse"){
+                    document.getElementById("pfr-plugflow").style.animation = 'none';
+                    document.getElementById("pfr-plugflow").offsetWidth;
+                    document.getElementById("pfr-plugflow").style.animation = "plugflow {{ system.length * 0.0166 }}s";
+                    document.getElementById("pfr-plugflow").style.animationPlayState = "paused";
+                } else {
+                    document.getElementById("pfr-plugflow-step").style.animation = 'none';
+                    document.getElementById("pfr-plugflow-step").offsetWidth;
+                    document.getElementById("pfr-plugflow-step").style.animation = "plugflow-step {{ system.length * 0.0166 }}s";
+                    document.getElementById("pfr-plugflow-step").style.animationPlayState = "paused";
+                }
             }
             }
         function animateReset() {
@@ -120,7 +159,7 @@
             },
             {
                 transition: {duration: 0},
-                frame: {duration: 1,
+                frame: {duration: 0,
                         redraw: false}})
         };
         function animatePause() {
@@ -135,7 +174,7 @@
             },
             {
                 transition: {duration: 0},
-                frame: {duration: 1,
+                frame: {duration: 0,
                         redraw: false}})
             
             idx++

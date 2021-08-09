@@ -140,13 +140,13 @@ def idealreactors():
 
     if form.reactorType.data==None:
         reactorType = "cstr"
-        reactorVol = 50
+        reactorVol = 20
         reactorFlow = 2
         tracerType = "pulse"
         errors = False
     elif not form.validate_on_submit():
         reactorType = "cstr"
-        reactorVol = 50
+        reactorVol = 20
         reactorFlow = 2
         tracerType = "pulse"
         errors = True
@@ -167,9 +167,10 @@ def idealreactors():
             Cgraph = system.PFR() #note that code now has this as "n"
             Egraph = system.PFR_E()
             Fgraph = system.PFR_F()
-
     else:
         system = RTD(reactorVol, reactorFlow, tracerType)
+        system.length = 0
+        system.length2 = 0
         Cgraph = False
         Egraph = False
         Fgraph = False
