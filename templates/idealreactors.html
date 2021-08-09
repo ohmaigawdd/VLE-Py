@@ -65,43 +65,60 @@
         function playAnimation() {
             if ("{{reactorType}}" == "cstr"){
                 if ("{{system.type}}" == "pulse"){
-                    document.getElementById("cstr").style.animation = "bgcolor-change {{ system.tau/10 }}s";
-                    document.getElementById("pulse-arrow").style.animation = "pulse {{ system.tau/10 }}s";
-                    document.getElementById("pulse-line").style.animation = "pulse {{ system.tau/10 }}s";
+                    document.getElementById("cstr").style.animation = "bgcolor-change 30s";
+                    document.getElementById("pulse-arrow").style.animation = "pulse 30s";
+                    document.getElementById("pulse-line").style.animation = "pulse 30s";
                     document.getElementById("cstr").style.animationPlayState = "running";
                     document.getElementById("pulse-arrow").style.animationPlayState = "running";
                     document.getElementById("pulse-line").style.animationPlayState = "running";
+                    
                 } else {
-                    document.getElementById("cstr").style.animation = "bgcolor-change {{ system.tau/10 }}s";
-                    document.getElementById("pulse-arrow").style.animation = "pulse {{ system.tau/10 }}s";
-                    document.getElementById("step-line").style.animation = "step {{ system.tau/10 }}s";
-                    document.getElementById("cstr").style.animationPlayState = "running";
-                    document.getElementById("pulse-arrow").style.animationPlayState = "running";
+                    document.getElementById("cstr-step").style.animation = "bgcolor-change-step {{ system.duration }}s";
+                    document.getElementById("step-arrow").style.animation = "step {{ system.duration }}s";
+                    document.getElementById("step-line").style.animation = "step {{ system.duration }}s";
+                    document.getElementById("cstr-step").style.animationPlayState = "running";
+                    document.getElementById("step-arrow").style.animationPlayState = "running";
                     document.getElementById("step-line").style.animationPlayState = "running";
                 }
                 
             } else {
-                document.getElementById("pfr-plugflow").style.animation = "plugflow {{ system.tau/10 }}s";
-                document.getElementById("pfr-plugflow").style.animationPlayState = "running";
+                if ("{{system.type}}" == "pulse"){
+                    document.getElementById("pfr-plugflow").style.animation = "plugflow 5s";
+                    document.getElementById("pfr-plugflow").style.animationPlayState = "running";
+                    document.getElementById("pfr-plugflow").style.animationTimingFunction = "linear";
+                } else {
+                    document.getElementById("pfr-plugflow-step").style.animation = "plugflow-step 5s";
+                    document.getElementById("pfr-plugflow-step").style.animationPlayState = "running";
+                    document.getElementById("pfr-plugflow-step").style.animationTimingFunction = "linear";
+                }
+                
             }
             }
         function pauseAnimation() {
             if ("{{reactorType}}" == "cstr"){
-                document.getElementById("cstr").style.animationPlayState = "paused";
+                if ("{{system.type}}" == "pulse"){
+                    document.getElementById("cstr").style.animationPlayState = "paused";
+                } else {
+                    document.getElementById("cstr-step").style.animationPlayState = "paused";
+                }
             } else {
-                document.getElementById("pfr-plugflow").style.animationPlayState = "paused";
+                if ("{{system.type}}" == "pulse"){
+                    document.getElementById("pfr-plugflow").style.animationPlayState = "paused";
+                } else {
+                    document.getElementById("pfr-plugflow-step").style.animationPlayState = "paused";
+                }
             }
             }
         function resetAnimation() {
             if ("{{reactorType}}" == "cstr"){
                 document.getElementById("cstr").style.animation = 'none';
                 document.getElementById("cstr").offsetWidth;
-                document.getElementById("cstr").style.animation = "bgcolor-change {{ system.tau }}s";
+                document.getElementById("cstr").style.animation = "bgcolor-change {{ system.duration }}s";
                 document.getElementById("cstr").style.animationPlayState = "paused";
             } else {
                 document.getElementById("pfr-plugflow").style.animation = 'none';
                 document.getElementById("pfr-plugflow").offsetWidth;
-                document.getElementById("pfr-plugflow").style.animation = "plugflow {{ system.tau }}s";
+                document.getElementById("pfr-plugflow").style.animation = "plugflow {{ system.duration }}s";
                 document.getElementById("pfr-plugflow").style.animationPlayState = "paused";
             }
             }
@@ -129,7 +146,7 @@
             },
             {
                 transition: {duration: 0},
-                frame: {duration: 1,
+                frame: {duration: 0.001/{{system.length/2}},
                         redraw: false}})
             
             idx++
@@ -197,7 +214,7 @@
             <div id="pulse-line"></div>
             <div id="pulse-arrow"></div>
         {% else %}
-            <div id="cstr"></div>
+            <div id="cstr-step"></div>
             <div id="impeller-stick-ideal"></div>
             <div id="inflow"></div>
             <div id="outflow"></div>
@@ -206,7 +223,7 @@
             <div id="impeller-blades-left-ideal"></div>
             <div id="impeller-blades-right-ideal"></div>
             <div id="step-line"></div>
-            <div id="pulse-arrow"></div>
+            <div id="step-arrow"></div>
         {% endif %}
     {% else %}
         {% if system.type == "pulse" %}
@@ -222,7 +239,7 @@
             <div id="outflow-pfr"></div>
             <div id="in-line-pfr"></div>
             <div id="out-line-pfr"></div>
-            <div id="pfr-plugflow"></div>
+            <div id="pfr-plugflow-step"></div>
         {% endif %}
     {% endif %}
 </div>

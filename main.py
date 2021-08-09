@@ -167,12 +167,12 @@ def idealreactors():
             Cgraph = system.PFR() #note that code now has this as "n"
             Egraph = system.PFR_E()
             Fgraph = system.PFR_F()
-
     else:
         system = RTD(reactorVol, reactorFlow, tracerType)
         Cgraph = False
         Egraph = False
         Fgraph = False
+    
 
     return render_template("idealreactors.html", reactorType=reactorType, system=system, form=form, errors=errors, Cgraph=Cgraph, Egraph=Egraph, Fgraph=Fgraph)
 
