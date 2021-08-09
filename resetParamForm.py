@@ -6,9 +6,9 @@ class IdealReactorForm(FlaskForm):
     
     reactorType = SelectField("Type of Reactor: ", choices = [("cstr","CSTR"), ("pfr","PFR")])
 
-    reactorVol = IntegerField("Reactor Volume (V): ", validators=[NumberRange(0, 500, message=("Volume out of range!"))])
+    reactorVol = IntegerField("Reactor Volume (V): ", validators=[NumberRange(0, 40, message=("Volume out of range!"))])
 
-    reactorFlow = IntegerField("Flow Rate (Q): ", validators=[NumberRange(0, 500, message=("Flow rate out of range!"))])
+    reactorFlow = IntegerField("Flow Rate (Q): ", validators=[NumberRange(0, 10, message=("Flow rate out of range!"))])
 
     tracerType = SelectField("Type of Tracer Input: ", choices = [("pulse","Pulse"), ("step","Step")])
 

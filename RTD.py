@@ -75,8 +75,9 @@ class RTD:
 
         self.x = list(x).copy()
         self.y = list(y).copy()
-        self.length = len(self.x)
-        
+        self.length = self.x.index(float("{:.2f}".format(self.tau)))
+        self.length2 = len(self.x)
+
         fig = go.Figure(
             data=[go.Scatter(x=[], y=[], name = "PFR")],
             layout=go.Layout(template='plotly_dark',
@@ -95,8 +96,8 @@ class RTD:
         PFR = rtdpy.Pfr(tau=self.tau, dt=.01, time_end=self.tau*2)
         x = PFR.time
         y = PFR.exitage    
-        x = x[::25]
-        y = y[::25]
+        # x = x[::25]
+        # y = y[::25]
 
         frames = [go.Frame(data=[go.Scatter(x=[x[i] for i in range(len(x))], y=[y[i] for i in range(len(y))])])]
         
@@ -108,7 +109,7 @@ class RTD:
                 yaxis=dict(range=[0, max(y)*1.1], autorange=False),
                 xaxis_title="Time (s)",
                 yaxis_title = "Cumulative Distribution Function",
-                title="PFR: Plot of E against Time",
+                title="PFR: Plot of F against Time",
                 updatemenus=[dict(
                 bgcolor = 'grey',
                 font = dict(color = 'black', family="Helvetica Neue, monospace", size = 12),
@@ -130,8 +131,8 @@ class RTD:
         PFR = rtdpy.Pfr(tau=self.tau, dt=.01, time_end=self.tau*2)
         x = PFR.time
         y = PFR.stepresponse 
-        x = x[::25]
-        y = y[::25]
+        # x = x[::25]
+        # y = y[::25]
 
         frames = [go.Frame(data=[go.Scatter(x=[x[i] for i in range(len(x))], y=[y[i] for i in range(len(y))])])]
 
@@ -149,7 +150,7 @@ class RTD:
                 bgcolor = 'grey',
                 font = dict(color = 'black', family="Helvetica Neue, monospace", size = 12),
                 type="buttons",
-                buttons=[dict(label="Display",
+               buttons=[dict(label="Display",
                             method="animate",
                             args=[None, {"frame": {"duration": 0, 
                                     "redraw": False},
@@ -163,9 +164,9 @@ class RTD:
         
 
     def CSTR(self, n):
-        xdata = []
-        ydata = []
-        x = np.arange(0, self.tau*2, 0.25)
+        CSTR = rtdpy.Ncstr(tau=self.tau, n = n, dt=.01, time_end=self.tau*5)
+        # x = np.arange(0, self.tau*5, 0.25)
+        x = CSTR.time
         y = []
 
         if self.type == "pulse":
@@ -179,7 +180,8 @@ class RTD:
 
         self.x = list(x).copy()
         self.y = list(y).copy()
-        self.length = len(self.x)
+        self.length = self.x.index(float("{:.2f}".format(self.tau)))
+        self.length2 = len(self.x)
 
         fig = go.Figure(
             data=[go.Scatter(x=[], y=[], name = "n = " + str(n))],
@@ -204,10 +206,9 @@ class RTD:
         #     c = (100/self.V_reactor)*math.exp((-1)*self.flow*t/self.V_reactor)
         #     y.append(c)
 
-        CSTR = rtdpy.Ncstr(tau=self.tau, n = n, dt=.01, time_end=self.tau*2)
+        CSTR = rtdpy.Ncstr(tau=self.tau, n = n, dt=.01, time_end=self.tau*5)
         xdata, ydata = [], []
         x = CSTR.time
-
         y = CSTR.exitage
 
         # x = x[::25]
@@ -257,7 +258,7 @@ class RTD:
         #     c = (100/self.V_reactor)*math.exp((-1)*self.flow*t/self.V_reactor)
         #     y.append(c)
 
-        CSTR = rtdpy.Ncstr(tau=self.tau, n = n, dt=.01, time_end=self.tau*2)
+        CSTR = rtdpy.Ncstr(tau=self.tau, n = n, dt=.01, time_end=self.tau*5)
         xdata, ydata = [], []
         x = CSTR.time
         y = CSTR.stepresponse
