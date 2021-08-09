@@ -109,7 +109,7 @@ class RTD:
                 yaxis=dict(range=[0, max(y)*1.1], autorange=False),
                 xaxis_title="Time (s)",
                 yaxis_title = "Cumulative Distribution Function",
-                title="PFR: Plot of F against Time",
+                title="PFR: Plot of E against Time",
                 updatemenus=[dict(
                 bgcolor = 'grey',
                 font = dict(color = 'black', family="Helvetica Neue, monospace", size = 12),
@@ -150,7 +150,7 @@ class RTD:
                 bgcolor = 'grey',
                 font = dict(color = 'black', family="Helvetica Neue, monospace", size = 12),
                 type="buttons",
-               buttons=[dict(label="Display",
+                buttons=[dict(label="Display",
                             method="animate",
                             args=[None, {"frame": {"duration": 0, 
                                     "redraw": False},

@@ -118,6 +118,22 @@
     animation-timing-function: linear;
 }
 
+#cstr-step {
+    position: relative;
+    width: 300px;
+    height: 400px;
+    top: 200px;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+    border: 1px solid #1b4e5f;
+    background-color: #5a0000;
+    animation: bgcolor-change-step 5s;
+    animation-play-state: paused;
+    animation-fill-mode: forwards;
+}
+
 #pfr {
     position: relative;
     width: 300px;

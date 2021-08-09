@@ -65,6 +65,7 @@
         function playAnimation() {
             if ("{{reactorType}}" == "cstr"){
                 if ("{{system.type}}" == "pulse"){
+                  
                     document.getElementById("cstr").style.animation = "bgcolor-change {{system.length2 * 0.0166}}s";
                     document.getElementById("pulse-arrow").style.animation = "pulse 4s";
                     document.getElementById("pulse-line").style.animation = "pulse 4s";
