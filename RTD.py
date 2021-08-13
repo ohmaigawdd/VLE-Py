@@ -64,15 +64,27 @@ class RTD:
 
         xdata = []
         ydata = []
-        PFR = rtdpy.Pfr(tau=self.tau, dt=.01, time_end=self.tau*2)
+        PFR = rtdpy.Pfr(tau=self.tau, dt=.25, time_end=self.tau*2)
         x = PFR.time
         if self.type == 'pulse':
             y = PFR.exitage
+            y.fill(0)
         else:
-            y = PFR.stepresponse*100        
-        # x = x[::25]
-        # y = y[::25]
-
+            y = PFR.stepresponse*100
+            y = np.where(y < 50, 0, y)
+            y = np.where(y >= 50, 100, y)
+        
+        if not self.tau.is_integer():
+            x = list(x)
+            x.append(round(self.tau,2))
+            print(x)
+            x = sorted(x)
+            index = x.index(round(self.tau, 2))
+            print(index)
+            y = list(y)
+            y.insert(index, 100)
+            print(y)
+        
         self.x = list(x).copy()
         self.y = list(y).copy()
         self.length = self.x.index(float("{:.2f}".format(self.tau)))
@@ -164,7 +176,7 @@ class RTD:
         
 
     def CSTR(self, n):
-        CSTR = rtdpy.Ncstr(tau=self.tau, n = n, dt=.01, time_end=self.tau*5)
+        CSTR = rtdpy.Ncstr(tau=self.tau, n = n, dt=.25, time_end=self.tau*5)
         # x = np.arange(0, self.tau*5, 0.25)
         x = CSTR.time
         y = []
