@@ -109,7 +109,7 @@ class RTD:
         xdata, ydata = [], []
         PFR = rtdpy.Pfr(tau=self.tau, dt=.01, time_end=self.tau*2)
         x = PFR.time
-        y = PFR.exitage    
+        y = PFR.exitage
         # x = x[::25]
         # y = y[::25]
 
@@ -194,8 +194,8 @@ class RTD:
 
         self.x = list(x).copy()
         self.y = list(y).copy()
-        # self.length = self.x.index(float("{:.2f}".format(self.tau)))
-        # self.length2 = len(self.x)
+        self.length = self.x.index(float("{:.2f}".format(self.tau)))
+        self.length2 = len(self.x)
 
         fig = go.Figure(
             data=[go.Scatter(x=[], y=[], name = "n = " + str(n))],
@@ -378,3 +378,4 @@ class RTD:
 
 # a = RTD(50,2,'pulse')  # esp for PFR, ONLY INTEGER VALUES
 # a.CSTR(1)
+
