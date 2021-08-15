@@ -47,15 +47,15 @@ class RTD:
 
 
     def PFR_bypass(self):
-        bypass_tau = self.V_reactor / ((1-self.bypass)*self.flow)
+        self.bypass_tau = self.V_reactor / ((1-self.bypass)*self.flow)
         xdata = []
         ydata = []
-        PFR = rtdpy.Pfr(tau=bypass_tau, dt=.25, time_end=self.tau*2)
+        PFR = rtdpy.Pfr(tau=self.bypass_tau, dt=.25, time_end=self.tau*2)
         x = PFR.time
         if self.type == 'pulse':
             y = PFR.exitage*25*(1-self.bypass)
             y[0] = self.bypass*100 #bypass amount
-            if not self.tau.is_integer():
+            if not self.bypass_tau.is_integer():
                 y.fill(0)
             print(y)
         else:
@@ -63,12 +63,12 @@ class RTD:
             y = np.where(y < 50, PFR.stepresponse*100*self.bypass, y)
             y = np.where(y >= 50, 100, y)
         
-        if not self.tau.is_integer():
+        if not self.bypass_tau.is_integer():
             x = list(x)
-            x.append(round(self.tau,2))
+            x.append(round(self.bypass_tau,2))
             print(x)
             x = sorted(x)
-            index = x.index(round(self.tau, 2))
+            index = x.index(round(self.bypass_tau, 2))
             print(index)
             y = list(y)
             y.insert(index, 100)
@@ -76,7 +76,7 @@ class RTD:
         
         self.x = list(x).copy()
         self.y = list(y).copy()
-        self.length = self.x.index(float("{:.2f}".format(self.tau)))
+        self.length = self.x.index(float("{:.2f}".format(self.bypass_tau)))
         self.length2 = len(self.x)
 
         fig = go.Figure(
@@ -94,7 +94,7 @@ class RTD:
 
     def PFR_bypass_E(self):
         xdata, ydata = [], []
-        PFR = rtdpy.Pfr(tau=self.tau, dt=.01, time_end=self.tau*2)
+        PFR = rtdpy.Pfr(tau=self.bypass_tau, dt=.01, time_end=self.tau*2)
         x = PFR.time
         y = PFR.exitage*(1-self.bypass)
         y[0] = self.bypass*100
@@ -130,12 +130,12 @@ class RTD:
 
     def PFR_bypass_F(self):
         xdata, ydata = [], []
-        PFR = rtdpy.Pfr(tau=self.tau, dt=.01, time_end=self.tau*2)
+        PFR = rtdpy.Pfr(tau=self.bypass_tau, dt=.01, time_end=self.tau*2)
         x = PFR.time
         y = PFR.stepresponse
         #Temp solution for single bypass at start only
         y = np.where(y <= PFR.stepresponse*self.bypass, PFR.stepresponse*self.bypass, y)
-        y = np.where(y > PFR.stepresponse*self.bypass, PFR.stepresponse, y)
+        y = np.where(y > PFR.stepresponse*self.bypass, 1, y)
         # x = x[::25]
         # y = y[::25]
 
