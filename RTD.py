@@ -67,8 +67,10 @@ class RTD:
         PFR = rtdpy.Pfr(tau=self.tau, dt=.25, time_end=self.tau*2)
         x = PFR.time
         if self.type == 'pulse':
-            y = PFR.exitage
-            y.fill(0)
+            y = PFR.exitage*25
+            if not self.tau.is_integer():
+                y.fill(0)
+            print(y)
         else:
             y = PFR.stepresponse*100
             y = np.where(y < 50, 0, y)
@@ -192,8 +194,8 @@ class RTD:
 
         self.x = list(x).copy()
         self.y = list(y).copy()
-        self.length = self.x.index(float("{:.2f}".format(self.tau)))
-        self.length2 = len(self.x)
+        # self.length = self.x.index(float("{:.2f}".format(self.tau)))
+        # self.length2 = len(self.x)
 
         fig = go.Figure(
             data=[go.Scatter(x=[], y=[], name = "n = " + str(n))],
