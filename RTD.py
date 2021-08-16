@@ -76,7 +76,6 @@ class RTD:
         self.x = list(x).copy()
         self.y = list(y).copy()
         self.length = self.x.index(float("{:.2f}".format(self.tau)))
-        self.length2 = len(self.x)
 
         fig = go.Figure(
             data=[go.Scatter(x=[], y=[], name = "PFR")],
@@ -180,8 +179,7 @@ class RTD:
 
         self.x = list(x).copy()
         self.y = list(y).copy()
-        self.length = self.x.index(float("{:.2f}".format(self.tau)))
-        self.length2 = len(self.x)
+        self.length = len(self.x)
 
         fig = go.Figure(
             data=[go.Scatter(x=[], y=[], name = "n = " + str(n))],
