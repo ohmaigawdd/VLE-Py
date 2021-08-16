@@ -66,7 +66,7 @@
             if ("{{reactorType}}" == "cstr"){
                 if ("{{system.type}}" == "pulse"){
                   
-                    document.getElementById("cstr").style.animation = "bgcolor-change {{system.length2 * 0.0166}}s";
+                    document.getElementById("cstr").style.animation = "bgcolor-change {{system.length * 0.0166}}s";
                     document.getElementById("pulse-arrow").style.animation = "pulse 4s";
                     document.getElementById("pulse-line").style.animation = "pulse 4s";
                     document.getElementById("cstr").style.animationPlayState = "running";
@@ -74,7 +74,7 @@
                     document.getElementById("pulse-line").style.animationPlayState = "running";
                     
                 } else {
-                    document.getElementById("cstr-step").style.animation = "bgcolor-change-step {{system.length2 * 0.0166}}s";
+                    document.getElementById("cstr-step").style.animation = "bgcolor-change-step {{system.length * 0.0166}}s";
                     document.getElementById("step-arrow").style.animation = "step 4s";
                     document.getElementById("step-line").style.animation = "step 4s";
                     document.getElementById("cstr-step").style.animationPlayState = "running";
@@ -118,7 +118,7 @@
                     document.getElementById("pulse-arrow").style.animation = "none";
                     document.getElementById("pulse-line").style.animation = "none";
                     document.getElementById("cstr").offsetWidth;
-                    document.getElementById("cstr").style.animation = "bgcolor-change {{system.length2 * 0.0166}}s";
+                    document.getElementById("cstr").style.animation = "bgcolor-change {{system.length * 0.0166}}s";
                     document.getElementById("pulse-arrow").style.animation = "pulse 4s";
                     document.getElementById("pulse-line").style.animation = "pulse 4s";
                     document.getElementById("cstr").style.animationPlayState = "paused";
@@ -129,7 +129,7 @@
                     document.getElementById("step-arrow").style.animation = "none";
                     document.getElementById("step-line").style.animation = "none";
                     document.getElementById("cstr-step").offsetWidth;
-                    document.getElementById("cstr-step").style.animation = "bgcolor-change {{system.length2 * 0.0166}}s";
+                    document.getElementById("cstr-step").style.animation = "bgcolor-change {{system.length * 0.0166}}s";
                     document.getElementById("step-arrow").style.animation = "step 4s";
                     document.getElementById("step-line").style.animation = "step 4s";
                     document.getElementById("cstr-step").style.animationPlayState = "paused";
