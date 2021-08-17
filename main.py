@@ -1,5 +1,5 @@
 from flask import Flask, render_template, session, request
-from resetParamForm import PureForm, BinaryForm, IdealReactorForm
+from resetParamForm import PureForm, BinaryForm, IdealReactorForm, RealReactorForm
 from VLECalculations import RachfordRice, Antoine, Steam
 from Plot import plot, plot_steam, GvsP, GvsT
 from RTD import RTD
@@ -180,7 +180,29 @@ def idealreactors():
 # REAL PFR/CSTR PAGE
 @app.route("/realreactors", methods=["GET","POST"])
 def realreactors():
-    return render_template("realreactors.html")
+
+    form = RealReactorForm()
+    # Profs told us to fix V and Q for real reactor application
+    reactorVol = 20       #m3
+    reactorFlow = 10      #m3/s
+
+    if form.reactorType.data==None:
+        reactorType = "cstr"
+        tracerType = "pulse"
+        problemType = "poor impeller design"
+        errors = False
+    elif not form.validate_on_submit():
+        reactorType = "cstr"
+        tracerType = "pulse"
+        problemType = "poor impeller design"
+        errors = True
+    elif form.validate_on_submit():
+        reactorType = form.reactorType.data
+        tracerType = form.tracerType.data
+        problemType = form.problemType.data
+        errors = False
+
+    return render_template("realreactors.html", form=form, reactorType=reactorType, reactorFlow=reactorFlow, reactorVol=reactorVol, tracerType=tracerType, problemType=problemType)
 
 ###############################################################
 

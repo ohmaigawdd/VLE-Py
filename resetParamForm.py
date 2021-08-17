@@ -2,6 +2,16 @@ from flask_wtf import FlaskForm
 from wtforms.fields import SelectField, SubmitField, FloatField, IntegerField
 from wtforms.validators import NumberRange
 
+class RealReactorForm(FlaskForm):
+
+    reactorType = SelectField("Type of Reactor: ", choices = [("cstr","CSTR"), ("pfr","PFR")])
+
+    tracerType = SelectField("Type of Tracer Input: ", choices = [("pulse","Pulse"), ("step","Step")])
+
+    problemType = SelectField("Type of Non-ideality: ", choices = [("poor impeller design","Poor Impeller Design"), ("poor entrance/exit placement","Poor Entrance/Exit Placement")])
+
+    submit = SubmitField("Submit") 
+
 class IdealReactorForm(FlaskForm):
     
     reactorType = SelectField("Type of Reactor: ", choices = [("cstr","CSTR"), ("pfr","PFR")])
