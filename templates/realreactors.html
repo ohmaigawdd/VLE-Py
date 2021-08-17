@@ -13,7 +13,60 @@
     	Visualisation of Residence Time Distribution <br> (Real Reactors)
     </p>
     <p class="mainText">
-	Lorem, ipsum dolor sit amet consectetur adipisicing elit. Alias rerum quos deserunt excepturi, dicta, consectetur rem fugit nemo, explicabo cum id deleniti? Mollitia, voluptatum. Laborum est excepturi inventore quo ipsam.
+	Comparison of Residence Time Distribution between Ideal and Non-ideal Reactors
     </p>
 </div>
+
+<div class="information rounded" style='margin-right: 35px;'>
+    <p class='informationHeader'>Current System Parameters</p>
+    <br>
+    <table>
+        <tr >
+            <td class='tableHeader'><strong>Tracer Type:</strong></td> 
+            <td class='tableText'>{{ tracerType.capitalize() }}</td>
+            <td class='tableHeader'><strong>Type of Non-ideality:</strong></td> 
+            <td class='tableText'>{{ problemType.capitalize() }}</td>
+        </tr>
+        <tr>
+            <td class='tableHeader'><strong>Reactor Type:</strong></td> 
+            <td class='tableText'>{{ reactorType.upper() }}</td>
+        </tr>
+        <tr >
+            <td class='tableHeader'><strong>Reactor Volume (V):</strong></td> 
+            <td class='tableText'>{{ reactorVol }} m<sup>3</sup></td>
+        </tr>
+        <tr>
+            <td class='tableHeader'><strong>Flow Rate (Q):</strong></td> 
+            <td class='tableText'>{{ reactorFlow }} m<sup>3</sup>/s</td>
+        </tr>
+    </table>
+    <br>
+</div>
+
+<div class='information rounded'>
+    <form method="POST">
+        <p class='informationHeader'>Reset System Parameters</p>
+        {{ form.hidden_tag() }}
+        <table>
+            <tr class='informationText'>
+                <td><strong>{{ form.tracerType.label  }}</strong></td>
+                <td>{{ form.tracerType() }}</td>
+            </tr>
+            <tr class='informationText'>
+                <td><strong>{{ form.reactorType.label }}</strong></td> 
+                <td>{{ form.reactorType() }}</td>
+            </tr>
+            <tr class='informationText'>
+                <td><strong>{{ form.problemType.label }}</strong></td> 
+                <td>{{ form.problemType() }}</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>{{ form.submit() }}</td>
+            </tr>
+        </table>
+    </form>
+</div>
+
+<br style="clear: both">
 {% endblock %}

@@ -81,11 +81,14 @@ td {
 .tableHeader {
 	font-weight: 300;
 	color: white;
+	white-space: nowrap;
+	vertical-align: top;
 }
 
 .tableText {
 	font-weight: 300;
 	color: darkgray;
+	vertical-align: top;
 }
 
 /* For any legends (put a <table> inside */
