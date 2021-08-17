@@ -8,7 +8,7 @@ class RealReactorForm(FlaskForm):
 
     tracerType = SelectField("Type of Tracer Input: ", choices = [("pulse","Pulse"), ("step","Step")])
 
-    problemType = SelectField("Type of Non-ideality: ", choices = [("poor impeller design","Poor Impeller Design"), ("poor entrance/exit placement","Poor Entrance/Exit Placement")])
+    problemType = SelectField("Type of Non-ideality: ", choices = [("poor impeller design","Poor Impeller Design"), ("poor outlet design","Poor Outlet Design")])
 
     submit = SubmitField("Submit") 
 

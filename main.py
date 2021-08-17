@@ -184,7 +184,7 @@ def realreactors():
     form = RealReactorForm()
     # Profs told us to fix V and Q for real reactor application
     reactorVol = 20       #m3
-    reactorFlow = 10      #m3/s
+    reactorFlow = 2      #m3/s
 
     if form.reactorType.data==None:
         reactorType = "cstr"
