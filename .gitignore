@@ -4,3 +4,4 @@
 *.json
 **/rtdpy-master
 requirements.txt
+*/__pycache__/*

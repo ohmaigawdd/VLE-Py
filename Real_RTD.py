@@ -25,7 +25,7 @@ import json
 import rtdpy
 import time
 
-class RTD:
+class Real_RTD:
     
     def __init__(self,V_reactor,flow, type):
         types = ['pulse', 'step']
@@ -36,7 +36,7 @@ class RTD:
             self.type = type
             #bypass and deadvol are in fractions
             self.bypass = 0.2
-            self.deadvol = 2
+            self.deadvol = 10
             self.bypass_tau = self.V_reactor / ((1-self.bypass)*self.flow)
             self.deadvol_tau = (self.V_reactor-self.deadvol) / self.flow
 
@@ -87,7 +87,7 @@ class RTD:
                 yaxis=dict(range=[0, max(y)*1.1], autorange=False),
                 xaxis_title="Time (s)",
                 yaxis_title = "Concentration",
-                title="PFR: Plot of Concentration against Time",
+                title="Real PFR: Plot of Concentration against Time",
             ),
         )
         return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
@@ -111,7 +111,7 @@ class RTD:
                 yaxis=dict(range=[0, max(y)*1.1], autorange=False),
                 xaxis_title="Time (s)",
                 yaxis_title = "Cumulative Distribution Function",
-                title="PFR: Plot of E against Time",
+                title="Real PFR: Plot of E against Time",
                 updatemenus=[dict(
                 bgcolor = 'grey',
                 font = dict(color = 'black', family="Helvetica Neue, monospace", size = 12),
@@ -149,7 +149,7 @@ class RTD:
                 yaxis=dict(range=[0, max(y)*1.1], autorange=False),
                 xaxis_title="Time (s)",
                 yaxis_title = "Cumulative Distribution Function",
-                title="PFR: Plot of F against Time",
+                title="Real PFR: Plot of F against Time",
                 updatemenus=[dict(
                 bgcolor = 'grey',
                 font = dict(color = 'black', family="Helvetica Neue, monospace", size = 12),
@@ -164,7 +164,7 @@ class RTD:
         )
         
         return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
-
+      
     def PFR_deadvol(self):
         xdata = []
         ydata = []
@@ -204,7 +204,7 @@ class RTD:
                 yaxis=dict(range=[0, max(y)*1.1], autorange=False),
                 xaxis_title="Time (s)",
                 yaxis_title = "Concentration",
-                title="PFR: Plot of Concentration against Time",
+                title="Real PFR: Plot of Concentration against Time",
             ),
         )
         return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
@@ -227,7 +227,7 @@ class RTD:
                 yaxis=dict(range=[0, max(y)*1.1], autorange=False),
                 xaxis_title="Time (s)",
                 yaxis_title = "Cumulative Distribution Function",
-                title="PFR: Plot of E against Time",
+                title="Real PFR: Plot of E against Time",
                 updatemenus=[dict(
                 bgcolor = 'grey',
                 font = dict(color = 'black', family="Helvetica Neue, monospace", size = 12),
@@ -241,8 +241,6 @@ class RTD:
             ), frames = frames
         )
 
-        return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
-
     def PFR_deadvol_F(self):
         xdata, ydata = [], []
         PFR = rtdpy.Pfr(tau=self.deadvol_tau, dt=.01, time_end=self.tau*2)
@@ -252,7 +250,6 @@ class RTD:
         # y = y[::25]
 
         frames = [go.Frame(data=[go.Scatter(x=[x[i] for i in range(len(x))], y=[y[i] for i in range(len(y))])])]
-
         
         fig = go.Figure(
             data=[go.Scatter(x=xdata, y=ydata, name = "PFR", line = dict(width=6))],
@@ -262,7 +259,7 @@ class RTD:
                 yaxis=dict(range=[0, max(y)*1.1], autorange=False),
                 xaxis_title="Time (s)",
                 yaxis_title = "Cumulative Distribution Function",
-                title="PFR: Plot of F against Time",
+                title="Real PFR: Plot of F against Time",
                 updatemenus=[dict(
                 bgcolor = 'grey',
                 font = dict(color = 'black', family="Helvetica Neue, monospace", size = 12),
@@ -308,7 +305,7 @@ class RTD:
                 yaxis=dict(range=[0, max(y)*1.1], autorange=False),
                 xaxis_title="Time (s)",
                 yaxis_title = "Concentration",
-                title="n CSTR: Plot of Concentration against Time, n=" + str(n)
+                title="n Real CSTR: Plot of Concentration against Time, n=" + str(n)
             )
         )
 
@@ -354,7 +351,7 @@ class RTD:
                 yaxis=dict(range=[0, max(y)*1.1], autorange=False),
                 xaxis_title="Time (s)",
                 yaxis_title = "Exit Age Function",
-                title="n CSTR: Plot of E against Time, n=" + str(n),
+                title="n Real CSTR: Plot of E against Time, n=" + str(n),
                 updatemenus=[dict(
                 bgcolor = 'grey',
                 font = dict(color = 'black', family="Helvetica Neue, monospace", size = 12),
@@ -369,7 +366,6 @@ class RTD:
         )
 
         return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
-
 
     def CSTR_bypass_F(self,n):
 
@@ -417,7 +413,7 @@ class RTD:
                 yaxis=dict(range=[0, max(y)*1.1], autorange=False),
                 xaxis_title="Time (s)",
                 yaxis_title = "Cumulative Distribution Function",
-                title="n CSTR: Plot of F against Time, n=" + str(n),
+                title="n Real CSTR: Plot of F against Time, n=" + str(n),
                 updatemenus=[dict(
                 bgcolor = 'grey',
                 font = dict(color = 'black', family="Helvetica Neue, monospace", size = 12),
@@ -450,8 +446,7 @@ class RTD:
 
         self.x = list(x).copy()
         self.y = list(y).copy()
-        self.length = self.x.index(float("{:.2f}".format(self.tau)))
-        self.length2 = len(self.x)
+        self.length = len(self.x)
 
         fig = go.Figure(
             data=[go.Scatter(x=[], y=[], name = "n = " + str(n), line=dict(width=6))],
@@ -461,7 +456,7 @@ class RTD:
                 yaxis=dict(range=[0, max(y)*1.1], autorange=False),
                 xaxis_title="Time (s)",
                 yaxis_title = "Concentration",
-                title="n CSTR: Plot of Concentration against Time, n=" + str(n)
+                title="n Real CSTR: Plot of Concentration against Time, n=" + str(n)
             )
         )
 
@@ -483,7 +478,6 @@ class RTD:
 
         # x = x[::25]
         # y = y[::25]
-
         # frames = []
 
         # for i in range(len(x)-1):
@@ -502,7 +496,7 @@ class RTD:
                 yaxis=dict(range=[0, max(y)*1.1], autorange=False),
                 xaxis_title="Time (s)",
                 yaxis_title = "Exit Age Function",
-                title="n CSTR: Plot of E against Time, n=" + str(n),
+                title="n Real CSTR: Plot of E against Time, n=" + str(n),
                 updatemenus=[dict(
                 bgcolor = 'grey',
                 font = dict(color = 'black', family="Helvetica Neue, monospace", size = 12),
@@ -518,7 +512,6 @@ class RTD:
         
         return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
-
     def CSTR_deadvol_F(self,n):
 
         # x = np.arange(0, self.tau*5, 0.25)
@@ -530,8 +523,20 @@ class RTD:
 
         CSTR = rtdpy.Ncstr(tau=self.deadvol_tau, n = n, dt=.01, time_end=self.tau*5)
         xdata, ydata = [], []
+        timelost = []
         x = CSTR.time
-        y = CSTR.stepresponse
+        y = [self.bypass*self.flow/self.flow]
+        data = CSTR.stepresponse
+        for val in data:
+            if val >= y[0]:
+                y.append(val)
+            else:
+                pass
+        
+        #Will lose the first few t so need to somehow extrapolate graph
+        #while len(y) < len(x):
+        #    y.append(1)
+
         # x = x[::25]
         # y = y[::25]
 
@@ -553,7 +558,7 @@ class RTD:
                 yaxis=dict(range=[0, max(y)*1.1], autorange=False),
                 xaxis_title="Time (s)",
                 yaxis_title = "Cumulative Distribution Function",
-                title="n CSTR: Plot of F against Time, n=" + str(n),
+                title="n Real CSTR: Plot of F against Time, n=" + str(n),
                 updatemenus=[dict(
                 bgcolor = 'grey',
                 font = dict(color = 'black', family="Helvetica Neue, monospace", size = 12),
@@ -565,9 +570,9 @@ class RTD:
                             "fromcurrent": True, 
                             "transition": {"duration": 0}}])])]
             ), frames = frames
-        )
-        fig.show()
-        #return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+        
+        # fig.show()
+        return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
     # def CSTRstep(self, n):
     #     xdata = []
@@ -632,5 +637,6 @@ class RTD:
         # else:
         #     pass
 
-a = RTD(50,2,'pulse')  # esp for PFR, ONLY INTEGER VALUES
-a.CSTR_deadvol_F(1)
+# a = RTD(50,2,'pulse')  # esp for PFR, ONLY INTEGER VALUES
+# a.CSTR_deadvol_F(1)
+
