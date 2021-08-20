@@ -569,7 +569,7 @@ class Real_RTD:
                                     "redraw": False},
                             "fromcurrent": True, 
                             "transition": {"duration": 0}}])])]
-            ), frames = frames
+            ), frames = frames)
         
         # fig.show()
         return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
