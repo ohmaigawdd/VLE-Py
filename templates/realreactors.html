@@ -13,7 +13,7 @@
     	Visualisation of Residence Time Distribution <br> (Real Reactors)
     </p>
     <p class="mainText">
-	Comparison of Residence Time Distribution between Ideal and Non-ideal Reactors
+	    Comparison of Residence Time Distribution between Ideal and Non-ideal Reactors
     </p>
 </div>
 
@@ -23,7 +23,7 @@
     <table>
         <tr >
             <td class='tableHeader'><strong>Tracer Type:</strong></td> 
-            <td class='tableText'>{{ tracerType.capitalize() }}</td>
+            <td class='tableText'>{{ idealsystem.type.capitalize() }}</td>
             <td class='tableHeader'><strong>Type of Non-ideality:</strong></td> 
             <td class='tableText'>{{ problemType.capitalize() }}</td>
         </tr>
@@ -33,14 +33,73 @@
         </tr>
         <tr >
             <td class='tableHeader'><strong>Reactor Volume (V):</strong></td> 
-            <td class='tableText'>{{ reactorVol }} m<sup>3</sup></td>
+            <td class='tableText'>{{ idealsystem.V_reactor }} m<sup>3</sup></td>
         </tr>
         <tr>
             <td class='tableHeader'><strong>Flow Rate (Q):</strong></td> 
-            <td class='tableText'>{{ reactorFlow }} m<sup>3</sup>/s</td>
+            <td class='tableText'>{{ idealsystem.flow }} m<sup>3</sup>/s</td>
         </tr>
     </table>
     <br>
+    <button id="Start" onclick="requestAnimationFrame(animateStart);">Start Animation</button>
+    <button id="Pause" onclick="animatePause();">Pause Animation</button>
+    <button id="Reset" onclick="animateReset();">Reset Animation</button>
+    <script>
+        let idx = 1;
+        let flag = false;
+        let running = false;
+        
+        function animateReset() {
+            flag = false;
+            running = false;
+            idx = 1;
+            Plotly.animate("Cplot", {
+                data: [{x: [], y: [], mode: "lines"}]
+            },
+            {
+                transition: {duration: 0},
+                frame: {duration: 0,
+                        redraw: false}})
+            Plotly.animate("realCplot", {
+                data: [{x: [], y: [], mode: "lines"}]
+            },
+            {
+                transition: {duration: 0},
+                frame: {duration: 0,
+                        redraw: false}})
+        };
+        function animatePause() {
+            if (running == true) {
+                flag = true;
+            }
+        };
+        function animateStart() {
+            running = true;
+            Plotly.animate("Cplot", {
+                data: [{x: {{idealsystem.x}}.slice(0,idx), y: {{idealsystem.y}}.slice(0,idx), mode: "lines"}]
+            },
+            {
+                transition: {duration: 0},
+                frame: {duration: 0,
+                        redraw: false}})
+            Plotly.animate("realCplot", {
+                data: [{x: {{realsystem.x}}.slice(0,idx), y: {{realsystem.y}}.slice(0,idx), mode: "lines"}]
+            },
+            {
+                transition: {duration: 0},
+                frame: {duration: 0,
+                        redraw: false}})
+            
+            idx++
+            if (flag == false) {
+                requestAnimationFrame(animateStart);
+            }
+            else {
+                flag = false;
+                running = false;
+            }
+        }
+    </script>
 </div>
 
 <div class='information rounded'>
@@ -67,6 +126,54 @@
         </table>
     </form>
 </div>
+
+{% if errors == False %}
+<div class='information rounded' id='Cplot' style='margin-right: 35px; margin-top: 0px; height: 720px; padding: 0px'>
+    <!-- import plotly library -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script>
+        var Cgraph = {{ Cgraph | safe }}
+        Plotly.newPlot('Cplot',Cgraph, {})
+    </script>
+</div>
+
+<div class='information rounded' id='realCplot' style='margin-top: 0px; height: 720px; padding: 0px'>
+    <!-- import plotly library -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script>
+        var realCgraph = {{ realCgraph | safe }}
+        Plotly.newPlot('realCplot',realCgraph, {})
+    </script>
+</div>
+
+<div class='information rounded' id='Eplot' style='margin-right: 35px; margin-top: 0px; height: 720px; padding: 0px'>
+    <script>
+        var Egraph = {{ Egraph | safe }}
+        Plotly.newPlot('Eplot',Egraph, {})
+    </script>
+</div>
+
+<div class='information rounded' id='realEplot' style='margin-top: 0px; height: 720px; padding: 0px'>
+    <script>
+        var realEgraph = {{ realEgraph | safe }}
+        Plotly.newPlot('realEplot',realEgraph, {})
+    </script>
+</div>
+
+<div class='information rounded' id='Fplot' style='margin-right: 35px; margin-top: 0px; height: 720px; padding: 0px'>
+    <script>
+        var Fgraph = {{ Fgraph | safe }}
+        Plotly.newPlot('Fplot',Fgraph, {})
+    </script>
+</div>
+
+<div class='information rounded' id='realFplot' style='margin-top: 0px; height: 720px; padding: 0px'>
+    <script>
+        var realFgraph = {{ realFgraph | safe }}
+        Plotly.newPlot('realFplot',realFgraph, {})
+    </script>
+</div>
+{% endif %}
 
 <br style="clear: both">
 {% endblock %}
