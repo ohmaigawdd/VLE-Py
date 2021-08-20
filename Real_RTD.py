@@ -164,7 +164,7 @@ class Real_RTD:
         )
         
         return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
-
+      
     def PFR_deadvol(self):
         xdata = []
         ydata = []
@@ -241,8 +241,6 @@ class Real_RTD:
             ), frames = frames
         )
 
-        return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
-
     def PFR_deadvol_F(self):
         xdata, ydata = [], []
         PFR = rtdpy.Pfr(tau=self.deadvol_tau, dt=.01, time_end=self.tau*2)
@@ -252,7 +250,6 @@ class Real_RTD:
         # y = y[::25]
 
         frames = [go.Frame(data=[go.Scatter(x=[x[i] for i in range(len(x))], y=[y[i] for i in range(len(y))])])]
-
         
         fig = go.Figure(
             data=[go.Scatter(x=xdata, y=ydata, name = "PFR", line = dict(width=6))],
@@ -481,7 +478,6 @@ class Real_RTD:
 
         # x = x[::25]
         # y = y[::25]
-
         # frames = []
 
         # for i in range(len(x)-1):
@@ -527,8 +523,20 @@ class Real_RTD:
 
         CSTR = rtdpy.Ncstr(tau=self.deadvol_tau, n = n, dt=.01, time_end=self.tau*5)
         xdata, ydata = [], []
+        timelost = []
         x = CSTR.time
-        y = CSTR.stepresponse
+        y = [self.bypass*self.flow/self.flow]
+        data = CSTR.stepresponse
+        for val in data:
+            if val >= y[0]:
+                y.append(val)
+            else:
+                pass
+        
+        #Will lose the first few t so need to somehow extrapolate graph
+        #while len(y) < len(x):
+        #    y.append(1)
+
         # x = x[::25]
         # y = y[::25]
 
@@ -562,7 +570,7 @@ class Real_RTD:
                             "fromcurrent": True, 
                             "transition": {"duration": 0}}])])]
             ), frames = frames
-        )
+        
         # fig.show()
         return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
@@ -631,3 +639,4 @@ class Real_RTD:
 
 # a = RTD(50,2,'pulse')  # esp for PFR, ONLY INTEGER VALUES
 # a.CSTR_deadvol_F(1)
+
