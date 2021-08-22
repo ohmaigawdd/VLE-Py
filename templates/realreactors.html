@@ -113,17 +113,40 @@
             </tr>
             <tr class='informationText'>
                 <td><strong>{{ form.reactorType.label }}</strong></td> 
-                <td>{{ form.reactorType() }}</td>
+                <td onchange="optionChange()">{{ form.reactorType() }}</td>
             </tr>
             <tr class='informationText'>
-                <td><strong>{{ form.problemType.label }}</strong></td> 
-                <td>{{ form.problemType() }}</td>
+                <td><strong>{{ form.problemType_cstr.label }}</strong></td> 
+                <td>{{ form.problemType_cstr() }}{{ form.problemType_pfr() }}</td>
+                {% if reactorType == "cstr" %}
+                <script>
+                    document.getElementById("problemType_pfr").style.display = "none"
+                    document.getElementById("problemType_cstr").style.display = "initial"
+                </script>
+                {% else %}
+                <script>
+                    document.getElementById("problemType_pfr").style.display = "initial"
+                    document.getElementById("problemType_cstr").style.display = "none"
+                </script>
+                {% endif %}
             </tr>
             <tr>
                 <td></td>
                 <td>{{ form.submit() }}</td>
             </tr>
         </table>
+        <script>
+            function optionChange() {
+                let box_value = document.getElementById("reactorType").value;
+                if (box_value === "pfr") {
+                    document.getElementById("problemType_pfr").style.display = "initial"
+                    document.getElementById("problemType_cstr").style.display = "none"
+                } else {
+                    document.getElementById("problemType_pfr").style.display = "none"
+                    document.getElementById("problemType_cstr").style.display = "initial"
+                }
+            }
+        </script>
     </form>
 </div>
 
