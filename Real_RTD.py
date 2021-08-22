@@ -104,7 +104,7 @@ class Real_RTD:
         frames = [go.Frame(data=[go.Scatter(x=[x[i] for i in range(len(x))], y=[y[i] for i in range(len(y))])])]
         
         fig = go.Figure(
-            data=[go.Scatter(x=xdata, y=ydata, name = "PFR", line = dict(width=6))],
+            data=[go.Scatter(x=xdata, y=ydata, name = "PFR")],
             layout=go.Layout(template='plotly_dark',
                 paper_bgcolor='rgba(0,0,0,0)',
                 xaxis=dict(range=[0, self.tau*2], autorange=False),
@@ -142,7 +142,7 @@ class Real_RTD:
 
         
         fig = go.Figure(
-            data=[go.Scatter(x=xdata, y=ydata, name = "PFR", line = dict(width=6))],
+            data=[go.Scatter(x=xdata, y=ydata, name = "PFR")],
             layout=go.Layout(template='plotly_dark',
                 paper_bgcolor='rgba(0,0,0,0)',
                 xaxis=dict(range=[0, self.tau*2], autorange=False),
@@ -220,7 +220,7 @@ class Real_RTD:
         frames = [go.Frame(data=[go.Scatter(x=[x[i] for i in range(len(x))], y=[y[i] for i in range(len(y))])])]
         
         fig = go.Figure(
-            data=[go.Scatter(x=xdata, y=ydata, name = "PFR", line = dict(width=6))],
+            data=[go.Scatter(x=xdata, y=ydata, name = "PFR")],
             layout=go.Layout(template='plotly_dark',
                 paper_bgcolor='rgba(0,0,0,0)',
                 xaxis=dict(range=[0, self.tau*2], autorange=False),
@@ -241,6 +241,8 @@ class Real_RTD:
             ), frames = frames
         )
 
+        return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+
     def PFR_deadvol_F(self):
         xdata, ydata = [], []
         PFR = rtdpy.Pfr(tau=self.deadvol_tau, dt=.01, time_end=self.tau*2)
@@ -252,7 +254,7 @@ class Real_RTD:
         frames = [go.Frame(data=[go.Scatter(x=[x[i] for i in range(len(x))], y=[y[i] for i in range(len(y))])])]
         
         fig = go.Figure(
-            data=[go.Scatter(x=xdata, y=ydata, name = "PFR", line = dict(width=6))],
+            data=[go.Scatter(x=xdata, y=ydata, name = "PFR")],
             layout=go.Layout(template='plotly_dark',
                 paper_bgcolor='rgba(0,0,0,0)',
                 xaxis=dict(range=[0, self.tau*2], autorange=False),
@@ -344,7 +346,7 @@ class Real_RTD:
         frames = [go.Frame(data=[go.Scatter(x=[x[i] for i in range(len(x))], y=[y[i] for i in range(len(y))])])]
 
         fig = go.Figure(
-            data=[go.Scatter(x=xdata, y=ydata, name = "n = " + str(n), line=dict(width=6))],
+            data=[go.Scatter(x=xdata, y=ydata, name = "n = " + str(n))],
             layout=go.Layout(template='plotly_dark',
                 paper_bgcolor='rgba(0,0,0,0)',
                 xaxis=dict(range=[0, self.tau*5], autorange=False),
@@ -406,7 +408,7 @@ class Real_RTD:
         frames = [go.Frame(data=[go.Scatter(x=[x[i] for i in range(len(x))], y=[y[i] for i in range(len(y))])])]
 
         fig = go.Figure(
-            data=[go.Scatter(x=xdata, y=ydata, name = "n = " + str(n), line=dict(width=6))],
+            data=[go.Scatter(x=xdata, y=ydata, name = "n = " + str(n))],
             layout=go.Layout(template='plotly_dark',
                 paper_bgcolor='rgba(0,0,0,0)',
                 xaxis=dict(range=[0, self.tau*5], autorange=False),
@@ -449,7 +451,7 @@ class Real_RTD:
         self.length = len(self.x)
 
         fig = go.Figure(
-            data=[go.Scatter(x=[], y=[], name = "n = " + str(n), line=dict(width=6))],
+            data=[go.Scatter(x=[], y=[], name = "n = " + str(n))],
             layout=go.Layout(template='plotly_dark',
                 paper_bgcolor='rgba(0,0,0,0)',
                 xaxis=dict(range=[0, self.tau*5], autorange=False),
@@ -489,7 +491,7 @@ class Real_RTD:
         frames = [go.Frame(data=[go.Scatter(x=[x[i] for i in range(len(x))], y=[y[i] for i in range(len(y))])])]
 
         fig = go.Figure(
-            data=[go.Scatter(x=xdata, y=ydata, name = "n = " + str(n), line=dict(width=6))],
+            data=[go.Scatter(x=xdata, y=ydata, name = "n = " + str(n))],
             layout=go.Layout(template='plotly_dark',
                 paper_bgcolor='rgba(0,0,0,0)',
                 xaxis=dict(range=[0, self.tau*5], autorange=False),
@@ -551,7 +553,7 @@ class Real_RTD:
         frames = [go.Frame(data=[go.Scatter(x=[x[i] for i in range(len(x))], y=[y[i] for i in range(len(y))])])]
 
         fig = go.Figure(
-            data=[go.Scatter(x=xdata, y=ydata, name = "n = " + str(n), line=dict(width=6))],
+            data=[go.Scatter(x=xdata, y=ydata, name = "n = " + str(n))],
             layout=go.Layout(template='plotly_dark',
                 paper_bgcolor='rgba(0,0,0,0)',
                 xaxis=dict(range=[0, self.tau*5], autorange=False),

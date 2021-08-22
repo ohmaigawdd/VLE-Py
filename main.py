@@ -186,8 +186,8 @@ def realreactors():
     reactorVol = 20       #m3
     reactorFlow = 2      #m3/s
     # Array to check for real issues with reactors
-    reasons_for_deadvol = ["poor impeller design"]
-    reasons_for_bypass = ["poor outlet design"]
+    reasons_for_deadvol = ["poor impeller design", "reactor fouling"]
+    reasons_for_bypass = ["poor outlet design", "poor flow design"]
     # reasons_for_both = [] <- can add in when got more ideas
 
     if form.reactorType.data==None:
@@ -203,7 +203,10 @@ def realreactors():
     elif form.validate_on_submit():
         reactorType = form.reactorType.data
         tracerType = form.tracerType.data
-        problemType = form.problemType.data
+        if reactorType == "cstr":
+            problemType = form.problemType_cstr.data
+        else:
+            problemType = form.problemType_pfr.data
         errors = False
 
     if errors == False:

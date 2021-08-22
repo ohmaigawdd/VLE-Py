@@ -4,11 +4,12 @@ from wtforms.validators import NumberRange
 
 class RealReactorForm(FlaskForm):
 
-    reactorType = SelectField("Type of Reactor: ", choices = [("cstr","CSTR"), ("pfr","PFR")])
+    reactorType = SelectField("Type of Reactor: ", choices = [("cstr","CSTR"), ("pfr","PFR")], render_kw={'onchange': "optionChange()"})
 
     tracerType = SelectField("Type of Tracer Input: ", choices = [("pulse","Pulse"), ("step","Step")])
 
-    problemType = SelectField("Type of Non-ideality: ", choices = [("poor impeller design","Poor Impeller Design"), ("poor outlet design","Poor Outlet Design")])
+    problemType_cstr = SelectField("Type of Non-ideality: ", choices = [("poor impeller design","Poor Impeller Design"), ("poor outlet design","Poor Outlet Design")])
+    problemType_pfr = SelectField("Type of Non-ideality: ", choices = [("reactor fouling","Reactor Fouling"), ("poor flow design","Poor Flow Design")])
 
     submit = SubmitField("Submit") 
 
