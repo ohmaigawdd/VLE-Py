@@ -29,7 +29,7 @@
     }
 }
 
-@keyframes bgcolor-change-step {
+@keyframes bgcolor-change-fast {
     0% {
         background-color: #cae9F5;
     }
@@ -37,7 +37,19 @@
         background-color: red;
     }
     100% {
-        background-color: #5a0000;
+        background-color: #cae9F5;
+    }
+}
+
+@keyframes bgcolor-change-step {
+    0% {
+        background-color: #cae9F5;
+    }
+    0.1% {
+        background-color: rgb(236, 100, 100);
+    }
+    100% {
+        background-color: red;
     }
 }
 
@@ -84,7 +96,7 @@
     border: 1px dashed #888;
 }
 
-#cstr {
+#cstr, #cstr-real {
     position: relative;
     width: 300px;
     height: 400px;
@@ -101,7 +113,7 @@
     animation-timing-function: linear;
 }
 
-#cstr-step {
+#cstr-step, #cstr-step-real {
     position: relative;
     width: 300px;
     height: 400px;
@@ -111,14 +123,14 @@
     left: 0;
     margin: auto;
     border: 1px solid #1b4e5f;
-    background-color: #5a0000;
+    background-color: red;
     animation: bgcolor-change-step 5s;
     animation-play-state: paused;
     animation-fill-mode: forwards;
     animation-timing-function: linear;
 }
 
-#cstr-step {
+#cstr-step, #cstr-step-real {
     position: relative;
     width: 300px;
     height: 400px;
@@ -128,7 +140,7 @@
     left: 0;
     margin: auto;
     border: 1px solid #1b4e5f;
-    background-color: #5a0000;
+    background-color: red;
     animation: bgcolor-change-step 5s;
     animation-play-state: paused;
     animation-fill-mode: forwards;
@@ -240,7 +252,7 @@
     background-color: #f8efae;
 }
 
-#inflow, #outflow, #inflow-pfr, #outflow-pfr {
+#inflow, #outflow, #inflow-pfr, #outflow-pfr, #outflow-real {
     position: relative;
     width: 10px;
     height: 10px;
@@ -270,13 +282,19 @@
     animation-name: outflow;
 }
 
+#outflow-real {
+    bottom: 394px;
+    left: 500px;
+    animation-name: outflow;
+}
+
 #outflow-pfr {
     top: 186px;
     left: 500px;
     animation-name: outflow;
 }
 
-#in-line, #out-line, #in-line-pfr, #out-line-pfr {
+#in-line, #out-line, #in-line-pfr, #out-line-pfr, #out-line-real {
     position: relative;
     width: 140px;
     height: 1px;
@@ -298,16 +316,20 @@
     left: 460px;
 }
 
+#out-line-real {
+    bottom: 400px;
+    left: 460px;
+}
+
 #out-line-pfr {
     top: 180px;
     left: 460px;
 }
 
-#pulse-line {
+#pulse-line, #pulse-line-real, #pulse-line-real2 {
     position: relative;
     width: 1px;
     height: 100px;
-    bottom: 620px;
     right: 130px;
     margin: auto;
     border: 1px solid black;
@@ -316,11 +338,19 @@
     animation-play-state: paused;
 }
 
-#pulse-arrow {
+#pulse-line, #step-line, #pulse-line-real2, #step-line-real2 {
+    bottom: 620px;
+}
+
+#pulse-line-real, #step-line-real {
+    bottom: 556px;
+}
+
+
+#pulse-arrow, #pulse-arrow-real, #pulse-arrow-real2 {
     position: relative;
     width: 10px;
     height: 10px;
-    bottom: 627px;
     left: 175px;
     border: 4px solid black;
     border-left: 0;
@@ -330,11 +360,19 @@
     animation-play-state: paused;
 }
 
-#step-line {
+#pulse-arrow, #step-arrow, #pulse-arrow-real2, #step-arrow-real2 {
+    bottom: 627px;
+}
+
+#pulse-arrow-real, #step-arrow-real {
+    bottom: 563px;
+}
+
+
+#step-line, #step-line-real, #step-line-real2 {
     position: relative;
     width: 1px;
     height: 100px;
-    bottom: 620px;
     right: 130px;
     margin: auto;
     border: 1px solid red;
@@ -344,11 +382,10 @@
     animation-play-state: paused;
 }
 
-#step-arrow {
+#step-arrow, #step-arrow-real, #step-arrow-real2 {
     position: relative;
     width: 10px;
     height: 10px;
-    bottom: 627px;
     left: 175px;
     border: 4px solid red;
     border-left: 0;
@@ -357,4 +394,22 @@
     animation-name: step;
     animation-duration: 4s;
     animation-play-state: paused;
+}
+
+#dead-volume-left {
+    position: relative;
+    width: 30px;
+    height: 370px;
+    bottom: 547px;
+    left: 161px;
+    background-color: #cae9F5;
+}
+
+#dead-volume-right {
+    position: relative;
+    width: 30px;
+    height: 370px;
+    bottom: 917px;
+    left: 429px;
+    background-color: #cae9F5;
 }

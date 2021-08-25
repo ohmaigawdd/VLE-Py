@@ -59,7 +59,23 @@
                     document.getElementById("cstr").style.animationPlayState = "running";
                     document.getElementById("pulse-arrow").style.animationPlayState = "running";
                     document.getElementById("pulse-line").style.animationPlayState = "running";
-                    
+
+                    if ("{{problemType}}" == "poor impeller design"){
+                        document.getElementById("cstr-real").style.animation = "bgcolor-change {{idealsystem.length * 0.0166}}s";
+                        document.getElementById("pulse-arrow-real").style.animation = "pulse 4s";
+                        document.getElementById("pulse-line-real").style.animation = "pulse 4s";
+                        document.getElementById("cstr-real").style.animationPlayState = "running";
+                        document.getElementById("pulse-arrow-real").style.animationPlayState = "running";
+                        document.getElementById("pulse-line-real").style.animationPlayState = "running";
+                    } else {
+                        document.getElementById("cstr-real").style.animation = "bgcolor-change {{idealsystem.length * 0.0095}}s";
+                        document.getElementById("pulse-arrow-real2").style.animation = "pulse 4s";
+                        document.getElementById("pulse-line-real2").style.animation = "pulse 4s";
+                        document.getElementById("cstr-real").style.animationPlayState = "running";
+                        document.getElementById("pulse-arrow-real2").style.animationPlayState = "running";
+                        document.getElementById("pulse-line-real2").style.animationPlayState = "running";
+                    }
+    
                 } else {
                     document.getElementById("cstr-step").style.animation = "bgcolor-change-step {{idealsystem.length * 0.0166}}s";
                     document.getElementById("step-arrow").style.animation = "step 4s";
@@ -67,6 +83,22 @@
                     document.getElementById("cstr-step").style.animationPlayState = "running";
                     document.getElementById("step-arrow").style.animationPlayState = "running";
                     document.getElementById("step-line").style.animationPlayState = "running";
+
+                    if ("{{problemType}}" == "poor impeller design"){
+                        document.getElementById("cstr-step-real").style.animation = "bgcolor-change-step {{idealsystem.length * 0.0166}}s";
+                        document.getElementById("step-arrow-real").style.animation = "step 4s";
+                        document.getElementById("step-line-real").style.animation = "step 4s";
+                        document.getElementById("cstr-step-real").style.animationPlayState = "running";
+                        document.getElementById("step-arrow-real").style.animationPlayState = "running";
+                        document.getElementById("step-line-real").style.animationPlayState = "running";
+                    } else {
+                        document.getElementById("cstr-step-real").style.animation = "bgcolor-change-step {{idealsystem.length * 0.02}}s";
+                        document.getElementById("step-arrow-real2").style.animation = "step 4s";
+                        document.getElementById("step-line-real2").style.animation = "step 4s";
+                        document.getElementById("cstr-step-real").style.animationPlayState = "running";
+                        document.getElementById("step-arrow-real2").style.animationPlayState = "running";
+                        document.getElementById("step-line-real2").style.animationPlayState = "running";
+                    }
                 }
                 
             } else {
@@ -87,8 +119,10 @@
             if ("{{reactorType}}" == "cstr"){
                 if ("{{idealsystem.type}}" == "pulse"){
                     document.getElementById("cstr").style.animationPlayState = "paused";
+                    document.getElementById("cstr-real").style.animationPlayState = "paused";
                 } else {
                     document.getElementById("cstr-step").style.animationPlayState = "paused";
+                    document.getElementById("cstr-step-real").style.animationPlayState = "paused";
                 }
             } else {
                 if ("{{idealsystem.type}}" == "pulse"){
@@ -111,6 +145,31 @@
                     document.getElementById("cstr").style.animationPlayState = "paused";
                     document.getElementById("pulse-arrow").style.animationPlayState = "paused";
                     document.getElementById("pulse-line").style.animationPlayState = "paused";
+
+                    if ("{{problemType}}" == "poor impeller design"){
+                        document.getElementById("cstr-real").style.animation = 'none';
+                        document.getElementById("pulse-arrow-real").style.animation = "none";
+                        document.getElementById("pulse-line-real").style.animation = "none";
+                        document.getElementById("cstr-real").offsetWidth;
+                        document.getElementById("cstr-real").style.animation = "bgcolor-change {{idealsystem.length * 0.0166}}s";
+                        document.getElementById("pulse-arrow-real").style.animation = "pulse 4s";
+                        document.getElementById("pulse-line-real").style.animation = "pulse 4s";
+                        document.getElementById("cstr-real").style.animationPlayState = "paused";
+                        document.getElementById("pulse-arrow-real").style.animationPlayState = "paused";
+                        document.getElementById("pulse-line-real").style.animationPlayState = "paused";
+                    } else {
+                        document.getElementById("cstr-real").style.animation = 'none';
+                        document.getElementById("pulse-arrow-real2").style.animation = "none";
+                        document.getElementById("pulse-line-real2").style.animation = "none";
+                        document.getElementById("cstr-real").offsetWidth;
+                        document.getElementById("cstr-real").style.animation = "bgcolor-change {{idealsystem.length * 0.095}}s";
+                        document.getElementById("pulse-arrow-real2").style.animation = "pulse 4s";
+                        document.getElementById("pulse-line-real2").style.animation = "pulse 4s";
+                        document.getElementById("cstr-real").style.animationPlayState = "paused";
+                        document.getElementById("pulse-arrow-real2").style.animationPlayState = "paused";
+                        document.getElementById("pulse-line-real2").style.animationPlayState = "paused";
+                    }
+
                 } else {
                     document.getElementById("cstr-step").style.animation = 'none';
                     document.getElementById("step-arrow").style.animation = "none";
@@ -122,6 +181,30 @@
                     document.getElementById("cstr-step").style.animationPlayState = "paused";
                     document.getElementById("step-arrow").style.animationPlayState = "paused";
                     document.getElementById("step-line").style.animationPlayState = "paused";
+                    
+                    if ("{{problemType}}" == "poor impeller design"){
+                        document.getElementById("cstr-step-real").style.animation = 'none';
+                        document.getElementById("step-arrow-real").style.animation = "none";
+                        document.getElementById("step-line-real").style.animation = "none";
+                        document.getElementById("cstr-step-real").offsetWidth;
+                        document.getElementById("cstr-step-real").style.animation = "bgcolor-change {{idealsystem.length * 0.0166}}s";
+                        document.getElementById("step-arrow-real").style.animation = "step 4s";
+                        document.getElementById("step-line-real").style.animation = "step 4s";
+                        document.getElementById("cstr-step-real").style.animationPlayState = "paused";
+                        document.getElementById("step-arrow-real").style.animationPlayState = "paused";
+                        document.getElementById("step-line-real").style.animationPlayState = "paused";
+                    } else {
+                        document.getElementById("cstr-step-real").style.animation = 'none';
+                        document.getElementById("step-arrow-real2").style.animation = "none";
+                        document.getElementById("step-line-real2").style.animation = "none";
+                        document.getElementById("cstr-step-real").offsetWidth;
+                        document.getElementById("cstr-step-real").style.animation = "bgcolor-change {{idealsystem.length * 0.025}}s";
+                        document.getElementById("step-arrow-real2").style.animation = "step 4s";
+                        document.getElementById("step-line-real2").style.animation = "step 4s";
+                        document.getElementById("cstr-step-real").style.animationPlayState = "paused";
+                        document.getElementById("step-arrow-real2").style.animationPlayState = "paused";
+                        document.getElementById("step-line-real2").style.animationPlayState = "paused";
+                    }
                 }
             } else {
                 if ("{{idealsystem.type}}" == "pulse"){
@@ -284,7 +367,77 @@
 </div>
 
 <div class='information rounded' id='real-reactor-animation' style='margin-top: 0px; height: 720px; padding: 0px;'>
-    <p class="tableText">Yusong, you can add your code for the real reactor here.</p>
+    {% if reactorType == "cstr" %}
+        {% if idealsystem.type == "pulse" %}
+            {% if problemType == "poor impeller design" %}
+                <div id="cstr-real"></div>
+                <div id="impeller-stick"></div>
+                <div id="inflow"></div>
+                <div id="outflow"></div>
+                <div id="in-line"></div>
+                <div id="out-line"></div>
+                <div id="impeller-blades-left"></div>
+                <div id="impeller-blades-right"></div>
+                <div id="pulse-line-real"></div>
+                <div id="pulse-arrow-real"></div>
+                <div id="dead-volume-left"></div>
+                <div id="dead-volume-right"></div>
+            {% else %}
+                <div id="cstr-real"></div>
+                <div id="impeller-stick-ideal"></div>
+                <div id="inflow"></div>
+                <div id="outflow-real"></div>
+                <div id="in-line"></div>
+                <div id="out-line-real"></div>
+                <div id="impeller-blades-left-ideal"></div>
+                <div id="impeller-blades-right-ideal"></div>
+                <div id="pulse-line-real2"></div>
+                <div id="pulse-arrow-real2"></div>
+            {% endif %}
+        {% else %}
+            {% if problemType == "poor impeller design" %}
+                <div id="cstr-step-real"></div>
+                <div id="impeller-stick"></div>
+                <div id="inflow"></div>
+                <div id="outflow"></div>
+                <div id="in-line"></div>
+                <div id="out-line"></div>
+                <div id="impeller-blades-left"></div>
+                <div id="impeller-blades-right"></div>
+                <div id="step-line-real"></div>
+                <div id="step-arrow-real"></div>
+                <div id="dead-volume-left"></div>
+                <div id="dead-volume-right"></div>
+            {% else %}
+                <div id="cstr-step-real"></div>
+                <div id="impeller-stick-ideal"></div>
+                <div id="inflow"></div>
+                <div id="outflow-real"></div>
+                <div id="in-line"></div>
+                <div id="out-line-real"></div>
+                <div id="impeller-blades-left-ideal"></div>
+                <div id="impeller-blades-right-ideal"></div>
+                <div id="step-line-real2"></div>
+                <div id="step-arrow-real2"></div>
+            {% endif %}
+        {% endif %}
+    {% else %}
+        {% if idealsystem.type == "pulse" %}
+            <div id="pfr"></div>
+            <div id="inflow-pfr"></div>
+            <div id="outflow-pfr"></div>
+            <div id="in-line-pfr"></div>
+            <div id="out-line-pfr"></div>
+            <div id="pfr-plugflow"></div>
+        {% else %}
+            <div id="pfr"></div>
+            <div id="inflow-pfr"></div>
+            <div id="outflow-pfr"></div>
+            <div id="in-line-pfr"></div>
+            <div id="out-line-pfr"></div>
+            <div id="pfr-plugflow-step"></div>
+        {% endif %}
+    {% endif %}
 </div>
 
 <div class='information rounded' id='Cplot' style='margin-right: 35px; margin-top: 0px; height: 720px; padding: 0px'>
