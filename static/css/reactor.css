@@ -17,6 +17,11 @@
     to {left: 570px;}
 }
 
+@keyframes bypass {
+    from {left: 150px;}
+    to {left: 450px;}
+}
+
 @keyframes bgcolor-change {
     0% {
         background-color: #cae9F5;
@@ -61,6 +66,12 @@
 @keyframes plugflow {
     from {left: -145px}
     to {left: 145px}
+    
+}
+
+@keyframes plugflow-fouling {
+    from {left: -140px}
+    to {left: 140px}
     
 }
 
@@ -159,7 +170,7 @@
     background-color: #cae9F5;
 }
 
-#pfr-plugflow {
+#pfr-plugflow, #pfr-plugflow-real2 {
     position: relative;
     width: 10px;
     height: 98px;
@@ -173,11 +184,54 @@
     animation-play-state: paused;
 }
 
-#pfr-plugflow-step {
+#pfr-plugflow-real {
+    position: relative;
+    width: 20px;
+    height: 60px;
+    top: 108px;
+    left: 140px;
+    margin: auto;
+    background-color: red;
+    animation: plugflow 5s;
+    animation-play-state: paused;
+}
+
+#fouling-1, #fouling-2 {
+    position: relative;
+    width: 300px;
+    height: 20px;
+    background-color: sienna;
+}
+
+#fouling-1 {
+    top: 129px;
+    left: 160px;
+}
+
+#fouling-2 {
+    top: 188px;
+    left: 160px;
+}
+
+#pfr-plugflow-step, #pfr-plugflow-step-real2 {
     position: relative;
     width: 300px;
     height: 98px;
     top: 129px;
+    left: 0px;
+    right: unset;
+    bottom: 0;
+    margin: auto;
+    background-color: red;
+    animation: plugflow-step 5s;
+    animation-play-state: paused;
+}
+
+#pfr-plugflow-step-real {
+    position: relative;
+    width: 300px;
+    height: 60px;
+    top: 108px;
     left: 0px;
     right: unset;
     bottom: 0;
@@ -252,7 +306,7 @@
     background-color: #f8efae;
 }
 
-#inflow, #outflow, #inflow-pfr, #outflow-pfr, #outflow-real {
+#inflow, #outflow, #inflow-pfr, #outflow-pfr, #outflow-real, #bypass-arrow {
     position: relative;
     width: 10px;
     height: 10px;
@@ -322,8 +376,40 @@
 }
 
 #out-line-pfr {
-    top: 180px;
+    top: 179px;
     left: 460px;
+}
+
+#bypass-2 {
+    position: relative;
+    background-color: #b9d770;
+    width: 421px;
+    height: 1px;
+    top: 10px;
+    left: 100px;
+}
+
+#bypass-1, #bypass-3 {
+    position: relative;
+    background-color: #b9d770;
+    width: 1px;
+    height: 70px;
+}
+
+#bypass-1 {
+    top: 80px;
+    left: 100px;
+}
+
+#bypass-3 {
+    top: 10px;
+    left: 520px;
+}
+
+#bypass-arrow {
+    top:5px;
+    left: 150px;
+    animation-name: bypass;
 }
 
 #pulse-line, #pulse-line-real, #pulse-line-real2 {

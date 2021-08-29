@@ -107,10 +107,32 @@
                     // 0.0166 is obtained by running a console.time() and consol.timeEnd() on the plotly code to find average time to plot a point on plotly
                     document.getElementById("pfr-plugflow").style.animationPlayState = "running";
                     document.getElementById("pfr-plugflow").style.animationTimingFunction = "linear";
+
+                    if ("{{problemType}}" == "reactor fouling"){
+                        document.getElementById("pfr-plugflow-real").style.animation = "plugflow-fouling {{idealsystem.length * 0.0166 * 0.5}}s";
+                        // 0.0166 is obtained by running a console.time() and consol.timeEnd() on the plotly code to find average time to plot a point on plotly
+                        document.getElementById("pfr-plugflow-real").style.animationPlayState = "running";
+                        document.getElementById("pfr-plugflow-real").style.animationTimingFunction = "linear";
+                    } else {
+                        document.getElementById("pfr-plugflow-real2").style.animation = "plugflow-fouling {{idealsystem.length * 0.0166 * 0.5}}s";
+                        // 0.0166 is obtained by running a console.time() and consol.timeEnd() on the plotly code to find average time to plot a point on plotly
+                        document.getElementById("pfr-plugflow-real2").style.animationPlayState = "running";
+                        document.getElementById("pfr-plugflow-real2").style.animationTimingFunction = "linear";
+                    }
                 } else {
                     document.getElementById("pfr-plugflow-step").style.animation = "plugflow-step {{idealsystem.length * 0.0166}}s";
                     document.getElementById("pfr-plugflow-step").style.animationPlayState = "running";
                     document.getElementById("pfr-plugflow-step").style.animationTimingFunction = "linear";
+
+                    if ("{{problemType}}" == "reactor fouling"){
+                        document.getElementById("pfr-plugflow-step-real").style.animation = "plugflow-step {{idealsystem.length * 0.0166 *0.5}}s";
+                        document.getElementById("pfr-plugflow-step-real").style.animationPlayState = "running";
+                        document.getElementById("pfr-plugflow-step-real").style.animationTimingFunction = "linear";
+                    } else {
+                        document.getElementById("pfr-plugflow-step-real2").style.animation = "plugflow-step {{idealsystem.length * 0.0166 *0.5}}s";
+                        document.getElementById("pfr-plugflow-step-real2").style.animationPlayState = "running";
+                        document.getElementById("pfr-plugflow-step-real2").style.animationTimingFunction = "linear";
+                    }
                 }
                 
             }
@@ -212,11 +234,35 @@
                     document.getElementById("pfr-plugflow").offsetWidth;
                     document.getElementById("pfr-plugflow").style.animation = "plugflow {{ idealsystem.length * 0.0166 }}s";
                     document.getElementById("pfr-plugflow").style.animationPlayState = "paused";
+                    
+                    if ("{{problemType}}" == "reactor fouling"){
+                        document.getElementById("pfr-plugflow-real").style.animation = 'none';
+                        document.getElementById("pfr-plugflow-real").offsetWidth;
+                        document.getElementById("pfr-plugflow-real").style.animation = "plugflow {{ idealsystem.length * 0.0166 *0.5}}s";
+                        document.getElementById("pfr-plugflow-real").style.animationPlayState = "paused";
+                    } else {
+                        document.getElementById("pfr-plugflow-real2").style.animation = 'none';
+                        document.getElementById("pfr-plugflow-real2").offsetWidth;
+                        document.getElementById("pfr-plugflow-real2").style.animation = "plugflow {{ idealsystem.length * 0.0166 *0.5}}s";
+                        document.getElementById("pfr-plugflow-real2").style.animationPlayState = "paused";
+                    }
                 } else {
                     document.getElementById("pfr-plugflow-step").style.animation = 'none';
                     document.getElementById("pfr-plugflow-step").offsetWidth;
                     document.getElementById("pfr-plugflow-step").style.animation = "plugflow-step {{ idealsystem.length * 0.0166 }}s";
                     document.getElementById("pfr-plugflow-step").style.animationPlayState = "paused";
+
+                    if ("{{problemType}}" == "reactor fouling"){
+                        document.getElementById("pfr-plugflow-step-real").style.animation = 'none';
+                        document.getElementById("pfr-plugflow-step-real").offsetWidth;
+                        document.getElementById("pfr-plugflow-step-real").style.animation = "plugflow-step {{ idealsystem.length * 0.0166 }}s";
+                        document.getElementById("pfr-plugflow-step-real").style.animationPlayState = "paused";
+                    } else {
+                        document.getElementById("pfr-plugflow-step-real2").style.animation = 'none';
+                        document.getElementById("pfr-plugflow-step-real2").offsetWidth;
+                        document.getElementById("pfr-plugflow-step-real2").style.animation = "plugflow-step {{ idealsystem.length * 0.0166 }}s";
+                        document.getElementById("pfr-plugflow-step-real2").style.animationPlayState = "paused";
+                    }
                 }
             }
         }
@@ -423,19 +469,49 @@
         {% endif %}
     {% else %}
         {% if idealsystem.type == "pulse" %}
-            <div id="pfr"></div>
-            <div id="inflow-pfr"></div>
-            <div id="outflow-pfr"></div>
-            <div id="in-line-pfr"></div>
-            <div id="out-line-pfr"></div>
-            <div id="pfr-plugflow"></div>
+            {% if problemType == "reactor fouling" %}
+                <div id="pfr"></div>
+                <div id="inflow-pfr"></div>
+                <div id="outflow-pfr"></div>
+                <div id="in-line-pfr"></div>
+                <div id="out-line-pfr"></div>
+                <div id="fouling-1"></div>
+                <div id="fouling-2"></div>
+                <div id="pfr-plugflow-real"></div>
+            {% else %}
+                <div id="pfr"></div>
+                <div id="inflow-pfr"></div>
+                <div id="outflow-pfr"></div>
+                <div id="in-line-pfr"></div>
+                <div id="out-line-pfr"></div>
+                <div id="pfr-plugflow-real2"></div>
+                <div id="bypass-1"></div>
+                <div id="bypass-3"></div>
+                <div id="bypass-2"></div>
+                <div id="bypass-arrow"></div>
+            {% endif %}
         {% else %}
-            <div id="pfr"></div>
-            <div id="inflow-pfr"></div>
-            <div id="outflow-pfr"></div>
-            <div id="in-line-pfr"></div>
-            <div id="out-line-pfr"></div>
-            <div id="pfr-plugflow-step"></div>
+            {% if problemType == "reactor fouling" %}
+                <div id="pfr"></div>
+                <div id="inflow-pfr"></div>
+                <div id="outflow-pfr"></div>
+                <div id="in-line-pfr"></div>
+                <div id="out-line-pfr"></div>
+                <div id="fouling-1"></div>
+                <div id="fouling-2"></div>
+                <div id="pfr-plugflow-step-real"></div>
+            {% else %}
+                <div id="pfr"></div>
+                <div id="inflow-pfr"></div>
+                <div id="outflow-pfr"></div>
+                <div id="in-line-pfr"></div>
+                <div id="out-line-pfr"></div>
+                <div id="pfr-plugflow-step-real2"></div>
+                <div id="bypass-1"></div>
+                <div id="bypass-3"></div>
+                <div id="bypass-2"></div>
+                <div id="bypass-arrow"></div>
+            {% endif %}
         {% endif %}
     {% endif %}
 </div>

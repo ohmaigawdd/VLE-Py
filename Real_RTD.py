@@ -60,7 +60,7 @@ class Real_RTD:
             y[0] = self.bypass*100 #bypass amount
             if not self.bypass_tau.is_integer():
                 y.fill(0)
-            print(y)
+            # print(y)
         else:
             y = PFR_Real.stepresponse*100
             y = np.where(y < 50, 20, y)
@@ -69,13 +69,13 @@ class Real_RTD:
         if not self.bypass_tau.is_integer():
             x = list(x)
             x.append(round(self.bypass_tau,2))
-            print(x)
+            # print(x)
             x = sorted(x)
             index = x.index(round(self.bypass_tau, 2))
-            print(index)
+            # print(index)
             y = list(y)
             y.insert(index, 100)
-            print(y)
+            # print(y)
         
         self.x = list(x).copy()
         self.y = list(y).copy()
@@ -185,7 +185,7 @@ class Real_RTD:
             y = PFR_Real.exitage*25
             if not self.deadvol_tau.is_integer():
                 y.fill(0)
-            print(y)
+            # print(y)
         else:
             y = PFR_Real.stepresponse*100
             y = np.where(y < 50, 0, y)
@@ -194,13 +194,13 @@ class Real_RTD:
         if not self.deadvol_tau.is_integer():
             x = list(x)
             x.append(round(self.deadvol_tau,2))
-            print(x)
+            # print(x)
             x = sorted(x)
             index = x.index(round(self.deadvol_tau, 2))
-            print(index)
+            # print(index)
             y = list(y)
             y.insert(index, 100)
-            print(y)
+            # print(y)
         
         self.x = list(x).copy()
         self.y = list(y).copy()
