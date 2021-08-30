@@ -214,6 +214,8 @@ def realreactors():
         realsystem = Real_RTD(reactorVol, reactorFlow, tracerType)
         if reactorType == "cstr":
             Cgraph = idealsystem.CSTR(1) #note that code now has this as "n"
+            Egraph = idealsystem.CSTR_E(1)
+            Fgraph = idealsystem.CSTR_F(1)
             if problemType in reasons_for_deadvol:
                 realCgraph = realsystem.CSTR_deadvol(1) 
                 realEgraph = realsystem.CSTR_deadvol_E(1)
@@ -224,6 +226,8 @@ def realreactors():
                 realFgraph = realsystem.CSTR_bypass_F(1)
         elif reactorType == "pfr":
             Cgraph = idealsystem.PFR()
+            Egraph = idealsystem.PFR_E()
+            Fgraph = idealsystem.PFR_F()
             if problemType in reasons_for_deadvol:
                 realCgraph = realsystem.PFR_deadvol() 
                 realEgraph = realsystem.PFR_deadvol_E()
@@ -238,11 +242,13 @@ def realreactors():
         idealsystem.length = 0
         realsystem.length = 0
         Cgraph = False
+        Egraph = False
+        Fgraph = False
         realCgraph = False
         realEgraph = False
         realFgraph = False
 
-    return render_template("realreactors.html", form=form, errors=errors, reactorType=reactorType, problemType=problemType, idealsystem=idealsystem, realsystem=realsystem, Cgraph=Cgraph, realCgraph=realCgraph, realEgraph=realEgraph, realFgraph=realFgraph)
+    return render_template("realreactors.html", form=form, errors=errors, reactorType=reactorType, problemType=problemType, idealsystem=idealsystem, realsystem=realsystem, Cgraph=Cgraph, Egraph=Egraph, Fgraph=Fgraph, realCgraph=realCgraph, realEgraph=realEgraph, realFgraph=realFgraph)
 
 ###############################################################
 

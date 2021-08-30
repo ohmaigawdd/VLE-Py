@@ -119,7 +119,7 @@ class Real_RTD:
                 yaxis=dict(range=[0, max(y)*1.1], autorange=False),
                 xaxis_title="Time (s)",
                 yaxis_title = "Cumulative Distribution Function",
-                title="PFR: Plot of E against Time",
+                title="Real PFR: Plot of E against Time",
                 updatemenus=[dict(
                 bgcolor = 'grey',
                 font = dict(color = 'black', family="Helvetica Neue, monospace", size = 12),
@@ -160,7 +160,7 @@ class Real_RTD:
                 yaxis=dict(range=[0, max(y)*1.1], autorange=False),
                 xaxis_title="Time (s)",
                 yaxis_title = "Cumulative Distribution Function",
-                title="PFR: Plot of F against Time",
+                title="Real PFR: Plot of F against Time",
                 updatemenus=[dict(
                 bgcolor = 'grey',
                 font = dict(color = 'black', family="Helvetica Neue, monospace", size = 12),
@@ -242,7 +242,7 @@ class Real_RTD:
                 yaxis=dict(range=[0, max(y)*1.1], autorange=False),
                 xaxis_title="Time (s)",
                 yaxis_title = "Cumulative Distribution Function",
-                title="PFR: Plot of E against Time",
+                title="Real PFR: Plot of E against Time",
                 updatemenus=[dict(
                 bgcolor = 'grey',
                 font = dict(color = 'black', family="Helvetica Neue, monospace", size = 12),
@@ -280,7 +280,7 @@ class Real_RTD:
                 yaxis=dict(range=[0, max(y)*1.1], autorange=False),
                 xaxis_title="Time (s)",
                 yaxis_title = "Cumulative Distribution Function",
-                title="PFR: Plot of F against Time",
+                title="Real PFR: Plot of F against Time",
                 updatemenus=[dict(
                 bgcolor = 'grey',
                 font = dict(color = 'black', family="Helvetica Neue, monospace", size = 12),
@@ -376,7 +376,7 @@ class Real_RTD:
                 yaxis=dict(range=[0, max(y)*1.1], autorange=False),
                 xaxis_title="Time (s)",
                 yaxis_title = "Exit Age Function",
-                title="n CSTR: Plot of E against Time, n=" + str(n),
+                title="n Real CSTR: Plot of E against Time, n=" + str(n),
                 updatemenus=[dict(
                 bgcolor = 'grey',
                 font = dict(color = 'black', family="Helvetica Neue, monospace", size = 12),
@@ -442,7 +442,7 @@ class Real_RTD:
                 yaxis=dict(range=[0, max(y)*1.1], autorange=False),
                 xaxis_title="Time (s)",
                 yaxis_title = "Cumulative Distribution Function",
-                title="n CSTR: Plot of F against Time, n=" + str(n),
+                title="n Real CSTR: Plot of F against Time, n=" + str(n),
                 updatemenus=[dict(
                 bgcolor = 'grey',
                 font = dict(color = 'black', family="Helvetica Neue, monospace", size = 12),
@@ -529,7 +529,7 @@ class Real_RTD:
                 yaxis=dict(range=[0, max(y)*1.1], autorange=False),
                 xaxis_title="Time (s)",
                 yaxis_title = "Exit Age Function",
-                title="n CSTR: Plot of E against Time, n=" + str(n),
+                title="n Real CSTR: Plot of E against Time, n=" + str(n),
                 updatemenus=[dict(
                 bgcolor = 'grey',
                 font = dict(color = 'black', family="Helvetica Neue, monospace", size = 12),
@@ -573,7 +573,7 @@ class Real_RTD:
                 yaxis=dict(range=[0, max(y)*1.1], autorange=False),
                 xaxis_title="Time (s)",
                 yaxis_title = "Cumulative Distribution Function",
-                title="n CSTR: Plot of F against Time, n=" + str(n),
+                title="n Real CSTR: Plot of F against Time, n=" + str(n),
                 updatemenus=[dict(
                 bgcolor = 'grey',
                 font = dict(color = 'black', family="Helvetica Neue, monospace", size = 12),

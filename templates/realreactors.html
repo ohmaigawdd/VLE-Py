@@ -534,13 +534,26 @@
     </script>
 </div>
 
-<div class='information rounded' id='realEplot' style='margin-right: 35px; margin-top: 0px; height: 720px; padding: 0px'>
+<div class='information rounded' id='Eplot' style='margin-right: 35px; margin-top: 0px; height: 720px; padding: 0px'>
+    <script>
+        var Egraph = {{ Egraph | safe }}
+        Plotly.newPlot('Eplot',Egraph, {})
+    </script>
+</div>
+
+<div class='information rounded' id='realEplot' style='margin-top: 0px; height: 720px; padding: 0px'>
     <script>
         var realEgraph = {{ realEgraph | safe }}
         Plotly.newPlot('realEplot',realEgraph, {})
     </script>
 </div>
 
+<div class='information rounded' id='Fplot' style='margin-right: 35px; margin-top: 0px; height: 720px; padding: 0px'>
+    <script>
+        var Fgraph = {{ Fgraph | safe }}
+        Plotly.newPlot('Fplot',Fgraph, {})
+    </script>
+</div>
 
 <div class='information rounded' id='realFplot' style='margin-top: 0px; height: 720px; padding: 0px'>
     <script>
