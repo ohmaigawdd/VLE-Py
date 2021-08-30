@@ -24,6 +24,7 @@ import json
 #Instasll rtdpy first! (TRY INSTALL MANUALLY INSTEAD OF PIP) idk why it installed older version
 import rtdpy
 import time
+from RTD import RTD
 
 class Real_RTD:
     
@@ -39,6 +40,7 @@ class Real_RTD:
             self.deadvol = 10
             self.bypass_tau = self.V_reactor / ((1-self.bypass)*self.flow)
             self.deadvol_tau = (self.V_reactor-self.deadvol) / self.flow
+            self.ideal = RTD(20,2,self.type)
 
     #rtdpy not as nice as signal.unit_impulse for PFR
     # 3 methods for ideal PFR RTD:
@@ -50,29 +52,30 @@ class Real_RTD:
     def PFR_bypass(self):
         xdata = []
         ydata = []
-        PFR = rtdpy.Pfr(tau=self.bypass_tau, dt=.25, time_end=self.tau*2)
-        x = PFR.time
+        PFR_Real = rtdpy.Pfr(tau=self.bypass_tau, dt=.25, time_end=self.tau*2)
+        x = PFR_Real.time
+
         if self.type == 'pulse':
-            y = PFR.exitage*25*(1-self.bypass)
+            y = PFR_Real.exitage*25*(1-self.bypass)
             y[0] = self.bypass*100 #bypass amount
             if not self.bypass_tau.is_integer():
                 y.fill(0)
-            print(y)
+            # print(y)
         else:
-            y = PFR.stepresponse*100
-            y = np.where(y < (100-self.bypass*100), (self.bypass*100), y)
-            y = np.where(y >= (100-self.bypass*100), 100, y)
+            y = PFR_Real.stepresponse*100
+            y = np.where(y < 50, 20, y)
+            y = np.where(y >= 50, 100, y)
         
         if not self.bypass_tau.is_integer():
             x = list(x)
             x.append(round(self.bypass_tau,2))
-            print(x)
+            # print(x)
             x = sorted(x)
             index = x.index(round(self.bypass_tau, 2))
-            print(index)
+            # print(index)
             y = list(y)
             y.insert(index, 100)
-            print(y)
+            # print(y)
         
         self.x = list(x).copy()
         self.y = list(y).copy()
@@ -80,7 +83,7 @@ class Real_RTD:
         self.length2 = len(self.x)
 
         fig = go.Figure(
-            data=[go.Scatter(x=[], y=[], name = "PFR")],
+            data=[go.Scatter(x=[], y=[], name = "PFR_Real")],
             layout=go.Layout(template='plotly_dark',
                 paper_bgcolor='rgba(0,0,0,0)',
                 xaxis=dict(range=[0, self.tau*2], autorange=False),
@@ -90,28 +93,33 @@ class Real_RTD:
                 title="Real PFR: Plot of Concentration against Time",
             ),
         )
+
         return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
     def PFR_bypass_E(self):
         xdata, ydata = [], []
-        PFR = rtdpy.Pfr(tau=self.bypass_tau, dt=.01, time_end=self.tau*2)
-        x = PFR.time
-        y = PFR.exitage*(1-self.bypass)
+        PFR_Real = rtdpy.Pfr(tau=self.bypass_tau, dt=.01, time_end=self.tau*2)
+        x = PFR_Real.time
+        y = PFR_Real.exitage*(1-self.bypass)
         y[0] = self.bypass*100
         # x = x[::25]
         # y = y[::25]
 
+        PFR_Ideal = rtdpy.Pfr(tau=self.tau, dt=.01, time_end=self.tau*2)
+        x1 = PFR_Ideal.time
+        y1 = PFR_Ideal.exitage
+
         frames = [go.Frame(data=[go.Scatter(x=[x[i] for i in range(len(x))], y=[y[i] for i in range(len(y))])])]
         
         fig = go.Figure(
-            data=[go.Scatter(x=xdata, y=ydata, name = "PFR")],
+            data=[go.Scatter(x=xdata, y=ydata, name = "PFR_Real"),go.Scatter(x=x1, y=y1, name = "PFR_Ideal")],
             layout=go.Layout(template='plotly_dark',
                 paper_bgcolor='rgba(0,0,0,0)',
                 xaxis=dict(range=[0, self.tau*2], autorange=False),
                 yaxis=dict(range=[0, max(y)*1.1], autorange=False),
                 xaxis_title="Time (s)",
                 yaxis_title = "Cumulative Distribution Function",
-                title="Real PFR: Plot of E against Time",
+                title="PFR: Plot of E against Time",
                 updatemenus=[dict(
                 bgcolor = 'grey',
                 font = dict(color = 'black', family="Helvetica Neue, monospace", size = 12),
@@ -124,32 +132,35 @@ class Real_RTD:
                             "transition": {"duration": 0}}])])]
             ), frames = frames
         )
-
+        
         return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
     def PFR_bypass_F(self):
         xdata, ydata = [], []
-        PFR = rtdpy.Pfr(tau=self.bypass_tau, dt=.01, time_end=self.tau*2)
-        x = PFR.time
-        y = PFR.stepresponse
+        PFR_Real = rtdpy.Pfr(tau=self.bypass_tau, dt=.01, time_end=self.tau*2)
+        x = PFR_Real.time
+        y = PFR_Real.stepresponse
         #Temp solution for single bypass at start only
         y = np.where(y <= (1-self.bypass), self.bypass, y)
         y = np.where(y > (1-self.bypass), 1, y)
         # x = x[::25]
         # y = y[::25]
 
+        PFR_Ideal = rtdpy.Pfr(tau=self.tau, dt=.01, time_end=self.tau*2)
+        x1 = PFR_Ideal.time
+        y1 = PFR_Ideal.stepresponse 
+
         frames = [go.Frame(data=[go.Scatter(x=[x[i] for i in range(len(x))], y=[y[i] for i in range(len(y))])])]
 
-        
         fig = go.Figure(
-            data=[go.Scatter(x=xdata, y=ydata, name = "PFR")],
+            data=[go.Scatter(x=xdata, y=ydata, name = "PFR Real"),go.Scatter(x=x1, y=y1, name = "PFR Ideal")],
             layout=go.Layout(template='plotly_dark',
                 paper_bgcolor='rgba(0,0,0,0)',
                 xaxis=dict(range=[0, self.tau*2], autorange=False),
                 yaxis=dict(range=[0, max(y)*1.1], autorange=False),
                 xaxis_title="Time (s)",
                 yaxis_title = "Cumulative Distribution Function",
-                title="Real PFR: Plot of F against Time",
+                title="PFR: Plot of F against Time",
                 updatemenus=[dict(
                 bgcolor = 'grey',
                 font = dict(color = 'black', family="Helvetica Neue, monospace", size = 12),
@@ -162,34 +173,34 @@ class Real_RTD:
                             "transition": {"duration": 0}}])])]
             ), frames = frames
         )
-        
+
         return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
       
     def PFR_deadvol(self):
         xdata = []
         ydata = []
-        PFR = rtdpy.Pfr(tau=self.deadvol_tau, dt=.25, time_end=self.tau*2)
-        x = PFR.time
+        PFR_Real = rtdpy.Pfr(tau=self.deadvol_tau, dt=.25, time_end=self.tau*2)
+        x = PFR_Real.time
         if self.type == 'pulse':
-            y = PFR.exitage*25
+            y = PFR_Real.exitage*25
             if not self.deadvol_tau.is_integer():
                 y.fill(0)
-            print(y)
+            # print(y)
         else:
-            y = PFR.stepresponse*100
+            y = PFR_Real.stepresponse*100
             y = np.where(y < 50, 0, y)
             y = np.where(y >= 50, 100, y)
         
         if not self.deadvol_tau.is_integer():
             x = list(x)
             x.append(round(self.deadvol_tau,2))
-            print(x)
+            # print(x)
             x = sorted(x)
             index = x.index(round(self.deadvol_tau, 2))
-            print(index)
+            # print(index)
             y = list(y)
             y.insert(index, 100)
-            print(y)
+            # print(y)
         
         self.x = list(x).copy()
         self.y = list(y).copy()
@@ -197,7 +208,7 @@ class Real_RTD:
         self.length2 = len(self.x)
 
         fig = go.Figure(
-            data=[go.Scatter(x=[], y=[], name = "PFR")],
+            data=[go.Scatter(x=[], y=[], name = "PFR Real")],
             layout=go.Layout(template='plotly_dark',
                 paper_bgcolor='rgba(0,0,0,0)',
                 xaxis=dict(range=[0, self.tau*2], autorange=False),
@@ -211,23 +222,27 @@ class Real_RTD:
 
     def PFR_deadvol_E(self):
         xdata, ydata = [], []
-        PFR = rtdpy.Pfr(tau=self.deadvol_tau, dt=.01, time_end=self.tau*2)
-        x = PFR.time
-        y = PFR.exitage
+        PFR_Real = rtdpy.Pfr(tau=self.deadvol_tau, dt=.01, time_end=self.tau*2)
+        x = PFR_Real.time
+        y = PFR_Real.exitage
         # x = x[::25]
         # y = y[::25]
+
+        PFR_Ideal = rtdpy.Pfr(tau=self.tau, dt=.01, time_end=self.tau*2)
+        x1 = PFR_Ideal.time
+        y1 = PFR_Ideal.exitage
 
         frames = [go.Frame(data=[go.Scatter(x=[x[i] for i in range(len(x))], y=[y[i] for i in range(len(y))])])]
         
         fig = go.Figure(
-            data=[go.Scatter(x=xdata, y=ydata, name = "PFR")],
+            data=[go.Scatter(x=xdata, y=ydata, name = "PFR Real"), go.Scatter(x=x1, y=y1, name = "PFR Ideal")],
             layout=go.Layout(template='plotly_dark',
                 paper_bgcolor='rgba(0,0,0,0)',
                 xaxis=dict(range=[0, self.tau*2], autorange=False),
                 yaxis=dict(range=[0, max(y)*1.1], autorange=False),
                 xaxis_title="Time (s)",
                 yaxis_title = "Cumulative Distribution Function",
-                title="Real PFR: Plot of E against Time",
+                title="PFR: Plot of E against Time",
                 updatemenus=[dict(
                 bgcolor = 'grey',
                 font = dict(color = 'black', family="Helvetica Neue, monospace", size = 12),
@@ -245,23 +260,27 @@ class Real_RTD:
 
     def PFR_deadvol_F(self):
         xdata, ydata = [], []
-        PFR = rtdpy.Pfr(tau=self.deadvol_tau, dt=.01, time_end=self.tau*2)
-        x = PFR.time
-        y = PFR.stepresponse
+        PFR_Real = rtdpy.Pfr(tau=self.deadvol_tau, dt=.01, time_end=self.tau*2)
+        x = PFR_Real.time
+        y = PFR_Real.stepresponse
         # x = x[::25]
         # y = y[::25]
+
+        PFR_Ideal = rtdpy.Pfr(tau=self.tau, dt=.01, time_end=self.tau*2)
+        x1 = PFR_Ideal.time
+        y1 = PFR_Ideal.stepresponse 
 
         frames = [go.Frame(data=[go.Scatter(x=[x[i] for i in range(len(x))], y=[y[i] for i in range(len(y))])])]
         
         fig = go.Figure(
-            data=[go.Scatter(x=xdata, y=ydata, name = "PFR")],
+            data=[go.Scatter(x=xdata, y=ydata, name = "PFR Real"), go.Scatter(x=x1, y=y1, name = "PFR Ideal")],
             layout=go.Layout(template='plotly_dark',
                 paper_bgcolor='rgba(0,0,0,0)',
                 xaxis=dict(range=[0, self.tau*2], autorange=False),
                 yaxis=dict(range=[0, max(y)*1.1], autorange=False),
                 xaxis_title="Time (s)",
                 yaxis_title = "Cumulative Distribution Function",
-                title="Real PFR: Plot of F against Time",
+                title="PFR: Plot of F against Time",
                 updatemenus=[dict(
                 bgcolor = 'grey',
                 font = dict(color = 'black', family="Helvetica Neue, monospace", size = 12),
@@ -286,12 +305,12 @@ class Real_RTD:
         if self.type == "pulse":
             for t in x:
                 #need to check if Concentration curve is liddat
-                c = (100/self.V_reactor)*math.exp((-1)*(t/self.deadvol_tau))
+                c = (100/self.V_reactor)*math.exp((-1)*t/self.bypass_tau)
                 y.append(c)
         else:
             for t in x:
                 #need to check if Concentration curve is liddat
-                c = (100/((1-self.bypass)*self.flow))*(1-math.exp((-1)*t/self.deadvol_tau))
+                c = (100/self.flow)*(1-math.exp((-1)*t/self.bypass_tau))
                 y.append(c)
 
         self.x = list(x).copy()
@@ -322,15 +341,19 @@ class Real_RTD:
         #     c = (100/self.V_reactor)*math.exp((-1)*self.flow*t/self.V_reactor)
         #     y.append(c)
 
-        CSTR = rtdpy.Ncstr(tau=self.bypass_tau, n = n, dt=.01, time_end=self.tau*5)
+        CSTR_Real = rtdpy.Ncstr(tau=self.bypass_tau, n = n, dt=.01, time_end=self.tau*5)
         xdata, ydata = [], []
-        x = CSTR.time
+        x = CSTR_Real.time
         x = np.append(x, [self.tau*5+1])
         y = [self.bypass*self.flow/self.flow]
 
         for t in x:
             e = ((1-self.bypass)*self.flow)**2/(self.V_reactor*self.flow)*math.exp((-1)*t/self.deadvol_tau)
             y.append(e)
+
+        CSTR_Ideal = rtdpy.Ncstr(tau=self.tau, n = n, dt=.01, time_end=self.tau*5)
+        x1 = CSTR_Ideal.time
+        y1 = CSTR_Ideal.exitage
 
         # x = x[::25]
         # y = y[::25]
@@ -346,14 +369,14 @@ class Real_RTD:
         frames = [go.Frame(data=[go.Scatter(x=[x[i] for i in range(len(x))], y=[y[i] for i in range(len(y))])])]
 
         fig = go.Figure(
-            data=[go.Scatter(x=xdata, y=ydata, name = "n = " + str(n))],
+            data=[go.Scatter(x=xdata, y=ydata, name = "Real (n = " + str(n) + ")"), go.Scatter(x=x1, y=y1, name = "Ideal (n = " + str(n) + ")")],
             layout=go.Layout(template='plotly_dark',
                 paper_bgcolor='rgba(0,0,0,0)',
                 xaxis=dict(range=[0, self.tau*5], autorange=False),
                 yaxis=dict(range=[0, max(y)*1.1], autorange=False),
                 xaxis_title="Time (s)",
                 yaxis_title = "Exit Age Function",
-                title="n Real CSTR: Plot of E against Time, n=" + str(n),
+                title="n CSTR: Plot of E against Time, n=" + str(n),
                 updatemenus=[dict(
                 bgcolor = 'grey',
                 font = dict(color = 'black', family="Helvetica Neue, monospace", size = 12),
@@ -378,17 +401,21 @@ class Real_RTD:
         #     c = (100/self.V_reactor)*math.exp((-1)*self.flow*t/self.V_reactor)
         #     y.append(c)
 
-        CSTR = rtdpy.Ncstr(tau=self.deadvol_tau, n = n, dt=.01, time_end=self.tau*5)
+        CSTR_Real = rtdpy.Ncstr(tau=self.deadvol_tau, n = n, dt=.01, time_end=self.tau*5)
         xdata, ydata = [], []
         timelost = []
-        x = CSTR.time
+        x = CSTR_Real.time
         y = [self.bypass*self.flow/self.flow]
-        data = CSTR.stepresponse
+        data = CSTR_Real.stepresponse
         for val in data:
             if val >= y[0]:
                 y.append(val)
             else:
                 pass
+
+        CSTR_Ideal = rtdpy.Ncstr(tau=self.tau, n = n, dt=.01, time_end=self.tau*5)
+        x1 = CSTR_Ideal.time
+        y1 = CSTR_Ideal.stepresponse
         
         #Will lose the first few t so need to somehow extrapolate graph
         #while len(y) < len(x):
@@ -408,14 +435,14 @@ class Real_RTD:
         frames = [go.Frame(data=[go.Scatter(x=[x[i] for i in range(len(x))], y=[y[i] for i in range(len(y))])])]
 
         fig = go.Figure(
-            data=[go.Scatter(x=xdata, y=ydata, name = "n = " + str(n))],
+            data=[go.Scatter(x=xdata, y=ydata, name = "n = " + str(n)), go.Scatter(x=x1, y=y1, name = "Ideal (n = " + str(n) + ")")],
             layout=go.Layout(template='plotly_dark',
                 paper_bgcolor='rgba(0,0,0,0)',
                 xaxis=dict(range=[0, self.tau*5], autorange=False),
                 yaxis=dict(range=[0, max(y)*1.1], autorange=False),
                 xaxis_title="Time (s)",
                 yaxis_title = "Cumulative Distribution Function",
-                title="n Real CSTR: Plot of F against Time, n=" + str(n),
+                title="n CSTR: Plot of F against Time, n=" + str(n),
                 updatemenus=[dict(
                 bgcolor = 'grey',
                 font = dict(color = 'black', family="Helvetica Neue, monospace", size = 12),
@@ -439,7 +466,7 @@ class Real_RTD:
 
         if self.type == "pulse":
             for t in x:
-                c = (100/(self.V_reactor-self.deadvol))*math.exp((-1)*t/self.deadvol_tau)
+                c = (100/self.V_reactor)*math.exp((-1)*t/self.deadvol_tau)
                 y.append(c)
         else:
             for t in x:
@@ -473,10 +500,14 @@ class Real_RTD:
         #     c = (100/self.V_reactor)*math.exp((-1)*self.flow*t/self.V_reactor)
         #     y.append(c)
 
-        CSTR = rtdpy.Ncstr(tau=self.deadvol_tau, n = n, dt=.01, time_end=self.tau*5)
+        CSTR_Real = rtdpy.Ncstr(tau=self.deadvol_tau, n = n, dt=.01, time_end=self.tau*5)
         xdata, ydata = [], []
-        x = CSTR.time
-        y = CSTR.exitage
+        x = CSTR_Real.time
+        y = CSTR_Real.exitage
+
+        CSTR_Ideal = rtdpy.Ncstr(tau=self.tau, n = n, dt=.01, time_end=self.tau*5)
+        x1 = CSTR_Ideal.time
+        y1 = CSTR_Ideal.exitage
 
         # x = x[::25]
         # y = y[::25]
@@ -491,14 +522,14 @@ class Real_RTD:
         frames = [go.Frame(data=[go.Scatter(x=[x[i] for i in range(len(x))], y=[y[i] for i in range(len(y))])])]
 
         fig = go.Figure(
-            data=[go.Scatter(x=xdata, y=ydata, name = "n = " + str(n))],
+            data=[go.Scatter(x=xdata, y=ydata, name = "Real (n = " + str(n) + ")"), go.Scatter(x=x1, y=y1, name = "Ideal (n = " + str(n) + ")")],
             layout=go.Layout(template='plotly_dark',
                 paper_bgcolor='rgba(0,0,0,0)',
                 xaxis=dict(range=[0, self.tau*5], autorange=False),
                 yaxis=dict(range=[0, max(y)*1.1], autorange=False),
                 xaxis_title="Time (s)",
                 yaxis_title = "Exit Age Function",
-                title="n Real CSTR: Plot of E against Time, n=" + str(n),
+                title="n CSTR: Plot of E against Time, n=" + str(n),
                 updatemenus=[dict(
                 bgcolor = 'grey',
                 font = dict(color = 'black', family="Helvetica Neue, monospace", size = 12),
@@ -523,44 +554,26 @@ class Real_RTD:
         #     c = (100/self.V_reactor)*math.exp((-1)*self.flow*t/self.V_reactor)
         #     y.append(c)
 
-        CSTR = rtdpy.Ncstr(tau=self.deadvol_tau, n = n, dt=.01, time_end=self.tau*5)
+        CSTR_Real = rtdpy.Ncstr(tau=self.deadvol_tau, n = n, dt=.01, time_end=self.tau*5)
         xdata, ydata = [], []
-        timelost = []
-        x = CSTR.time
-        y = [self.bypass*self.flow/self.flow]
-        data = CSTR.stepresponse
-        for val in data:
-            if val >= y[0]:
-                y.append(val)
-            else:
-                pass
+        x = CSTR_Real.time
+        y = CSTR_Real.stepresponse
+
+        CSTR_Ideal = rtdpy.Ncstr(tau=self.tau, n = n, dt=.01, time_end=self.tau*5)
+        x1 = CSTR_Ideal.time
+        y1 = CSTR_Ideal.stepresponse
         
-        #Will lose the first few t so need to somehow extrapolate graph
-        #while len(y) < len(x):
-        #    y.append(1)
-
-        # x = x[::25]
-        # y = y[::25]
-
-        # frames = []
-
-        # for i in range(len(x)-1):
-        #     fx = [x[j] for j in range(i)]
-        #     fy = [y[j] for j in range(i)]
-        #     frame = go.Frame(data=[go.Scatter(x=fx, y=fy)])
-        #     frames.append(frame)
-
         frames = [go.Frame(data=[go.Scatter(x=[x[i] for i in range(len(x))], y=[y[i] for i in range(len(y))])])]
 
         fig = go.Figure(
-            data=[go.Scatter(x=xdata, y=ydata, name = "n = " + str(n))],
+            data=[go.Scatter(x=xdata, y=ydata, name = "Real (n = " + str(n) + ")"), go.Scatter(x=x1, y=y1, name = "Ideal (n = " + str(n) + ")")],
             layout=go.Layout(template='plotly_dark',
                 paper_bgcolor='rgba(0,0,0,0)',
                 xaxis=dict(range=[0, self.tau*5], autorange=False),
                 yaxis=dict(range=[0, max(y)*1.1], autorange=False),
                 xaxis_title="Time (s)",
                 yaxis_title = "Cumulative Distribution Function",
-                title="n Real CSTR: Plot of F against Time, n=" + str(n),
+                title="n CSTR: Plot of F against Time, n=" + str(n),
                 updatemenus=[dict(
                 bgcolor = 'grey',
                 font = dict(color = 'black', family="Helvetica Neue, monospace", size = 12),
@@ -573,7 +586,6 @@ class Real_RTD:
                             "transition": {"duration": 0}}])])]
             ), frames = frames)
         
-        # fig.show()
         return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
     # def CSTRstep(self, n):
@@ -639,6 +651,6 @@ class Real_RTD:
         # else:
         #     pass
 
-# a = RTD(50,2,'pulse')  # esp for PFR, ONLY INTEGER VALUES
-# a.CSTR_deadvol_F(1)
+#a = Real_RTD(20,2,'step')  # esp for PFR, ONLY INTEGER VALUES
+#a.CSTR_bypass_F(1)
 

@@ -55,11 +55,11 @@ class plot:
             if self.plotID == 'Txy':
                 y_arr = [P]
                 type = 'P'
-                print("i ran")
+                # print("i ran")
             else:
                 y_arr = [T]
                 type = 'T'
-                print("i ran")
+                # print("i ran")
 
         
         if type == 'T':
