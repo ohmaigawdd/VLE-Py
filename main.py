@@ -29,21 +29,25 @@ def purevle():
 
     form = PureForm()
 
-    if form.T.data==None and form.P.data==None and form.processType.data==None:
+    if form.T_isob.data==None and form.P_isob.data==None and form.T_isot.data==None and form.P_isot.data==None and form.processType.data==None:
+        processType = "Isotherm"
         T = 50
         P = 100
-        processType = "Isotherm"
         errors = False
     elif not form.validate_on_submit():
+        processType = form.processType.data
         T = 50
         P = 100
-        processType = form.processType.data
         errors = True
     #if form is 100% okay
     elif form.validate_on_submit():
-        T = form.T.data
-        P = form.P.data
         processType = form.processType.data
+        if processType == "Isobar":
+            T = form.T_isob.data
+            P = form.P_isob.data
+        else:
+            T = form.T_isot.data
+            P = form.P_isot.data
         errors = False
     
     system = Steam(T, P)
@@ -187,7 +191,7 @@ def realreactors():
     reactorFlow = 2      #m3/s
     # Array to check for real issues with reactors
     reasons_for_deadvol = ["poor impeller design", "reactor fouling"]
-    reasons_for_bypass = ["poor outlet design", "poor flow design"]
+    reasons_for_bypass = ["poor outlet design", "improper bed packing"]
     # reasons_for_both = [] <- can add in when got more ideas
 
     if form.reactorType.data==None:

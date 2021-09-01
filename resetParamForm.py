@@ -9,7 +9,7 @@ class RealReactorForm(FlaskForm):
     tracerType = SelectField("Type of Tracer Input: ", choices = [("pulse","Pulse"), ("step","Step")])
 
     problemType_cstr = SelectField("Type of Non-ideality: ", choices = [("poor impeller design","Poor Impeller Design"), ("poor outlet design","Poor Outlet Design")])
-    problemType_pfr = SelectField("Type of Non-ideality: ", choices = [("reactor fouling","Reactor Fouling"), ("poor flow design","Poor Flow Design")])
+    problemType_pfr = SelectField("Type of Non-ideality: ", choices = [("reactor fouling","Reactor Fouling"), ("improper bed packing","Improper Bed Packing")])
 
     submit = SubmitField("Submit") 
 
@@ -17,9 +17,9 @@ class IdealReactorForm(FlaskForm):
     
     reactorType = SelectField("Type of Reactor: ", choices = [("cstr","CSTR"), ("pfr","PFR")])
 
-    reactorVol = IntegerField("Reactor Volume (V): ", validators=[NumberRange(0, 20, message=("Volume out of range!"))])
+    reactorVol = IntegerField("Reactor Volume (V): ", validators=[NumberRange(0, 20, message=("Volume out of range!"))], render_kw={'placeholder': "From 0 - 20"})
 
-    reactorFlow = IntegerField("Flow Rate (Q): ", validators=[NumberRange(0, 10, message=("Flow rate out of range!"))])
+    reactorFlow = IntegerField("Flow Rate (Q): ", validators=[NumberRange(0, 5, message=("Flow rate out of range!"))], render_kw={'placeholder': "From 0 - 5"})
 
     tracerType = SelectField("Type of Tracer Input: ", choices = [("pulse","Pulse"), ("step","Step")])
 
@@ -28,11 +28,13 @@ class IdealReactorForm(FlaskForm):
 class PureForm(FlaskForm):
 
     #Range of T and P as given by Pyxsteam
-    T = IntegerField("Start Temperature (T): ", validators=[NumberRange(1, 374, message=("Temperature out of range!"))])
+    T_isot = IntegerField("Start Temperature (T): ", validators=[NumberRange(1, 374, message=("Temperature out of range!"))], render_kw={'placeholder': "From 1 - 374"})
+    T_isob = IntegerField("Start Temperature (T): ", validators=[NumberRange(1, 374, message=("Temperature out of range!"))], render_kw={'placeholder': "From 1 - 374"})
 
-    P = IntegerField("Start Pressure (P): ", validators=[NumberRange(100, 22100, message=("Pressure out of range!"))])
-
-    processType = SelectField("Process: ", choices = [("Isotherm","Isothermal"), ("Isobar","Isobaric")])
+    P_isot = IntegerField("Start Pressure (P): ", validators=[NumberRange(100, 22100, message=("Pressure out of range!"))], render_kw={'placeholder': "From 100 - 22100"})
+    P_isob = IntegerField("Start Pressure (P): ", validators=[NumberRange(100, 4154, message=("Pressure out of range!"))], render_kw={'placeholder': "From 100 - 4154"})
+    
+    processType = SelectField("Process: ", choices = [("Isotherm","Isothermal"), ("Isobar","Isobaric")], render_kw={'onchange': "optionChange()"})
 
     submit = SubmitField("Submit") 
 
@@ -48,9 +50,9 @@ class BinaryForm(FlaskForm):
 
     plot_type = SelectField("Plot Type: ", choices = [("yxP","y-x (const P)"), ("yxT","y-x (const T)"), ("Txy","T-x-y"), ("Pxy","P-x-y")])
 
-    T = FloatField("Temperature (T): ", validators=[NumberRange(-70, 200, message=("Temperature out of range!"))])
+    T = FloatField("Temperature (T): ", validators=[NumberRange(-70, 200, message=("Temperature out of range!"))], render_kw={'placeholder': "From -70 - 200"})
 
-    P = FloatField("Pressure (P): ", validators=[NumberRange(101.3, 6000, message=("Pressure out of range!"))])
+    P = FloatField("Pressure (P): ", validators=[NumberRange(101.3, 6000, message=("Pressure out of range!"))], render_kw={'placeholder': "From 101.3 - 6000"})
 
     z = FloatField("Overall Composition (w.r.t. Component A): ", validators=[NumberRange(0, 1, message=("Composition out of range!"))])
 

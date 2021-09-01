@@ -20,11 +20,17 @@
 
 {% if errors == True %}
     {% set errorList = [] %}
-    {% if form.T.errors %}
-        {{ errorList.append(form.T.errors[0]) or "" }}
+    {% if form.T_isot.errors %}
+        {{ errorList.append(form.T_isot.errors[0]) or "" }}
     {% endif %}
-    {% if form.P.errors %}
-        {{ errorList.append(form.P.errors[0]) or "" }}
+    {% if form.T_isob.errors %}
+        {{ errorList.append(form.T_isob.errors[0]) or "" }}
+    {% endif %}
+    {% if form.P_isot.errors %}
+        {{ errorList.append(form.P_isot.errors[0]) or "" }}
+    {% endif %}
+    {% if form.P_isob.errors %}
+        {{ errorList.append(form.P_isob.errors[0]) or "" }}
     {% endif %}
     <div class="alert alert-warning rounded" role="alert" style='padding-bottom: 0px; margin-bottom: 0px;'>
         {% for error in errorList %}
@@ -40,21 +46,71 @@
         <table>
             <tr class='informationText'>
                 <td><strong>{{ form.processType.label  }}</strong></td>
-                <td>{{ form.processType() }}</td>
+                <td onchange="optionChange()">{{ form.processType() }}</td>
             </tr>
             <tr class='informationText'>
-                <td><strong>{{ form.T.label  }}</strong></td>
-                <td>{{ form.T() }} <sup>o</sup>C</td>
+                <td><strong>{{ form.T_isot.label  }}</strong></td>
+                <td>{{ form.T_isot() }}{{ form.T_isob() }} <sup>o</sup>C</td>
+                {% if processType == "Isobar" %}
+                <script>
+                    document.getElementById("T_isot").style.display = "none"
+                    document.getElementById("T_isob").style.display = "initial"
+                    document.getElementById("T_isot").value = 50
+                </script>
+                {% else %}
+                <script>
+                    document.getElementById("T_isot").style.display = "initial"
+                    document.getElementById("T_isob").style.display = "none"
+                    document.getElementById("T_isob").value = 50
+                </script>
+                {% endif %}
             </tr>
             <tr class='informationText'>
-                <td><strong>{{ form.P.label  }}</strong></td>
-                <td>{{ form.P() }} kPa</td>
+                <td><strong>{{ form.P_isot.label  }}</strong></td>
+                <td>{{ form.P_isot() }}{{ form.P_isob() }} kPa</td>
+                {% if processType == "Isobar" %}
+                <script>
+                    document.getElementById("P_isot").style.display = "none"
+                    document.getElementById("P_isob").style.display = "initial"
+                    document.getElementById("P_isot").value = 100
+                </script>
+                {% else %}
+                <script>
+                    document.getElementById("P_isot").style.display = "initial"
+                    document.getElementById("P_isob").style.display = "none"
+                    document.getElementById("P_isob").value = 100
+                </script>
+                {% endif %}
             </tr>
             <tr>
                 <td></td>
                 <td>{{ form.submit() }}</td>
             </tr>
         </table>
+        <script>
+            function optionChange() {
+                let box_value = document.getElementById("processType").value;
+                if (box_value === "Isobar") {
+                    document.getElementById("T_isob").value = null
+                    document.getElementById("P_isob").value = null
+                    document.getElementById("T_isot").style.display = "none"
+                    document.getElementById("T_isob").style.display = "initial"
+                    document.getElementById("P_isot").style.display = "none"
+                    document.getElementById("P_isob").style.display = "initial"
+                    document.getElementById("T_isot").value = 50
+                    document.getElementById("P_isot").value = 100
+                } else {
+                    document.getElementById("T_isot").value = null
+                    document.getElementById("P_isot").value = null
+                    document.getElementById("T_isot").style.display = "initial"
+                    document.getElementById("T_isob").style.display = "none"
+                    document.getElementById("P_isot").style.display = "initial"
+                    document.getElementById("P_isob").style.display = "none"
+                    document.getElementById("T_isob").value = 50
+                    document.getElementById("P_isob").value = 100
+                }
+            }
+        </script>
         <br>
         <div class="slidecontainer">
             {% if processType == "Isotherm" %}

@@ -70,7 +70,7 @@ class RTD:
             y = PFR.exitage*25
             if not self.tau.is_integer():
                 y.fill(0)
-            print(y)
+            # print(y)
         else:
             y = PFR.stepresponse*100
             y = np.where(y < 50, 0, y)
@@ -79,13 +79,13 @@ class RTD:
         if not self.tau.is_integer():
             x = list(x)
             x.append(round(self.tau,2))
-            print(x)
+            # print(x)
             x = sorted(x)
             index = x.index(round(self.tau, 2))
-            print(index)
+            # print(index)
             y = list(y)
             y.insert(index, 100)
-            print(y)
+            # print(y)
         
         self.x = list(x).copy()
         self.y = list(y).copy()
