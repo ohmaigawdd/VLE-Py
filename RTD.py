@@ -121,7 +121,7 @@ class RTD:
                 xaxis=dict(range=[0, self.tau*2], autorange=False),
                 yaxis=dict(range=[0, max(y)*1.1], autorange=False),
                 xaxis_title="Time (s)",
-                yaxis_title = "Cumulative Distribution Function",
+                yaxis_title = "Exit Age Function",
                 title="PFR: Plot of E against Time",
                 updatemenus=[dict(
                 bgcolor = 'grey',
