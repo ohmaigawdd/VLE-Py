@@ -454,6 +454,8 @@ class plot_steam:
                                         'T: %{x:.2f} C' +
                                         '<br>P: %{y:.2f} kPa'))
 
+        self.fig.add_annotation(x=self.sys.triplePointT(), y=self.sys.triplePointP(), text = "TRIPLE <br> POINT", showarrow=True, arrowhead=1, align="left")
+
         self.fig.update_xaxes(showspikes=True)
         self.fig.update_yaxes(showspikes=True)
 
