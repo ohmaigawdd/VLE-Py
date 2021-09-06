@@ -31,6 +31,12 @@
         <tr>
             <td class='tableHeader'><strong>Reactor Type:</strong></td> 
             <td class='tableText'>{{ reactorType.upper() }}</td>
+            <td class='tableHeader'><strong>Tracer Concentration:</strong></td> 
+            {% if reactorType == "cstr"%}
+            <td class='tableText'>{{ "%0.2f" % (100 / realsystem.V_reactor) | float}} units/m<sup>3</sup></td>
+            {% else %}
+            <td class='tableText'>100.00 units/m<sup>3</sup></td>
+            {% endif %}
         </tr>
         <tr >
             <td class='tableHeader'><strong>Reactor Volume (V):</strong></td> 

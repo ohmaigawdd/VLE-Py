@@ -112,7 +112,7 @@ class Real_RTD:
         frames = [go.Frame(data=[go.Scatter(x=[x[i] for i in range(len(x))], y=[y[i] for i in range(len(y))])])]
         
         fig = go.Figure(
-            data=[go.Scatter(x=xdata, y=ydata, name = "PFR_Real", showlegend=True),go.Scatter(x=x1, y=y1, name = "PFR_Ideal", showlegend=True)],
+            data=[go.Scatter(x=xdata, y=ydata, name="Real", showlegend=True),go.Scatter(x=x1, y=y1, name = "Ideal", showlegend=True)],
             layout=go.Layout(template='plotly_dark',
                 paper_bgcolor='rgba(0,0,0,0)',
                 xaxis=dict(range=[0, self.tau*2], autorange=False),
@@ -128,7 +128,7 @@ class Real_RTD:
                buttons=[dict(label="Display",
                             method="animate",
                             args=[None, {"frame": {"duration": 0, 
-                                    "redraw": False},
+                                    "redraw": True},
                             "fromcurrent": True, 
                             "transition": {"duration": 0}}])])]
             ), frames = frames
@@ -154,7 +154,7 @@ class Real_RTD:
         frames = [go.Frame(data=[go.Scatter(x=[x[i] for i in range(len(x))], y=[y[i] for i in range(len(y))])])]
 
         fig = go.Figure(
-            data=[go.Scatter(x=xdata, y=ydata, name = "PFR Real", showlegend=True),go.Scatter(x=x1, y=y1, name = "PFR Ideal", showlegend=True)],
+            data=[go.Scatter(x=xdata, y=ydata, name="Real", showlegend=True),go.Scatter(x=x1, y=y1, name = "Ideal", showlegend=True)],
             layout=go.Layout(template='plotly_dark',
                 paper_bgcolor='rgba(0,0,0,0)',
                 xaxis=dict(range=[0, self.tau*2], autorange=False),
@@ -170,7 +170,7 @@ class Real_RTD:
                 buttons=[dict(label="Display",
                             method="animate",
                             args=[None, {"frame": {"duration": 0, 
-                                    "redraw": False},
+                                    "redraw": True},
                             "fromcurrent": True, 
                             "transition": {"duration": 0}}])])]
             ), frames = frames
@@ -237,7 +237,7 @@ class Real_RTD:
         frames = [go.Frame(data=[go.Scatter(x=[x[i] for i in range(len(x))], y=[y[i] for i in range(len(y))])])]
         
         fig = go.Figure(
-            data=[go.Scatter(x=xdata, y=ydata, name = "PFR Real", showlegend=True), go.Scatter(x=x1, y=y1, name = "PFR Ideal", showlegend=True)],
+            data=[go.Scatter(x=xdata, y=ydata, name="Real", showlegend=True), go.Scatter(x=x1, y=y1, name = "Ideal", showlegend=True)],
             layout=go.Layout(template='plotly_dark',
                 paper_bgcolor='rgba(0,0,0,0)',
                 xaxis=dict(range=[0, self.tau*2], autorange=False),
@@ -253,7 +253,7 @@ class Real_RTD:
                buttons=[dict(label="Display",
                             method="animate",
                             args=[None, {"frame": {"duration": 0, 
-                                    "redraw": False},
+                                    "redraw": True},
                             "fromcurrent": True, 
                             "transition": {"duration": 0}}])])]
             ), frames = frames
@@ -276,7 +276,7 @@ class Real_RTD:
         frames = [go.Frame(data=[go.Scatter(x=[x[i] for i in range(len(x))], y=[y[i] for i in range(len(y))])])]
         
         fig = go.Figure(
-            data=[go.Scatter(x=xdata, y=ydata, name = "PFR Real", showlegend=True), go.Scatter(x=x1, y=y1, name = "PFR Ideal", showlegend=True)],
+            data=[go.Scatter(x=xdata, y=ydata, name="Real", showlegend=True), go.Scatter(x=x1, y=y1, name = "Ideal", showlegend=True)],
             layout=go.Layout(template='plotly_dark',
                 paper_bgcolor='rgba(0,0,0,0)',
                 xaxis=dict(range=[0, self.tau*2], autorange=False),
@@ -292,7 +292,7 @@ class Real_RTD:
                 buttons=[dict(label="Display",
                             method="animate",
                             args=[None, {"frame": {"duration": 0, 
-                                    "redraw": False},
+                                    "redraw": True},
                             "fromcurrent": True, 
                             "transition": {"duration": 0}}])])]
             ), frames = frames
@@ -373,7 +373,7 @@ class Real_RTD:
         frames = [go.Frame(data=[go.Scatter(x=[x[i] for i in range(len(x))], y=[y[i] for i in range(len(y))])])]
 
         fig = go.Figure(
-            data=[go.Scatter(x=xdata, y=ydata, name = "Real (n = " + str(n) + ")", showlegend=True), go.Scatter(x=x1, y=y1, name = "Ideal (n = " + str(n) + ")", showlegend=True)],
+            data=[go.Scatter(x=xdata, y=ydata, name="Real", showlegend=True), go.Scatter(x=x1, y=y1, name = "Ideal", showlegend=True)],
             layout=go.Layout(template='plotly_dark',
                 paper_bgcolor='rgba(0,0,0,0)',
                 xaxis=dict(range=[0, self.tau*5], autorange=False),
@@ -389,7 +389,7 @@ class Real_RTD:
                 buttons=[dict(label="Display",
                             method="animate",
                             args=[None, {"frame": {"duration": 0, 
-                                    "redraw": False},
+                                    "redraw": True},
                             "fromcurrent": True, 
                             "transition": {"duration": 0}}])])]
             ), frames = frames
@@ -440,7 +440,7 @@ class Real_RTD:
         frames = [go.Frame(data=[go.Scatter(x=[x[i] for i in range(len(x))], y=[y[i] for i in range(len(y))])])]
 
         fig = go.Figure(
-            data=[go.Scatter(x=xdata, y=ydata, name = "n = " + str(n), showlegend=True), go.Scatter(x=x1, y=y1, name = "Ideal (n = " + str(n) + ")", showlegend=True)],
+            data=[go.Scatter(x=xdata, y=ydata, name="Real", showlegend=True), go.Scatter(x=x1, y=y1, name = "Ideal", showlegend=True)],
             layout=go.Layout(template='plotly_dark',
                 paper_bgcolor='rgba(0,0,0,0)',
                 xaxis=dict(range=[0, self.tau*5], autorange=False),
@@ -456,7 +456,7 @@ class Real_RTD:
                 buttons=[dict(label="Display",
                             method="animate",
                             args=[None, {"frame": {"duration": 0, 
-                                    "redraw": False},
+                                    "redraw": True},
                             "fromcurrent": True, 
                             "transition": {"duration": 0}}])])]
             ), frames = frames
@@ -528,7 +528,7 @@ class Real_RTD:
         frames = [go.Frame(data=[go.Scatter(x=[x[i] for i in range(len(x))], y=[y[i] for i in range(len(y))])])]
 
         fig = go.Figure(
-            data=[go.Scatter(x=xdata, y=ydata, name = "Real (n = " + str(n) + ")", showlegend=True), go.Scatter(x=x1, y=y1, name = "Ideal (n = " + str(n) + ")", showlegend=True)],
+            data=[go.Scatter(x=xdata, y=ydata, name="Real", showlegend=True), go.Scatter(x=x1, y=y1, name = "Ideal", showlegend=True)],
             layout=go.Layout(template='plotly_dark',
                 paper_bgcolor='rgba(0,0,0,0)',
                 xaxis=dict(range=[0, self.tau*5], autorange=False),
@@ -544,7 +544,7 @@ class Real_RTD:
                 buttons=[dict(label="Display",
                             method="animate",
                             args=[None, {"frame": {"duration": 0, 
-                                    "redraw": False},
+                                    "redraw": True},
                             "fromcurrent": True, 
                             "transition": {"duration": 0}}])])]
             ), frames = frames
@@ -570,10 +570,10 @@ class Real_RTD:
         x1 = CSTR_Ideal.time
         y1 = CSTR_Ideal.stepresponse
         
-        frames = [go.Frame(data=[go.Scatter(x=[x[i] for i in range(len(x))], y=[y[i] for i in range(len(y))])])]
+        frames = [go.Frame(data=[go.Scatter(x=[x[i] for i in range(len(x))], y=[y[i] for i in range(len(y))], name="Real")])]
 
         fig = go.Figure(
-            data=[go.Scatter(x=xdata, y=ydata, name = "Real (n = " + str(n) + ")", showlegend=True), go.Scatter(x=x1, y=y1, name = "Ideal (n = " + str(n) + ")", showlegend=True)],
+            data=[go.Scatter(x=xdata, y=ydata, showlegend=True), go.Scatter(x=x1, y=y1, name = "Ideal", showlegend=True)],
             layout=go.Layout(template='plotly_dark',
                 paper_bgcolor='rgba(0,0,0,0)',
                 xaxis=dict(range=[0, self.tau*5], autorange=False),
@@ -589,7 +589,7 @@ class Real_RTD:
                 buttons=[dict(label="Display",
                             method="animate",
                             args=[None, {"frame": {"duration": 0, 
-                                    "redraw": False},
+                                    "redraw": True},
                             "fromcurrent": True, 
                             "transition": {"duration": 0}}])])]
             ), frames = frames)
