@@ -86,6 +86,11 @@
     10% {border-color: red}
 }
 
+@keyframes bypass-tracer {
+    from {background-color: #b9d770;}
+    to {background-color: red;}
+}
+
 /* body {
     margin: 0;
 }
@@ -380,28 +385,40 @@
     left: 460px;
 }
 
-#bypass-2 {
+#bypass-2, #bypass-2-red {
     position: relative;
-    background-color: #b9d770;
     width: 421px;
     height: 1px;
     top: 10px;
     left: 100px;
+    animation-name: bypass-tracer;
+    animation-duration: 0.1s;
+    animation-play-state: paused;
 }
 
-#bypass-1, #bypass-3 {
+#bypass-1, #bypass-3, #bypass-1-red, #bypass-3-red {
     position: relative;
-    background-color: #b9d770;
     width: 1px;
     height: 70px;
+    animation-name: bypass-tracer;
+    animation-duration: 0.1s;
+    animation-play-state: paused;
 }
 
-#bypass-1 {
+#bypass-1, #bypass-2, #bypass-3 {
+    background-color: #b9d770;
+}
+
+#bypass-1-red, #bypass-2-red, #bypass-3-red {
+    background-color: red;
+}
+
+#bypass-1, #bypass-1-red {
     top: 80px;
     left: 100px;
 }
 
-#bypass-3 {
+#bypass-3, #bypass-3-red {
     top: 10px;
     left: 520px;
 }
@@ -499,3 +516,4 @@
     left: 429px;
     background-color: #cae9F5;
 }
+

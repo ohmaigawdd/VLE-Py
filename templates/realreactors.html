@@ -31,6 +31,12 @@
         <tr>
             <td class='tableHeader'><strong>Reactor Type:</strong></td> 
             <td class='tableText'>{{ reactorType.upper() }}</td>
+            <td class='tableHeader'><strong>Tracer Concentration:</strong></td> 
+            {% if reactorType == "cstr"%}
+            <td class='tableText'>{{ "%0.2f" % (100 / realsystem.V_reactor) | float}} units/m<sup>3</sup></td>
+            {% else %}
+            <td class='tableText'>100.00 units/m<sup>3</sup></td>
+            {% endif %}
         </tr>
         <tr >
             <td class='tableHeader'><strong>Reactor Volume (V):</strong></td> 
@@ -118,6 +124,21 @@
                         // 0.0166 is obtained by running a console.time() and consol.timeEnd() on the plotly code to find average time to plot a point on plotly
                         document.getElementById("pfr-plugflow-real2").style.animationPlayState = "running";
                         document.getElementById("pfr-plugflow-real2").style.animationTimingFunction = "linear";
+
+                        document.getElementById("bypass-2").style.animation = "bypass-tracer {{0.1}}s";
+                        // 0.0166 is obtained by running a console.time() and consol.timeEnd() on the plotly code to find average time to plot a point on plotly
+                        document.getElementById("bypass-2").style.animationPlayState = "running";
+                        document.getElementById("bypass-2").style.animationTimingFunction = "linear";
+
+                        document.getElementById("bypass-1").style.animation = "bypass-tracer {{0.1}}s";
+                        // 0.0166 is obtained by running a console.time() and consol.timeEnd() on the plotly code to find average time to plot a point on plotly
+                        document.getElementById("bypass-1").style.animationPlayState = "running";
+                        document.getElementById("bypass-1").style.animationTimingFunction = "linear";
+
+                        document.getElementById("bypass-3").style.animation = "bypass-tracer {{0.1}}s";
+                        // 0.0166 is obtained by running a console.time() and consol.timeEnd() on the plotly code to find average time to plot a point on plotly
+                        document.getElementById("bypass-3").style.animationPlayState = "running";
+                        document.getElementById("bypass-3").style.animationTimingFunction = "linear";
                     }
                 } else {
                     document.getElementById("pfr-plugflow-step").style.animation = "plugflow-step {{idealsystem.length * 0.0166}}s";
@@ -132,6 +153,21 @@
                         document.getElementById("pfr-plugflow-step-real2").style.animation = "plugflow-step {{idealsystem.length * 0.0166 *0.5}}s";
                         document.getElementById("pfr-plugflow-step-real2").style.animationPlayState = "running";
                         document.getElementById("pfr-plugflow-step-real2").style.animationTimingFunction = "linear";
+
+                        document.getElementById("bypass-2-red").style.animation = "bypass-tracer {{0.1}}s";
+                        // 0.0166 is obtained by running a console.time() and consol.timeEnd() on the plotly code to find average time to plot a point on plotly
+                        document.getElementById("bypass-2-red").style.animationPlayState = "running";
+                        document.getElementById("bypass-2-red").style.animationTimingFunction = "linear";
+
+                        document.getElementById("bypass-1-red").style.animation = "bypass-tracer {{0.1}}s";
+                        // 0.0166 is obtained by running a console.time() and consol.timeEnd() on the plotly code to find average time to plot a point on plotly
+                        document.getElementById("bypass-1-red").style.animationPlayState = "running";
+                        document.getElementById("bypass-1-red").style.animationTimingFunction = "linear";
+
+                        document.getElementById("bypass-3-red").style.animation = "bypass-tracer {{0.1}}s";
+                        // 0.0166 is obtained by running a console.time() and consol.timeEnd() on the plotly code to find average time to plot a point on plotly
+                        document.getElementById("bypass-3-red").style.animationPlayState = "running";
+                        document.getElementById("bypass-3-red").style.animationTimingFunction = "linear";
                     }
                 }
                 
@@ -245,6 +281,21 @@
                         document.getElementById("pfr-plugflow-real2").offsetWidth;
                         document.getElementById("pfr-plugflow-real2").style.animation = "plugflow {{ idealsystem.length * 0.0166 *0.5}}s";
                         document.getElementById("pfr-plugflow-real2").style.animationPlayState = "paused";
+
+                        document.getElementById("bypass-2").style.animation = 'none';
+                        document.getElementById("bypass-2").offsetWidth;
+                        document.getElementById("bypass-2").style.animation = "bypass-tracer {{ 0.5 }}s";
+                        document.getElementById("bypass-2").style.animationPlayState = "paused";
+
+                        document.getElementById("bypass-1").style.animation = 'none';
+                        document.getElementById("bypass-1").offsetWidth;
+                        document.getElementById("bypass-1").style.animation = "bypass-tracer {{ 0.5 }}s";
+                        document.getElementById("bypass-1").style.animationPlayState = "paused";
+
+                        document.getElementById("bypass-3").style.animation = 'none';
+                        document.getElementById("bypass-3").offsetWidth;
+                        document.getElementById("bypass-3").style.animation = "bypass-tracer {{ 0.5 }}s";
+                        document.getElementById("bypass-3").style.animationPlayState = "paused";
                     }
                 } else {
                     document.getElementById("pfr-plugflow-step").style.animation = 'none';
@@ -262,6 +313,21 @@
                         document.getElementById("pfr-plugflow-step-real2").offsetWidth;
                         document.getElementById("pfr-plugflow-step-real2").style.animation = "plugflow-step {{ idealsystem.length * 0.0166 }}s";
                         document.getElementById("pfr-plugflow-step-real2").style.animationPlayState = "paused";
+
+                        document.getElementById("bypass-2-red").style.animation = 'none';
+                        document.getElementById("bypass-2-red").offsetWidth;
+                        document.getElementById("bypass-2-red").style.animation = "bypass-tracer {{ 0.5 }}s";
+                        document.getElementById("bypass-2-red").style.animationPlayState = "paused";
+
+                        document.getElementById("bypass-1-red").style.animation = 'none';
+                        document.getElementById("bypass-1-red").offsetWidth;
+                        document.getElementById("bypass-1-red").style.animation = "bypass-tracer {{ 0.5 }}s";
+                        document.getElementById("bypass-1-red").style.animationPlayState = "paused";
+
+                        document.getElementById("bypass-3-red").style.animation = 'none';
+                        document.getElementById("bypass-3-red").offsetWidth;
+                        document.getElementById("bypass-3-red").style.animation = "bypass-tracer {{ 0.5 }}s";
+                        document.getElementById("bypass-3-red").style.animationPlayState = "paused";
                     }
                 }
             }
@@ -369,6 +435,8 @@
 
 {% if errors == False %}
 <div class='information rounded' id='reactor-animation' style='margin-right: 35px; margin-top: 0px; height: 720px; padding: 0px'>
+    <br>
+    <h3 style="color:White; text-align:center;">Ideal Reactor</h3>
     {% if reactorType == "cstr" %}
         {% if idealsystem.type == "pulse" %}
             <div id="cstr"></div>
@@ -413,6 +481,8 @@
 </div>
 
 <div class='information rounded' id='real-reactor-animation' style='margin-top: 0px; height: 720px; padding: 0px;'>
+    <br>
+    <h3 style="color:White; text-align:center;">Real Reactor</h3>
     {% if reactorType == "cstr" %}
         {% if idealsystem.type == "pulse" %}
             {% if problemType == "poor impeller design" %}
@@ -507,9 +577,9 @@
                 <div id="in-line-pfr"></div>
                 <div id="out-line-pfr"></div>
                 <div id="pfr-plugflow-step-real2"></div>
-                <div id="bypass-1"></div>
-                <div id="bypass-3"></div>
-                <div id="bypass-2"></div>
+                <div id="bypass-1-red"></div>
+                <div id="bypass-3-red"></div>
+                <div id="bypass-2-red"></div>
                 <div id="bypass-arrow"></div>
             {% endif %}
         {% endif %}

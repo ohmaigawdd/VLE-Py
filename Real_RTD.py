@@ -112,14 +112,15 @@ class Real_RTD:
         frames = [go.Frame(data=[go.Scatter(x=[x[i] for i in range(len(x))], y=[y[i] for i in range(len(y))])])]
         
         fig = go.Figure(
-            data=[go.Scatter(x=xdata, y=ydata, name = "PFR_Real"),go.Scatter(x=x1, y=y1, name = "PFR_Ideal")],
+            data=[go.Scatter(x=xdata, y=ydata, name="Real", showlegend=True),go.Scatter(x=x1, y=y1, name = "Ideal", showlegend=True)],
             layout=go.Layout(template='plotly_dark',
                 paper_bgcolor='rgba(0,0,0,0)',
                 xaxis=dict(range=[0, self.tau*2], autorange=False),
-                yaxis=dict(range=[0, max(y)*1.1], autorange=False),
+                yaxis=dict(range=[0, max(y1)*1.1], autorange=False),
                 xaxis_title="Time (s)",
-                yaxis_title = "Cumulative Distribution Function",
+                yaxis_title = "Exit Age Function",
                 title="PFR: Plot of E against Time",
+                legend=dict(title = 'Legend', orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
                 updatemenus=[dict(
                 bgcolor = 'grey',
                 font = dict(color = 'black', family="Helvetica Neue, monospace", size = 12),
@@ -127,12 +128,12 @@ class Real_RTD:
                buttons=[dict(label="Display",
                             method="animate",
                             args=[None, {"frame": {"duration": 0, 
-                                    "redraw": False},
+                                    "redraw": True},
                             "fromcurrent": True, 
                             "transition": {"duration": 0}}])])]
             ), frames = frames
         )
-        
+
         return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
     def PFR_bypass_F(self):
@@ -153,7 +154,7 @@ class Real_RTD:
         frames = [go.Frame(data=[go.Scatter(x=[x[i] for i in range(len(x))], y=[y[i] for i in range(len(y))])])]
 
         fig = go.Figure(
-            data=[go.Scatter(x=xdata, y=ydata, name = "PFR Real"),go.Scatter(x=x1, y=y1, name = "PFR Ideal")],
+            data=[go.Scatter(x=xdata, y=ydata, name="Real", showlegend=True),go.Scatter(x=x1, y=y1, name = "Ideal", showlegend=True)],
             layout=go.Layout(template='plotly_dark',
                 paper_bgcolor='rgba(0,0,0,0)',
                 xaxis=dict(range=[0, self.tau*2], autorange=False),
@@ -161,6 +162,7 @@ class Real_RTD:
                 xaxis_title="Time (s)",
                 yaxis_title = "Cumulative Distribution Function",
                 title="PFR: Plot of F against Time",
+                legend=dict(title = 'Legend', orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
                 updatemenus=[dict(
                 bgcolor = 'grey',
                 font = dict(color = 'black', family="Helvetica Neue, monospace", size = 12),
@@ -168,7 +170,7 @@ class Real_RTD:
                 buttons=[dict(label="Display",
                             method="animate",
                             args=[None, {"frame": {"duration": 0, 
-                                    "redraw": False},
+                                    "redraw": True},
                             "fromcurrent": True, 
                             "transition": {"duration": 0}}])])]
             ), frames = frames
@@ -235,14 +237,15 @@ class Real_RTD:
         frames = [go.Frame(data=[go.Scatter(x=[x[i] for i in range(len(x))], y=[y[i] for i in range(len(y))])])]
         
         fig = go.Figure(
-            data=[go.Scatter(x=xdata, y=ydata, name = "PFR Real"), go.Scatter(x=x1, y=y1, name = "PFR Ideal")],
+            data=[go.Scatter(x=xdata, y=ydata, name="Real", showlegend=True), go.Scatter(x=x1, y=y1, name = "Ideal", showlegend=True)],
             layout=go.Layout(template='plotly_dark',
                 paper_bgcolor='rgba(0,0,0,0)',
                 xaxis=dict(range=[0, self.tau*2], autorange=False),
                 yaxis=dict(range=[0, max(y)*1.1], autorange=False),
                 xaxis_title="Time (s)",
-                yaxis_title = "Cumulative Distribution Function",
+                yaxis_title = "Exit Age Function",
                 title="PFR: Plot of E against Time",
+                legend=dict(title = 'Legend', orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
                 updatemenus=[dict(
                 bgcolor = 'grey',
                 font = dict(color = 'black', family="Helvetica Neue, monospace", size = 12),
@@ -250,7 +253,7 @@ class Real_RTD:
                buttons=[dict(label="Display",
                             method="animate",
                             args=[None, {"frame": {"duration": 0, 
-                                    "redraw": False},
+                                    "redraw": True},
                             "fromcurrent": True, 
                             "transition": {"duration": 0}}])])]
             ), frames = frames
@@ -273,7 +276,7 @@ class Real_RTD:
         frames = [go.Frame(data=[go.Scatter(x=[x[i] for i in range(len(x))], y=[y[i] for i in range(len(y))])])]
         
         fig = go.Figure(
-            data=[go.Scatter(x=xdata, y=ydata, name = "PFR Real"), go.Scatter(x=x1, y=y1, name = "PFR Ideal")],
+            data=[go.Scatter(x=xdata, y=ydata, name="Real", showlegend=True), go.Scatter(x=x1, y=y1, name = "Ideal", showlegend=True)],
             layout=go.Layout(template='plotly_dark',
                 paper_bgcolor='rgba(0,0,0,0)',
                 xaxis=dict(range=[0, self.tau*2], autorange=False),
@@ -281,6 +284,7 @@ class Real_RTD:
                 xaxis_title="Time (s)",
                 yaxis_title = "Cumulative Distribution Function",
                 title="PFR: Plot of F against Time",
+                legend=dict(title = 'Legend', orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
                 updatemenus=[dict(
                 bgcolor = 'grey',
                 font = dict(color = 'black', family="Helvetica Neue, monospace", size = 12),
@@ -288,7 +292,7 @@ class Real_RTD:
                 buttons=[dict(label="Display",
                             method="animate",
                             args=[None, {"frame": {"duration": 0, 
-                                    "redraw": False},
+                                    "redraw": True},
                             "fromcurrent": True, 
                             "transition": {"duration": 0}}])])]
             ), frames = frames
@@ -369,7 +373,7 @@ class Real_RTD:
         frames = [go.Frame(data=[go.Scatter(x=[x[i] for i in range(len(x))], y=[y[i] for i in range(len(y))])])]
 
         fig = go.Figure(
-            data=[go.Scatter(x=xdata, y=ydata, name = "Real (n = " + str(n) + ")"), go.Scatter(x=x1, y=y1, name = "Ideal (n = " + str(n) + ")")],
+            data=[go.Scatter(x=xdata, y=ydata, name="Real", showlegend=True), go.Scatter(x=x1, y=y1, name = "Ideal", showlegend=True)],
             layout=go.Layout(template='plotly_dark',
                 paper_bgcolor='rgba(0,0,0,0)',
                 xaxis=dict(range=[0, self.tau*5], autorange=False),
@@ -377,6 +381,7 @@ class Real_RTD:
                 xaxis_title="Time (s)",
                 yaxis_title = "Exit Age Function",
                 title="n CSTR: Plot of E against Time, n=" + str(n),
+                legend=dict(title = 'Legend', orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
                 updatemenus=[dict(
                 bgcolor = 'grey',
                 font = dict(color = 'black', family="Helvetica Neue, monospace", size = 12),
@@ -384,7 +389,7 @@ class Real_RTD:
                 buttons=[dict(label="Display",
                             method="animate",
                             args=[None, {"frame": {"duration": 0, 
-                                    "redraw": False},
+                                    "redraw": True},
                             "fromcurrent": True, 
                             "transition": {"duration": 0}}])])]
             ), frames = frames
@@ -435,7 +440,7 @@ class Real_RTD:
         frames = [go.Frame(data=[go.Scatter(x=[x[i] for i in range(len(x))], y=[y[i] for i in range(len(y))])])]
 
         fig = go.Figure(
-            data=[go.Scatter(x=xdata, y=ydata, name = "n = " + str(n)), go.Scatter(x=x1, y=y1, name = "Ideal (n = " + str(n) + ")")],
+            data=[go.Scatter(x=xdata, y=ydata, name="Real", showlegend=True), go.Scatter(x=x1, y=y1, name = "Ideal", showlegend=True)],
             layout=go.Layout(template='plotly_dark',
                 paper_bgcolor='rgba(0,0,0,0)',
                 xaxis=dict(range=[0, self.tau*5], autorange=False),
@@ -443,6 +448,7 @@ class Real_RTD:
                 xaxis_title="Time (s)",
                 yaxis_title = "Cumulative Distribution Function",
                 title="n CSTR: Plot of F against Time, n=" + str(n),
+                legend=dict(title = 'Legend', orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
                 updatemenus=[dict(
                 bgcolor = 'grey',
                 font = dict(color = 'black', family="Helvetica Neue, monospace", size = 12),
@@ -450,7 +456,7 @@ class Real_RTD:
                 buttons=[dict(label="Display",
                             method="animate",
                             args=[None, {"frame": {"duration": 0, 
-                                    "redraw": False},
+                                    "redraw": True},
                             "fromcurrent": True, 
                             "transition": {"duration": 0}}])])]
             ), frames = frames
@@ -522,7 +528,7 @@ class Real_RTD:
         frames = [go.Frame(data=[go.Scatter(x=[x[i] for i in range(len(x))], y=[y[i] for i in range(len(y))])])]
 
         fig = go.Figure(
-            data=[go.Scatter(x=xdata, y=ydata, name = "Real (n = " + str(n) + ")"), go.Scatter(x=x1, y=y1, name = "Ideal (n = " + str(n) + ")")],
+            data=[go.Scatter(x=xdata, y=ydata, name="Real", showlegend=True), go.Scatter(x=x1, y=y1, name = "Ideal", showlegend=True)],
             layout=go.Layout(template='plotly_dark',
                 paper_bgcolor='rgba(0,0,0,0)',
                 xaxis=dict(range=[0, self.tau*5], autorange=False),
@@ -530,6 +536,7 @@ class Real_RTD:
                 xaxis_title="Time (s)",
                 yaxis_title = "Exit Age Function",
                 title="n CSTR: Plot of E against Time, n=" + str(n),
+                legend=dict(title = 'Legend', orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
                 updatemenus=[dict(
                 bgcolor = 'grey',
                 font = dict(color = 'black', family="Helvetica Neue, monospace", size = 12),
@@ -537,7 +544,7 @@ class Real_RTD:
                 buttons=[dict(label="Display",
                             method="animate",
                             args=[None, {"frame": {"duration": 0, 
-                                    "redraw": False},
+                                    "redraw": True},
                             "fromcurrent": True, 
                             "transition": {"duration": 0}}])])]
             ), frames = frames
@@ -563,10 +570,10 @@ class Real_RTD:
         x1 = CSTR_Ideal.time
         y1 = CSTR_Ideal.stepresponse
         
-        frames = [go.Frame(data=[go.Scatter(x=[x[i] for i in range(len(x))], y=[y[i] for i in range(len(y))])])]
+        frames = [go.Frame(data=[go.Scatter(x=[x[i] for i in range(len(x))], y=[y[i] for i in range(len(y))], name="Real")])]
 
         fig = go.Figure(
-            data=[go.Scatter(x=xdata, y=ydata, name = "Real (n = " + str(n) + ")"), go.Scatter(x=x1, y=y1, name = "Ideal (n = " + str(n) + ")")],
+            data=[go.Scatter(x=xdata, y=ydata, showlegend=True), go.Scatter(x=x1, y=y1, name = "Ideal", showlegend=True)],
             layout=go.Layout(template='plotly_dark',
                 paper_bgcolor='rgba(0,0,0,0)',
                 xaxis=dict(range=[0, self.tau*5], autorange=False),
@@ -574,6 +581,7 @@ class Real_RTD:
                 xaxis_title="Time (s)",
                 yaxis_title = "Cumulative Distribution Function",
                 title="n CSTR: Plot of F against Time, n=" + str(n),
+                legend=dict(title = 'Legend', orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
                 updatemenus=[dict(
                 bgcolor = 'grey',
                 font = dict(color = 'black', family="Helvetica Neue, monospace", size = 12),
@@ -581,7 +589,7 @@ class Real_RTD:
                 buttons=[dict(label="Display",
                             method="animate",
                             args=[None, {"frame": {"duration": 0, 
-                                    "redraw": False},
+                                    "redraw": True},
                             "fromcurrent": True, 
                             "transition": {"duration": 0}}])])]
             ), frames = frames)
