@@ -54,6 +54,6 @@ class BinaryForm(FlaskForm):
 
     P = FloatField("Pressure (P): ", validators=[NumberRange(101.3, 6000, message=("Pressure out of range!"))], render_kw={'placeholder': "From 101.3 - 6000"})
 
-    z = FloatField("Overall Composition (w.r.t. Component A): ", validators=[NumberRange(0, 1, message=("Composition out of range!"))])
+    z = FloatField("Overall Composition (w.r.t. Component A): ", validators=[NumberRange(0, 1, message=("Composition out of range!"))], render_kw={'placeholder': "From 0.00 - 1.00"})
 
     submit = SubmitField("Submit") 
