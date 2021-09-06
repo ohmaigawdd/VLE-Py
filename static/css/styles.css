@@ -45,6 +45,15 @@ html {
 	border: 5px solid darkgray;
 }
 
+.buttons {
+	width: 1295px;
+	padding: 15px;
+	position: sticky;
+	margin-top: 15px;
+	margin-bottom: 15px;
+	border: 5px solid darkgray;
+}
+
 /* For main text in web app function boxes */
 
 .informationHeader {
@@ -59,9 +68,15 @@ html {
 }
 
 /* For the footer of the webpage */
+.taskbar {
+	font-size: 20px;
+	font-weight: 600;
+	color: white;  
+}
+
 .footer {
 	position: sticky;
-	height: 25px;
+	height: auto;
 	bottom: 0;
 	color: white;
 	text-align: center;

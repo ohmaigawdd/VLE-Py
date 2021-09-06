@@ -60,10 +60,6 @@
             <td class='tableText'>{{ system.flow }} m<sup>3</sup>/s</td>
         </tr>
     </table>
-    <br>
-    <button id="Start" onclick="requestAnimationFrame(animateStart);playAnimation();">Start Animation</button>
-    <button id="Pause" onclick="animatePause();pauseAnimation();">Pause Animation</button>
-    <button id="Reset" onclick="animateReset();resetAnimation()">Reset Animation</button>
     <script>
         let idx = 1;
         let flag = false;
@@ -295,4 +291,12 @@
 
 <br style="clear: both">
 
+{% endblock %}
+
+{% block taskbar%}
+    <div class="taskbar">Taskbar for Animations: </div>
+    <button id="Start" onclick="requestAnimationFrame(animateStart);playAnimation();">Start Animation</button>
+    <button id="Pause" onclick="animatePause();pauseAnimation();">Pause Animation</button>
+    <button id="Reset" onclick="animateReset();resetAnimation()">Reset Animation</button>
+    <br>
 {% endblock %}

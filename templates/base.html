@@ -54,11 +54,12 @@
 		</div>
 	</nav>
 
-	
 	{% block content %}
 	{% endblock %}
 
 	<footer class="footer bg-dark rounded">
+		{% block taskbar %}
+		{% endblock %}
 		NUS Department of Chemical and Biomolecular Engineering
 	</footer>
 </body>
