@@ -50,21 +50,21 @@ class Real_RTD:
     #      plt.plot(np.arange(0, 100), imp)
 
     def PFR_bypass(self):
-        xdata = []
-        ydata = []
         PFR_Real = rtdpy.Pfr(tau=self.bypass_tau, dt=.25, time_end=self.tau*2)
         x = PFR_Real.time
 
         if self.type == 'pulse':
             y = PFR_Real.exitage*25*(1-self.bypass)
-            y[0] = self.bypass*100 #bypass amount
             if not self.bypass_tau.is_integer():
                 y.fill(0)
-            # print(y)
+            y[0] = self.bypass*100 #bypass amount
+            maxVal = max(y)*1.25
         else:
             y = PFR_Real.stepresponse*100
             y = np.where(y < 50, 20, y)
             y = np.where(y >= 50, 100, y)
+            y[0] = 0
+            maxVal = max(y) * 1.1
         
         if not self.bypass_tau.is_integer():
             x = list(x)
@@ -74,7 +74,7 @@ class Real_RTD:
             index = x.index(round(self.bypass_tau, 2))
             # print(index)
             y = list(y)
-            y.insert(index, 100)
+            y.insert(index, 80)
             # print(y)
         
         self.x = list(x).copy()
@@ -87,7 +87,7 @@ class Real_RTD:
             layout=go.Layout(template='plotly_dark',
                 paper_bgcolor='rgba(0,0,0,0)',
                 xaxis=dict(range=[0, self.tau*2], autorange=False),
-                yaxis=dict(range=[0, max(y)*1.1], autorange=False),
+                yaxis=dict(range=[0, maxVal], autorange=False),
                 xaxis_title="Time (s)",
                 yaxis_title = "Concentration",
                 title="Real PFR: Plot of Concentration against Time",

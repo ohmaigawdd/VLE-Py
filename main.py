@@ -191,7 +191,7 @@ def realreactors():
     reactorFlow = 2      #m3/s
     # Array to check for real issues with reactors
     reasons_for_deadvol = ["poor impeller design", "reactor fouling"]
-    reasons_for_bypass = ["poor outlet design", "improper bed packing"]
+    reasons_for_bypass = ["poor outlet design", "poor bed packing"]
     # reasons_for_both = [] <- can add in when got more ideas
 
     if form.reactorType.data==None:
