@@ -63,7 +63,6 @@ class Real_RTD:
             y = PFR_Real.stepresponse*100
             y = np.where(y < 50, 20, y)
             y = np.where(y >= 50, 100, y)
-            y[0] = 0
             maxVal = max(y) * 1.1
         
         if not self.bypass_tau.is_integer():
@@ -179,8 +178,6 @@ class Real_RTD:
         return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
       
     def PFR_deadvol(self):
-        xdata = []
-        ydata = []
         PFR_Real = rtdpy.Pfr(tau=self.deadvol_tau, dt=.25, time_end=self.tau*2)
         x = PFR_Real.time
         if self.type == 'pulse':
