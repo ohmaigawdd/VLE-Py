@@ -1,5 +1,5 @@
-# VLE-Python
-Visualizing VLE via Python  
+# Web App for Chemical Engineering Fundamentals
+Visualisation of chemical engineering concepts such as theormodynamics and reactor residence time distribution through web-based applications
 
 ## How to Preview HTML
 Step 1) Clone Repository  
