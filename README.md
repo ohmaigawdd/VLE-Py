@@ -3,7 +3,7 @@ Visualisation of chemical engineering concepts such as theormodynamics and react
 
 ## How to Preview HTML
 Step 1) Clone Repository  
-Step 2) Open in VSCode and in terminal, install dependencies by running pip install - r requirements.txt  
+Step 2) Open in VSCode and in terminal, install dependencies by running "pip install - r requirements.txt"  
 Step 3) Go to main.py and run code  
 
 ## In Progress
