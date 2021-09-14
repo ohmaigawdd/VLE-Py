@@ -5,6 +5,7 @@ Visualisation of chemical engineering concepts such as theormodynamics and react
 Step 1) Clone Repository  
 Step 2) Open in VSCode and in terminal, install dependencies by running "pip install - r requirements.txt"  
 Step 3) Go to main.py and run code  
+Step 4) Wait for the code to finish running and ctrl+click the server which should prompt on the terminal when done
 
 ## In Progress
 1) Minor UI edits
