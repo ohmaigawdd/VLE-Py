@@ -471,16 +471,32 @@ def GvsP(T): #ISOTHERMAL T in degC
     G = {}
     Ggas = {}
     Gliq = {}
+    H = {}
+    Hgas_val = {}
+    Hliq_val = {}
+    S = {}
+    Sgas_val = {}
+    Sliq_val = {}
     for pressure in total_range:
         Hgas = steamTable.h_tx(T, 1)
+        Hgas_val[pressure*100] = Hgas
         Sgas = steamTable.s_ph(pressure, Hgas)
+        Sgas_val[pressure*100] = Sgas
         Ggas[pressure*100] = (Hgas - (273.15+T) * Sgas)
 
         Hliq = steamTable.h_tx(T, 0)
+        Hliq_val[pressure*100] = Hliq
         Sliq = steamTable.s_ph(pressure, Hliq)
+        Sliq_val[pressure*100] = Sliq
         Gliq[pressure*100] = (Hliq - (273.15+T) * Sliq)
 
         G[pressure*100] = min(Ggas[pressure*100], Gliq[pressure*100])
+        if G[pressure*100] == Ggas[pressure*100]:
+            S[pressure*100] = Sgas_val[pressure*100]
+            H[pressure*100] = Hgas_val[pressure*100]
+        else:
+            S[pressure*100] = Sliq_val[pressure*100]
+            H[pressure*100] = Hliq_val[pressure*100]
     
     fig = go.Figure()
     fig.update_layout(template='plotly_dark', 
@@ -503,27 +519,27 @@ def GvsP(T): #ISOTHERMAL T in degC
         ))
     fig.add_trace(go.Scatter(x=[pressure*100 for pressure in total_range], y=list(Ggas.values()),
                     mode='lines+markers', 
-                    name='G<sub>vap</sub>',
+                    name='G<sup>vap</sup><sub>water</sub>',
                     showlegend=True,
                     hovertemplate =
                     'P: %{x:.2f} kPa' +
                     '<br>G: %{y:.2f} kJ/kg'))
     fig.add_trace(go.Scatter(x=[pressure*100 for pressure in total_range], y=list(Gliq.values()),
                     mode='lines+markers', 
-                    name='G<sub>liq</sub>',
+                    name='G<sup>liq</sup><sub>water</sub>',
                     showlegend=True,
                     hovertemplate =
                     'P: %{x:.2f} kPa' +
                     '<br>G: %{y:.2f} kJ/kg'))
     fig.add_trace(go.Scatter(x=[pressure*100 for pressure in total_range], y=list(G.values()),
                         mode='lines+markers', 
-                        name='G<sub>final</sub>',
+                        name='G<sup>sys</sup><sub>water</sub>',
                         showlegend=True,
                         hovertemplate =
                         'P: %{x:.2f} kPa' +
                         '<br>G: %{y:.2f} kJ/kg'))
 
-    return (json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder), G, Ggas, Gliq)
+    return (json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder), G, Ggas, Gliq, H, Hgas_val, Hliq_val, S, Sgas_val, Sliq_val)
 
 def GvsT(P): # ISOBARIC P in bar
     #useful link: https://chem.libretexts.org/Bookshelves/Physical_and_Theoretical_Chemistry_Textbook_Maps/Map%3A_Physical_Chemistry_(McQuarrie_and_Simon)/23%3A_Phase_Equilibria/23.02%3A_Gibbs_Energies_and_Phase_Diagrams
@@ -531,16 +547,32 @@ def GvsT(P): # ISOBARIC P in bar
     G = {}
     Ggas = {}
     Gliq = {}
+    H = {}
+    Hgas_val = {}
+    Hliq_val = {}
+    S = {}
+    Sgas_val = {}
+    Sliq_val = {}
     for temperature in total_range:
         Hgas = steamTable.h_tx(temperature, 1)
+        Hgas_val[temperature] = Hgas
         Sgas = steamTable.s_ph(P, Hgas)
+        Sgas_val[temperature] = Sgas
         Ggas[temperature] = (Hgas - (273.15+temperature) * Sgas)
 
         Hliq = steamTable.h_tx(temperature, 0)
+        Hliq_val[temperature] = Hliq
         Sliq = steamTable.s_ph(P, Hliq)
+        Sliq_val[temperature] = Sliq
         Gliq[temperature] = (Hliq - (273.15+temperature) * Sliq)
 
         G[temperature] = min(Ggas[temperature], Gliq[temperature])
+        if G[temperature] == Ggas[temperature]:
+            S[temperature] = Sgas_val[temperature]
+            H[temperature] = Hgas_val[temperature]
+        else:
+            S[temperature] = Sliq_val[temperature]
+            H[temperature] = Hliq_val[temperature]
 
     fig = go.Figure()
     fig.update_layout(template='plotly_dark', 
@@ -563,27 +595,27 @@ def GvsT(P): # ISOBARIC P in bar
             ))
     fig.add_trace(go.Scatter(x=total_range, y=list(Ggas.values()),
                     mode='lines+markers', 
-                    name='G<sub>vap</sub>',
+                    name='G<sup>vap</sup><sub>water</sub>',
                     showlegend=True,
                     hovertemplate =
                     'P: %{x:.2f} kPa' +
                     '<br>G: %{y:.2f} kJ/kg'))
     fig.add_trace(go.Scatter(x=total_range, y=list(Gliq.values()),
                     mode='lines+markers', 
-                    name='G<sub>liq</sub>',
+                    name='G<sup>liq</sup><sub>water</sub>',
                     showlegend=True,
                     hovertemplate =
                     'P: %{x:.2f} kPa' +
                     '<br>G: %{y:.2f} kJ/kg'))
     fig.add_trace(go.Scatter(x=total_range, y=list(G.values()),
                         mode='lines+markers', 
-                        name='G<sub>final</sub>',
+                        name='G<sup>sys</sup><sub>water</sub>',
                         showlegend=True,
                         hovertemplate =
                         'P: %{x:.2f} kPa' +
                         '<br>G: %{y:.2f} kJ/kg'))
     
-    return (json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder), G, Ggas, Gliq)
+    return (json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder), G, Ggas, Gliq, H, Hgas_val, Hliq_val, S, Sgas_val, Sliq_val)
 
 
 # Testing functions

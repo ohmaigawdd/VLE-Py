@@ -142,6 +142,12 @@
                         gibbsGas.innerHTML = Math.round({{Ggraph[2]}}[newP] * 100) / 100;
                         gibbsLiq.innerHTML = Math.round({{Ggraph[3]}}[newP] * 100) / 100;
                         gibbsSys.innerHTML = Math.round({{Ggraph[1]}}[newP] * 100) / 100;
+                        Hgas.innerHTML = Math.round({{Ggraph[5]}}[newP] * 100) / 100;
+                        Hliq.innerHTML = Math.round({{Ggraph[6]}}[newP] * 100) / 100;
+                        Hsys.innerHTML = Math.round({{Ggraph[4]}}[newP] * 100) / 100;
+                        Sgas.innerHTML = Math.round({{Ggraph[2]}}[newP] * 100) / 100;
+                        Sliq.innerHTML = Math.round({{Ggraph[3]}}[newP] * 100) / 100;
+                        Ssys.innerHTML = Math.round({{Ggraph[1]}}[newP] * 100) / 100;
                         Plotly.addTraces('vapCurve',{x: [{{ system.T }}, {{ system.T }}], y: [{{ system.P }}, this.value], name: "{{ processType }}",text: ["Start", "End"], hovertemplate: '<br><b>%{text}</b></br>' + 'T: %{x:.2f} C' + '<br>P: %{y:.2f} kPa'});
                         Plotly.addTraces('Gplot',{x: [newP], y: [{{ Ggraph[1] }}[newP]], name: "Final System", mode: "markers", marker: {size: 15}, hovertemplate: 'P: %{x:.2f} kPa' + '<br>G: %{y:.2f} kJ/kg'});
                         if (newP <= {{ equi }} && vapFrac == 0) { // if gas->liq
@@ -156,6 +162,12 @@
                         gibbsGas.innerHTML = Math.round({{Ggraph[2]}}[newT] * 100) / 100;
                         gibbsLiq.innerHTML = Math.round({{Ggraph[3]}}[newT] * 100) / 100;
                         gibbsSys.innerHTML = Math.round({{Ggraph[1]}}[newT] * 100) / 100;
+                        Hgas.innerHTML = Math.round({{Ggraph[5]}}[newT] * 100) / 100;
+                        Hliq.innerHTML = Math.round({{Ggraph[6]}}[newT] * 100) / 100;
+                        Hsys.innerHTML = Math.round({{Ggraph[4]}}[newT] * 100) / 100;
+                        Sgas.innerHTML = Math.round({{Ggraph[8]}}[newT] * 100) / 100;
+                        Sliq.innerHTML = Math.round({{Ggraph[9]}}[newT] * 100) / 100;
+                        Ssys.innerHTML = Math.round({{Ggraph[7]}}[newT] * 100) / 100;
                         Plotly.addTraces('vapCurve',{x: [{{ system.T }},this.value], y: [{{ system.P }}, {{ system.P }}], name: "{{ processType }}",text: ["Start", "End"], hovertemplate: '<br><b>%{text}</b></br>' + 'T: %{x:.2f} C' + '<br>P: %{y:.2f} kPa'});
                         Plotly.addTraces('Gplot',{x: [newT], y: [{{ Ggraph[1] }}[newT]], name: "Final System", mode: "markers", marker: {size: 15}, hovertemplate: 'T: %{x:.2f} C' + '<br>G: %{y:.2f} kJ/kg'});
                         if (newT <= {{ equi }} && vapFrac == 1) { // if liq->gas
@@ -183,11 +195,11 @@
         <table>
             <tr>
                 <td><p class='informationHeader' style='margin-bottom: 0px;'>Legend</p></td>
-                <td class='tableHeader' style='padding-bottom: 0px; padding-left: 60px;'>Vapour: </td>
+                <td class='tableHeader' style='padding-bottom: 0px; padding-left: 60px; font-size: 20px;'>Vapour: </td>
                 <td class='tableText' style='padding-bottom: 0px;'><img src='static/images/vap.png' style='height: 15px; width: auto; margin-bottom: 5px;'></td>
-                <td class='tableHeader' style='padding-bottom: 0px;'>Liquid: </td>
+                <td class='tableHeader' style='padding-bottom: 0px; font-size: 20px;'>Liquid: </td>
                 <td class='tableText' style='padding-bottom: 0px;'><img src='static/images/liq.png' style='height: 15px; width: auto; margin-bottom: 5px;'></td>
-                <td class='tableHeader' style='padding-bottom: 0px;'>Molecule: </td>
+                <td class='tableHeader' style='padding-bottom: 0px; font-size: 20px;'>Molecule: </td>
                 <td class='tableText' style='padding-bottom: 0px;'><img src='static/images/blue.png' style='height: 15px; width: auto; margin-bottom: 5px;'></td>
             </tr>
         </table>
@@ -197,54 +209,96 @@
 {% if errors == False %}
 <div class='information rounded' id='Gplot' style='margin-right: 35px; margin-top: 0px; height: 640px; padding: 0px'>
     <div class='legend rounded' style="margin-right: 35px">
-        <table>
+        <table style="text-align: center;">
             <tr>
-                <td class='tableHeader' style='padding-bottom: 0px; padding-left: 30px; color: #636efb;'>G<sub>vap</sub>: </td>
-                <td class='tableText' style='padding-bottom: 0px;'><span id="Ggas"></span> kJ/kg</td>
-                <td class='tableHeader' style='padding-bottom: 0px; color: #f0543c;'>G<sub>liq</sub>: </td>
-                <td class='tableText' style='padding-bottom: 0px;'><span id="Gliq"></span> kJ/kg</td>
-                <td class='tableHeader' style='padding-bottom: 0px; color: #08cc94;'>G<sub>final</sub>: </td>
-                <td class='tableText' style='padding-bottom: 0px;'><span id="Gsys"></span> kJ/kg</td>
-                <script>
-                    var gibbsGas = document.getElementById("Ggas")
-                    var gibbsLiq = document.getElementById("Gliq")
-                    var gibbsSys = document.getElementById("Gsys")
-                    if ("{{ processType }}" == "Isotherm") {
-                        var initP = Math.round({{system.P}}/100) * 100
-                        gibbsGas.innerHTML = Math.round({{Ggraph[2]}}[initP] * 100) / 100;
-                        gibbsLiq.innerHTML = Math.round({{Ggraph[3]}}[initP] * 100) / 100;
-                        gibbsSys.innerHTML = Math.round({{Ggraph[1]}}[initP] * 100) / 100;
-                    } else {
-                        var initT = {{system.T}}
-                        gibbsGas.innerHTML = Math.round({{Ggraph[2]}}[initT] * 100) / 100;
-                        gibbsLiq.innerHTML = Math.round({{Ggraph[3]}}[initT] * 100) / 100;
-                        gibbsSys.innerHTML = Math.round({{Ggraph[1]}}[initT] * 100) / 100;
-                    }
-                </script>
+                <td class='tableHeader' style='padding-bottom: 0px; padding-left: 5px; color: #636efb;'>G<sup>vap</sup><sub>water</sub>: </td>
+                <td class='tableText' style='padding-bottom: 0px;'><span id="Ggas"></span> <span class="tableText" style="font-size: 10px;">kJ/kg</span></td>
+                <td class='tableHeader' style='padding-bottom: 0px; color: #f0543c;'>G<sup>liq</sup><sub>water</sub>: </td>
+                <td class='tableText' style='padding-bottom: 0px;'><span id="Gliq"></span> <span class="tableText" style="font-size: 10px;">kJ/kg</span></td>
+                <td class='tableHeader' style='padding-bottom: 0px; color: #08cc94;'>G<sup>sys</sup><sub>water</sub>: </td>
+                <td class='tableText' style='padding-bottom: 0px;'><span id="Gsys"></span> <span class="tableText" style="font-size: 10px;">kJ/kg</span></td>
             </tr>
+            <tr>
+                <td class='tableHeader' style='padding-bottom: 0px; padding-left: 5px; color: #636efb;'>H<sup>vap</sup><sub>water</sub>: </td>
+                <td class='tableText' style='padding-bottom: 0px;'><span id="Hgas"></span> <span class="tableText" style="font-size: 10px;">kJ/kg</span></td>
+                <td class='tableHeader' style='padding-bottom: 0px; color: #f0543c;'>H<sup>liq</sup><sub>water</sub>: </td>
+                <td class='tableText' style='padding-bottom: 0px;'><span id="Hliq"></span> <span class="tableText" style="font-size: 10px;">kJ/kg</span></td>
+                <td class='tableHeader' style='padding-bottom: 0px; color: #08cc94;'>H<sup>sys</sup><sub>water</sub>: </td>
+                <td class='tableText' style='padding-bottom: 0px;'><span id="Hsys"></span> <span class="tableText" style="font-size: 10px;">kJ/kg</span></td>
+            </tr>
+            <tr>
+                <td class='tableHeader' style='padding-bottom: 0px; padding-left: 5px; color: #636efb;'>S<sup>vap</sup><sub>water</sub>: </td>
+                <td class='tableText' style='padding-bottom: 0px;'><span id="Sgas"></span> <span class="tableText" style="font-size: 10px;">kJ/kg</span></td>
+                <td class='tableHeader' style='padding-bottom: 0px; color: #f0543c;'>S<sup>liq</sup><sub>water</sub>: </td>
+                <td class='tableText' style='padding-bottom: 0px;'><span id="Sliq"></span> <span class="tableText" style="font-size: 10px;">kJ/kg</span></td>
+                <td class='tableHeader' style='padding-bottom: 0px; color: #08cc94;'>S<sup>sys</sup><sub>water</sub>: </td>
+                <td class='tableText' style='padding-bottom: 0px;'><span id="Ssys"></span> <span class="tableText" style="font-size: 10px;">kJ/kg</span></td>
+            </tr>
+            <script>
+                var gibbsGas = document.getElementById("Ggas")
+                var gibbsLiq = document.getElementById("Gliq")
+                var gibbsSys = document.getElementById("Gsys")
+
+                var HGas = document.getElementById("Hgas")
+                var HLiq = document.getElementById("Hliq")
+                var HSys = document.getElementById("Hsys")
+
+                var SGas = document.getElementById("Sgas")
+                var SLiq = document.getElementById("Sliq")
+                var SSys = document.getElementById("Ssys")
+                if ("{{ processType }}" == "Isotherm") {
+                    var initP = Math.round({{system.P}}/100) * 100
+                    gibbsGas.innerHTML = Math.round({{Ggraph[2]}}[initP] * 100) / 100;
+                    gibbsLiq.innerHTML = Math.round({{Ggraph[3]}}[initP] * 100) / 100;
+                    gibbsSys.innerHTML = Math.round({{Ggraph[1]}}[initP] * 100) / 100;
+
+                    Hgas.innerHTML = Math.round({{Ggraph[5]}}[initP] * 100) / 100;
+                    Hliq.innerHTML = Math.round({{Ggraph[6]}}[initP] * 100) / 100;
+                    Hsys.innerHTML = Math.round({{Ggraph[4]}}[initP] * 100) / 100;
+
+                    Sgas.innerHTML = Math.round({{Ggraph[2]}}[initP] * 100) / 100;
+                    Sliq.innerHTML = Math.round({{Ggraph[3]}}[initP] * 100) / 100;
+                    Ssys.innerHTML = Math.round({{Ggraph[1]}}[initP] * 100) / 100;
+                } else {
+                    var initT = {{system.T}}
+                    gibbsGas.innerHTML = Math.round({{Ggraph[8]}}[initT] * 100) / 100;
+                    gibbsLiq.innerHTML = Math.round({{Ggraph[9]}}[initT] * 100) / 100;
+                    gibbsSys.innerHTML = Math.round({{Ggraph[7]}}[initT] * 100) / 100;
+
+                    Hgas.innerHTML = Math.round({{Ggraph[5]}}[initT] * 100) / 100;
+                    Hliq.innerHTML = Math.round({{Ggraph[6]}}[initT] * 100) / 100;
+                    Hsys.innerHTML = Math.round({{Ggraph[4]}}[initT] * 100) / 100;
+
+                    Sgas.innerHTML = Math.round({{Ggraph[8]}}[initT] * 100) / 100;
+                    Sliq.innerHTML = Math.round({{Ggraph[9]}}[initT] * 100) / 100;
+                    Ssys.innerHTML = Math.round({{Ggraph[7]}}[initT] * 100) / 100;
+                }
+            </script>
         </table>
     </div>
-    <!-- import plotly library -->
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-    <script>
-        var graphs1 = {{ Ggraph[0] | safe }};
-        Plotly.plot('Gplot',graphs1,{});
-        if ("{{ processType }}" == "Isotherm") {
-            Plotly.addTraces('Gplot',{x: [initP], y: [{{ Ggraph[1] }}[initP]], name: "Starting System", mode: "markers", marker: {size: 15},hovertemplate: 'P: %{x:.2f} kPa' + '<br>G: %{y:.2f} kJ/kg'});
-        }
-        else {
-            Plotly.addTraces('Gplot',{x: [initT], y: [{{ Ggraph[1] }}[initT]], name: "Starting System", mode: "markers", marker: {size: 15}, hovertemplate: 'T: %{x:.2f} C' + '<br>G: %{y:.2f} kJ/kg'});
-        }
-    </script>
 </div>
 
-<div class='information rounded' id='vapCurve' style='height: 720px; margin-top: 0px; padding: 0px;'>
+<!-- import plotly library -->
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script>
+    var graphs1 = {{ Ggraph[0] | safe }};
+    Plotly.plot('Gplot',graphs1,{});
+    if ("{{ processType }}" == "Isotherm") {
+        Plotly.addTraces('Gplot',{x: [initP], y: [{{ Ggraph[1] }}[initP]], name: "Starting System", mode: "markers", marker: {size: 15},hovertemplate: 'P: %{x:.2f} kPa' + '<br>G: %{y:.2f} kJ/kg'});
+    }
+    else {
+        Plotly.addTraces('Gplot',{x: [initT], y: [{{ Ggraph[1] }}[initT]], name: "Starting System", mode: "markers", marker: {size: 15}, hovertemplate: 'T: %{x:.2f} C' + '<br>G: %{y:.2f} kJ/kg'});
+    }
+</script>
+<div class='information rounded' id='vapCurve' style='height: 765px; margin-top: 0px; padding: 0px;'>
     <script>
         var graphs2 = {{ graphJSON | safe }}
         Plotly.plot('vapCurve',graphs2,{})
         Plotly.addTraces('vapCurve',{x: [{{ system.T }}, {{ system.T }}], y: [ {{ system.P }}, {{ system.P }}], name: "{{ processType }}",text: ["End", "Start"], hovertemplate: '<br><b>%{text}</b></br>' + 'T: %{x:.2f} C' + '<br>P: %{y:.2f} kPa'});
     </script>
 </div>
+
+
 
 <br style="clear: both" >
 {% endif %}
