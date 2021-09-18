@@ -42,9 +42,9 @@
             <td class='tableText'>{{ system.type.capitalize() }}</td>
             <td class='tableHeader'><strong>Tracer Concentration:</strong></td>
             {% if reactorType == "cstr"%}
-            <td class='tableText'>{{ "%0.2f" % (100 / system.V_reactor) | float}} units/m<sup>3</sup></td>
+            <td class='tableText'>{{ "%0.2f" % (100 / system.V_reactor) | float}} mol/m<sup>3</sup></td>
             {% else %}
-            <td class='tableText'>100.00 units/m<sup>3</sup></td>
+            <td class='tableText'>100.00 mol/m<sup>3</sup></td>
             {% endif %}
         </tr>
         <tr>

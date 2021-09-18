@@ -50,9 +50,9 @@ class BinaryForm(FlaskForm):
 
     plot_type = SelectField("Plot Type: ", choices = [("yxP","y-x (const P)"), ("yxT","y-x (const T)"), ("Txy","T-x-y"), ("Pxy","P-x-y")])
 
-    T = FloatField("Temperature (T): ", validators=[NumberRange(-70, 200, message=("Temperature out of range!"))], render_kw={'placeholder': "From -70 - 200"})
+    T = FloatField("Temperature (T in \u00b0C): ", validators=[NumberRange(-70, 200, message=("Temperature out of range!"))], render_kw={'placeholder': "From -70 - 200"})
 
-    P = FloatField("Pressure (P): ", validators=[NumberRange(101.3, 6000, message=("Pressure out of range!"))], render_kw={'placeholder': "From 101.3 - 6000"})
+    P = FloatField("Pressure (P in kPa): ", validators=[NumberRange(101.3, 6000, message=("Pressure out of range!"))], render_kw={'placeholder': "From 101.3 - 6000"})
 
     z = FloatField("Overall Composition (w.r.t. Component A): ", validators=[NumberRange(0, 1, message=("Composition out of range!"))], render_kw={'placeholder': "From 0.00 - 1.00"})
 
