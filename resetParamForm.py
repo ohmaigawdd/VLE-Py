@@ -28,11 +28,11 @@ class IdealReactorForm(FlaskForm):
 class PureForm(FlaskForm):
 
     #Range of T and P as given by Pyxsteam
-    T_isot = IntegerField("Start Temperature (T): ", validators=[NumberRange(1, 374, message=("Temperature out of range!"))], render_kw={'placeholder': "From 1 - 374"})
-    T_isob = IntegerField("Start Temperature (T): ", validators=[NumberRange(1, 374, message=("Temperature out of range!"))], render_kw={'placeholder': "From 1 - 374"})
+    T_isot = IntegerField("Start Temperature (T in \u00b0C): ", validators=[NumberRange(1, 374, message=("Temperature out of range!"))], render_kw={'placeholder': "From 1 - 374"})
+    T_isob = IntegerField("Start Temperature (T in \u00b0C): ", validators=[NumberRange(1, 374, message=("Temperature out of range!"))], render_kw={'placeholder': "From 1 - 374"})
 
-    P_isot = IntegerField("Start Pressure (P): ", validators=[NumberRange(100, 22100, message=("Pressure out of range!"))], render_kw={'placeholder': "From 100 - 22100"})
-    P_isob = IntegerField("Start Pressure (P): ", validators=[NumberRange(100, 4154, message=("Pressure out of range!"))], render_kw={'placeholder': "From 100 - 4154"})
+    P_isot = IntegerField("Start Pressure (P in kPa): ", validators=[NumberRange(100, 22100, message=("Pressure out of range!"))], render_kw={'placeholder': "From 100 - 22100"})
+    P_isob = IntegerField("Start Pressure (P in kPa): ", validators=[NumberRange(100, 4154, message=("Pressure out of range!"))], render_kw={'placeholder': "From 100 - 4154"})
     
     processType = SelectField("Process: ", choices = [("Isotherm","Isothermal"), ("Isobar","Isobaric")], render_kw={'onchange': "optionChange()"})
 

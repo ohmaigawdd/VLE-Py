@@ -50,7 +50,7 @@
             </tr>
             <tr class='informationText'>
                 <td><strong>{{ form.T_isot.label  }}</strong></td>
-                <td>{{ form.T_isot() }}{{ form.T_isob() }} <sup>o</sup>C</td>
+                <td>{{ form.T_isot() }}{{ form.T_isob() }}</td>
                 {% if processType == "Isobar" %}
                 <script>
                     document.getElementById("T_isot").style.display = "none"
@@ -67,7 +67,7 @@
             </tr>
             <tr class='informationText'>
                 <td><strong>{{ form.P_isot.label  }}</strong></td>
-                <td>{{ form.P_isot() }}{{ form.P_isob() }} kPa</td>
+                <td>{{ form.P_isot() }}{{ form.P_isob() }}</td>
                 {% if processType == "Isobar" %}
                 <script>
                     document.getElementById("P_isot").style.display = "none"
