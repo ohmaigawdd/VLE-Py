@@ -284,10 +284,10 @@
     var graphs1 = {{ Ggraph[0] | safe }};
     Plotly.plot('Gplot',graphs1,{});
     if ("{{ processType }}" == "Isotherm") {
-        Plotly.addTraces('Gplot',{x: [initP], y: [{{ Ggraph[1] }}[initP]], name: "Starting System", mode: "markers", marker: {size: 15},hovertemplate: 'P: %{x:.2f} kPa' + '<br>G: %{y:.2f} kJ/kg'});
+        Plotly.addTraces('Gplot',{x: [initP], y: [{{ Ggraph[1] }}[initP]], name: "Starting System", mode: "markers", marker: {size: 15, color: "orange"},hovertemplate: 'P: %{x:.2f} kPa' + '<br>G: %{y:.2f} kJ/kg'});
     }
     else {
-        Plotly.addTraces('Gplot',{x: [initT], y: [{{ Ggraph[1] }}[initT]], name: "Starting System", mode: "markers", marker: {size: 15}, hovertemplate: 'T: %{x:.2f} C' + '<br>G: %{y:.2f} kJ/kg'});
+        Plotly.addTraces('Gplot',{x: [initT], y: [{{ Ggraph[1] }}[initT]], name: "Starting System", mode: "markers", marker: {size: 15, color: "orange"}, hovertemplate: 'T: %{x:.2f} C' + '<br>G: %{y:.2f} kJ/kg'});
     }
 </script>
 <div class='information rounded' id='vapCurve' style='height: 765px; margin-top: 0px; padding: 0px;'>
