@@ -173,7 +173,6 @@ class plot:
             xaxis_title="x (" + component + ")",
             yaxis_title = "y (" + component + ")",
             legend=dict(
-                title='Legend',
                 orientation="h",
                 yanchor="bottom",
                 y=1.02,
@@ -226,7 +225,6 @@ class plot:
             xaxis_title="x (" + component + ")",
             yaxis_title = "y (" + component + ")",
             legend=dict(
-                title = 'Legend',
                 orientation="h",
                 yanchor="bottom",
                 y=1.02,
@@ -279,7 +277,6 @@ class plot:
             xaxis_title="x (" + component + ")/y (" + component + ")",
             yaxis_title = "Temperature ("+chr(176)+"C)",
             legend=dict(
-                title = 'Legend',
                 orientation="h",
                 yanchor="bottom",
                 y=1.02,
@@ -330,7 +327,6 @@ class plot:
             xaxis_title = "x (" + component + ")/y (" + component + ")",
             yaxis_title="Pressure (kPa)",
             legend=dict(
-                title = 'Legend',
                 orientation="h",
                 yanchor="bottom",
                 y=1.02,
@@ -434,7 +430,6 @@ class plot_steam:
             xaxis_title = "Temperature" + chr(176) + "C",
             yaxis_title="Pressure (kPa)",
             legend=dict(
-                title = 'Legend',
                 orientation="h",
                 yanchor="bottom",
                 y=1.02,
@@ -507,7 +502,6 @@ def GvsP(T): #ISOTHERMAL T in degC
         xaxis_title = "Pressure (kPa)",
         yaxis_title="Gibbs (kJ/kg)",
         legend=dict(
-            title = 'Legend',
             orientation="h",
             yanchor="bottom",
             y=1.02,
@@ -583,7 +577,6 @@ def GvsT(P): # ISOBARIC P in bar
             xaxis_title = "Temperature" + chr(176) + "C",
             yaxis_title="Gibbs (kJ/kj)",
             legend=dict(
-                title = 'Legend',
                 orientation="h",
                 yanchor="bottom",
                 y=1.02,
