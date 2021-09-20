@@ -69,6 +69,11 @@
     
 }
 
+@keyframes plugflow-real {
+    from {left: -150px}
+    to {left: 150px}
+}
+
 @keyframes plugflow-fouling {
     from {left: -140px}
     to {left: 140px}
@@ -177,15 +182,25 @@
 
 #pfr-plugflow, #pfr-plugflow-real2 {
     position: relative;
-    width: 10px;
     height: 98px;
     top: 129px;
-    left: 145px;
     right: unset;
     bottom: 0;
     margin: auto;
     background-color: red;
+}
+
+#pfr-plugflow {
+    width: 10px;
+    left: 145px;
     animation: plugflow 5s;
+    animation-play-state: paused;
+}
+
+#pfr-plugflow-real2 {
+    width: 5px;
+    left: 148px;
+    animation: plugflow-real 5s;
     animation-play-state: paused;
 }
 
