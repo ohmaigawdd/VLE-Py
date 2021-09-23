@@ -145,9 +145,9 @@
                         Hgas.innerHTML = Math.round({{Ggraph[5]}}[newP] * 100) / 100;
                         Hliq.innerHTML = Math.round({{Ggraph[6]}}[newP] * 100) / 100;
                         Hsys.innerHTML = Math.round({{Ggraph[4]}}[newP] * 100) / 100;
-                        Sgas.innerHTML = Math.round({{Ggraph[2]}}[newP] * 100) / 100;
-                        Sliq.innerHTML = Math.round({{Ggraph[3]}}[newP] * 100) / 100;
-                        Ssys.innerHTML = Math.round({{Ggraph[1]}}[newP] * 100) / 100;
+                        Sgas.innerHTML = Math.round({{Ggraph[8]}}[newP] * 100) / 100;
+                        Sliq.innerHTML = Math.round({{Ggraph[9]}}[newP] * 100) / 100;
+                        Ssys.innerHTML = Math.round({{Ggraph[7]}}[newP] * 100) / 100;
                         Plotly.addTraces('vapCurve',{x: [{{ system.T }}, {{ system.T }}], y: [{{ system.P }}, this.value], name: "{{ processType }}",text: ["Start", "End"], hovertemplate: '<br><b>%{text}</b></br>' + 'T: %{x:.2f} C' + '<br>P: %{y:.2f} kPa'});
                         Plotly.addTraces('Gplot',{x: [newP], y: [{{ Ggraph[1] }}[newP]], name: "Final System", mode: "markers", marker: {size: 15}, hovertemplate: 'P: %{x:.2f} kPa' + '<br>G: %{y:.2f} kJ/kg'});
                         if (newP <= {{ equi }} && vapFrac == 0) { // if gas->liq
@@ -256,14 +256,14 @@
                     Hliq.innerHTML = Math.round({{Ggraph[6]}}[initP] * 100) / 100;
                     Hsys.innerHTML = Math.round({{Ggraph[4]}}[initP] * 100) / 100;
 
-                    Sgas.innerHTML = Math.round({{Ggraph[2]}}[initP] * 100) / 100;
-                    Sliq.innerHTML = Math.round({{Ggraph[3]}}[initP] * 100) / 100;
-                    Ssys.innerHTML = Math.round({{Ggraph[1]}}[initP] * 100) / 100;
+                    Sgas.innerHTML = Math.round({{Ggraph[8]}}[initP] * 100) / 100;
+                    Sliq.innerHTML = Math.round({{Ggraph[9]}}[initP] * 100) / 100;
+                    Ssys.innerHTML = Math.round({{Ggraph[7]}}[initP] * 100) / 100;
                 } else {
                     var initT = {{system.T}}
-                    gibbsGas.innerHTML = Math.round({{Ggraph[8]}}[initT] * 100) / 100;
-                    gibbsLiq.innerHTML = Math.round({{Ggraph[9]}}[initT] * 100) / 100;
-                    gibbsSys.innerHTML = Math.round({{Ggraph[7]}}[initT] * 100) / 100;
+                    gibbsGas.innerHTML = Math.round({{Ggraph[2]}}[initT] * 100) / 100;
+                    gibbsLiq.innerHTML = Math.round({{Ggraph[3]}}[initT] * 100) / 100;
+                    gibbsSys.innerHTML = Math.round({{Ggraph[1]}}[initT] * 100) / 100;
 
                     Hgas.innerHTML = Math.round({{Ggraph[5]}}[initT] * 100) / 100;
                     Hliq.innerHTML = Math.round({{Ggraph[6]}}[initT] * 100) / 100;
