@@ -58,12 +58,11 @@ class Real_RTD:
             if not self.bypass_tau.is_integer():
                 y.fill(0)
             y[0] = self.bypass*100 #bypass amount
-            maxVal = max(y)*1.25
         else:
             y = PFR_Real.stepresponse*100
             y = np.where(y < 50, 20, y)
             y = np.where(y >= 50, 100, y)
-            maxVal = max(y) * 1.1
+
         
         if not self.bypass_tau.is_integer():
             x = list(x)
@@ -86,13 +85,13 @@ class Real_RTD:
             layout=go.Layout(template='plotly_dark',
                 paper_bgcolor='rgba(0,0,0,0)',
                 xaxis=dict(range=[0, self.tau*2], autorange=False),
-                yaxis=dict(range=[0, maxVal], autorange=False),
+                yaxis=dict(range=[0, 110], autorange=False, showticklabels=False),
                 xaxis_title="Time (s)",
-                yaxis_title = "Concentration",
+                yaxis_title = "Concentration (mol/m3)",
                 title="Real PFR: Plot of Concentration against Time",
             ),
         )
-
+        fig.add_annotation(x=5.5, y=0.5*max(y), text="Flow bypass, delayed exit", font_size=14, showarrow=False, bgcolor="white", font_color="black")
         return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
     def PFR_bypass_E(self):
@@ -117,7 +116,7 @@ class Real_RTD:
                 xaxis=dict(range=[0, self.tau*2], autorange=False),
                 yaxis=dict(range=[0, max(y1)*1.1], autorange=False),
                 xaxis_title="Time (s)",
-                yaxis_title = "Exit Age Function",
+                yaxis_title = "Exit Age Function (1/s)",
                 title="PFR: Plot of E against Time",
                 legend=dict(title = 'Legend', orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
                 updatemenus=[dict(
@@ -132,7 +131,10 @@ class Real_RTD:
                             "transition": {"duration": 0}}])])]
             ), frames = frames
         )
-
+        fig.add_annotation(x=self.tau, y=max(y1), text = "Ideal PFR", showarrow=True, bgcolor="red", font_color="white", arrowcolor="red", arrowhead=1, align="left",  ax=-20,
+        ay=-30,)
+        fig.add_annotation(x=self.bypass_tau, y=max(y), text = "Real PFR", showarrow=True, bgcolor="blue", font_color="white", arrowcolor="blue", arrowhead=1, align="right")
+        fig.add_annotation(x=5, y=0.5*max(y1), text="Flow bypass, delayed exit", font_size=14, showarrow=False, bgcolor="white", font_color="black")
         return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
     def PFR_bypass_F(self):
@@ -174,7 +176,10 @@ class Real_RTD:
                             "transition": {"duration": 0}}])])]
             ), frames = frames
         )
-
+        fig.add_annotation(x=self.tau, y=max(y1), text = "Ideal PFR", showarrow=True, bgcolor="red", font_color="white", arrowcolor="red", arrowhead=1, align="left",  ax=-20,
+        ay=-30,)
+        fig.add_annotation(x=self.bypass_tau, y=max(y), text = "Real PFR", showarrow=True, bgcolor="blue", font_color="white", arrowcolor="blue", arrowhead=1, align="right")
+        fig.add_annotation(x=5, y=0.5*max(y1), text="Flow bypass, delayed exit", font_size=14, showarrow=False, bgcolor="white", font_color="black")
         return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
       
     def PFR_deadvol(self):
@@ -211,12 +216,13 @@ class Real_RTD:
             layout=go.Layout(template='plotly_dark',
                 paper_bgcolor='rgba(0,0,0,0)',
                 xaxis=dict(range=[0, self.tau*2], autorange=False),
-                yaxis=dict(range=[0, max(y)*1.1], autorange=False),
+                yaxis=dict(range=[0, 110], autorange=False, showticklabels=False),
                 xaxis_title="Time (s)",
-                yaxis_title = "Concentration",
+                yaxis_title = "Concentration (mol/m3)",
                 title="Real PFR: Plot of Concentration against Time",
             ),
         )
+        fig.add_annotation(x=15, y=0.5*max(y), text="Dead volume, early exit", font_size=16, showarrow=False, bgcolor="white", font_color="black")
         return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
     def PFR_deadvol_E(self):
@@ -240,7 +246,7 @@ class Real_RTD:
                 xaxis=dict(range=[0, self.tau*2], autorange=False),
                 yaxis=dict(range=[0, max(y)*1.1], autorange=False),
                 xaxis_title="Time (s)",
-                yaxis_title = "Exit Age Function",
+                yaxis_title = "Exit Age Function (1/s)",
                 title="PFR: Plot of E against Time",
                 legend=dict(title = 'Legend', orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
                 updatemenus=[dict(
@@ -255,7 +261,10 @@ class Real_RTD:
                             "transition": {"duration": 0}}])])]
             ), frames = frames
         )
-
+        fig.add_annotation(x=self.tau, y=max(y1), text = "Ideal PFR", showarrow=True, bgcolor="red", font_color="white", arrowcolor="red", arrowhead=1, align="left")
+        fig.add_annotation(x=self.deadvol_tau, y=max(y), text = "Real PFR", showarrow=True, bgcolor="blue", font_color="white", arrowcolor="blue", arrowhead=1, align="left")
+        fig.add_annotation(x=15, y=0.5*max(y1), text="Dead volume, early exit", font_size=16, showarrow=False, bgcolor="white", font_color="black")
+        
         return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
     def PFR_deadvol_F(self):
@@ -295,6 +304,10 @@ class Real_RTD:
             ), frames = frames
         )
 
+        fig.add_annotation(x=self.tau, y=max(y1), text = "Ideal PFR", showarrow=True, bgcolor="red", font_color="white", arrowcolor="red", arrowhead=1, align="left")
+        fig.add_annotation(x=self.deadvol_tau, y=max(y), text = "Real PFR", showarrow=True, bgcolor="blue", font_color="white", arrowcolor="blue", arrowhead=1, align="left")
+        fig.add_annotation(x=15, y=0.5*max(y1), text="Dead volume, early exit", font_size=16, showarrow=False, bgcolor="white", font_color="black")
+
         return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
     def CSTR_bypass(self, n):
@@ -320,27 +333,20 @@ class Real_RTD:
         self.length2 = len(self.x)
 
         fig = go.Figure(
-            data=[go.Scatter(x=[], y=[], name = "n = " + str(n))],
+            data=[go.Scatter(x=[], y=[])],
             layout=go.Layout(template='plotly_dark',
                 paper_bgcolor='rgba(0,0,0,0)',
                 xaxis=dict(range=[0, self.tau*5], autorange=False),
                 yaxis=dict(range=[0, max(y)*1.1], autorange=False),
                 xaxis_title="Time (s)",
-                yaxis_title = "Concentration",
-                title="n Real CSTR: Plot of Concentration against Time, n=" + str(n)
+                yaxis_title = "Concentration (mol/m3)",
+                title="Real CSTR: Plot of Concentration against Time"
             )
         )
-
+        fig.add_annotation(x=30, y=3, text="Flow bypass, gentler gradient", font_size=18, showarrow=False, bgcolor="white", font_color="black")
         return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
     def CSTR_bypass_E(self,n):
-
-        # x = np.arange(0, self.tau*5, 0.25)
-        # y = []
-
-        # for t in x:
-        #     c = (100/self.V_reactor)*math.exp((-1)*self.flow*t/self.V_reactor)
-        #     y.append(c)
 
         CSTR_Real = rtdpy.Ncstr(tau=self.bypass_tau, n = n, dt=.01, time_end=self.tau*5)
         xdata, ydata = [], []
@@ -355,17 +361,6 @@ class Real_RTD:
         CSTR_Ideal = rtdpy.Ncstr(tau=self.tau, n = n, dt=.01, time_end=self.tau*5)
         x1 = CSTR_Ideal.time
         y1 = CSTR_Ideal.exitage
-
-        # x = x[::25]
-        # y = y[::25]
-
-        # frames = []
-
-        # for i in range(len(x)-1):
-        #     fx = [x[j] for j in range(i)]
-        #     fy = [y[j] for j in range(i)]
-        #     frame = go.Frame(data=[go.Scatter(x=fx, y=fy)])
-        #     frames.append(frame)
             
         frames = [go.Frame(data=[go.Scatter(x=[x[i] for i in range(len(x))], y=[y[i] for i in range(len(y))])])]
 
@@ -376,8 +371,8 @@ class Real_RTD:
                 xaxis=dict(range=[0, self.tau*5], autorange=False),
                 yaxis=dict(range=[0, max(y)*1.1], autorange=False),
                 xaxis_title="Time (s)",
-                yaxis_title = "Exit Age Function",
-                title="n CSTR: Plot of E against Time, n=" + str(n),
+                yaxis_title = "Exit Age Function (1/s)",
+                title="CSTR: Plot of E against Time",
                 legend=dict(title = 'Legend', orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
                 updatemenus=[dict(
                 bgcolor = 'grey',
@@ -391,17 +386,12 @@ class Real_RTD:
                             "transition": {"duration": 0}}])])]
             ), frames = frames
         )
-
+        fig.add_annotation(x=0, y=0.1, text = "Ideal CSTR", showarrow=True, bgcolor="red", font_color="white", arrowcolor="red", arrowhead=1, align="left",  ax=40, ay=-30,)
+        fig.add_annotation(x=0, y=max(y), text = "Real CSTR", showarrow=True, bgcolor="blue", font_color="white", arrowcolor="blue", arrowhead=1, align="right", ax=20, ay=-30)
+        fig.add_annotation(x=30, y=0.1, text="Flow bypass, gentler gradient", font_size=18, showarrow=False, bgcolor="white", font_color="black")
         return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
     def CSTR_bypass_F(self,n):
-
-        # x = np.arange(0, self.tau*5, 0.25)
-        # y = []
-
-        # for t in x:
-        #     c = (100/self.V_reactor)*math.exp((-1)*self.flow*t/self.V_reactor)
-        #     y.append(c)
 
         CSTR_Real = rtdpy.Ncstr(tau=self.deadvol_tau, n = n, dt=.01, time_end=self.tau*5)
         xdata, ydata = [], []
@@ -418,21 +408,6 @@ class Real_RTD:
         CSTR_Ideal = rtdpy.Ncstr(tau=self.tau, n = n, dt=.01, time_end=self.tau*5)
         x1 = CSTR_Ideal.time
         y1 = CSTR_Ideal.stepresponse
-        
-        #Will lose the first few t so need to somehow extrapolate graph
-        #while len(y) < len(x):
-        #    y.append(1)
-
-        # x = x[::25]
-        # y = y[::25]
-
-        # frames = []
-
-        # for i in range(len(x)-1):
-        #     fx = [x[j] for j in range(i)]
-        #     fy = [y[j] for j in range(i)]
-        #     frame = go.Frame(data=[go.Scatter(x=fx, y=fy)])
-        #     frames.append(frame)
 
         frames = [go.Frame(data=[go.Scatter(x=[x[i] for i in range(len(x))], y=[y[i] for i in range(len(y))])])]
 
@@ -444,7 +419,7 @@ class Real_RTD:
                 yaxis=dict(range=[0, max(y)*1.1], autorange=False),
                 xaxis_title="Time (s)",
                 yaxis_title = "Cumulative Distribution Function",
-                title="n CSTR: Plot of F against Time, n=" + str(n),
+                title="CSTR: Plot of F against Time",
                 legend=dict(title = 'Legend', orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
                 updatemenus=[dict(
                 bgcolor = 'grey',
@@ -458,7 +433,10 @@ class Real_RTD:
                             "transition": {"duration": 0}}])])]
             ), frames = frames
         )
-
+        fig.add_annotation(x=45, y=0.98890, text = "Ideal CSTR", showarrow=True, bgcolor="red", font_color="white", arrowcolor="red", arrowhead=1, align="left",  ax=-20,
+        ay=-30,)
+        fig.add_annotation(x=30, y=max(y), text = "Real CSTR", showarrow=True, bgcolor="blue", font_color="white", arrowcolor="blue", arrowhead=1, align="right")
+        fig.add_annotation(x=30, y=0.5*max(y1), text="Flow bypass, gentler gradient", font_size=18, showarrow=False, bgcolor="white", font_color="black")
         return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
     def CSTR_deadvol(self, n):
@@ -481,27 +459,20 @@ class Real_RTD:
         self.length = len(self.x)
 
         fig = go.Figure(
-            data=[go.Scatter(x=[], y=[], name = "n = " + str(n))],
+            data=[go.Scatter(x=[], y=[])],
             layout=go.Layout(template='plotly_dark',
                 paper_bgcolor='rgba(0,0,0,0)',
                 xaxis=dict(range=[0, self.tau*5], autorange=False),
                 yaxis=dict(range=[0, max(y)*1.1], autorange=False),
                 xaxis_title="Time (s)",
-                yaxis_title = "Concentration",
-                title="n Real CSTR: Plot of Concentration against Time, n=" + str(n)
+                yaxis_title = "Concentration (mol/m3)",
+                title="Real CSTR: Plot of Concentration against Time"
             )
         )
-
+        fig.add_annotation(x=30, y=3, text="Dead volume, steeper gradient", font_size=18, showarrow=False, bgcolor="white", font_color="black")
         return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
     def CSTR_deadvol_E(self,n):
-
-        # x = np.arange(0, self.tau*5, 0.25)
-        # y = []
-
-        # for t in x:
-        #     c = (100/self.V_reactor)*math.exp((-1)*self.flow*t/self.V_reactor)
-        #     y.append(c)
 
         CSTR_Real = rtdpy.Ncstr(tau=self.deadvol_tau, n = n, dt=.01, time_end=self.tau*5)
         xdata, ydata = [], []
@@ -512,16 +483,6 @@ class Real_RTD:
         x1 = CSTR_Ideal.time
         y1 = CSTR_Ideal.exitage
 
-        # x = x[::25]
-        # y = y[::25]
-        # frames = []
-
-        # for i in range(len(x)-1):
-        #     fx = [x[j] for j in range(i)]
-        #     fy = [y[j] for j in range(i)]
-        #     frame = go.Frame(data=[go.Scatter(x=fx, y=fy)])
-        #     frames.append(frame)
-            
         frames = [go.Frame(data=[go.Scatter(x=[x[i] for i in range(len(x))], y=[y[i] for i in range(len(y))])])]
 
         fig = go.Figure(
@@ -531,8 +492,8 @@ class Real_RTD:
                 xaxis=dict(range=[0, self.tau*5], autorange=False),
                 yaxis=dict(range=[0, max(y)*1.1], autorange=False),
                 xaxis_title="Time (s)",
-                yaxis_title = "Exit Age Function",
-                title="n CSTR: Plot of E against Time, n=" + str(n),
+                yaxis_title = "Exit Age Function (1/s)",
+                title="CSTR: Plot of E against Time",
                 legend=dict(title = 'Legend', orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
                 updatemenus=[dict(
                 bgcolor = 'grey',
@@ -546,17 +507,12 @@ class Real_RTD:
                             "transition": {"duration": 0}}])])]
             ), frames = frames
         )
-        
+        fig.add_annotation(x=0, y=0.1, text = "Ideal CSTR", showarrow=True, bgcolor="red", font_color="white", arrowcolor="red", arrowhead=1, align="left", ax=40, ay=-30,)
+        fig.add_annotation(x=0, y=max(y), text = "Real CSTR", showarrow=True, bgcolor="blue", font_color="white", arrowcolor="blue", arrowhead=1, align="left",  ax=20, ay=-30,)
+        fig.add_annotation(x=30, y=0.1, text="Dead volume, steeper gradient", font_size=18, showarrow=False, bgcolor="white", font_color="black")
         return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
     def CSTR_deadvol_F(self,n):
-
-        # x = np.arange(0, self.tau*5, 0.25)
-        # y = []
-
-        # for t in x:
-        #     c = (100/self.V_reactor)*math.exp((-1)*self.flow*t/self.V_reactor)
-        #     y.append(c)
 
         CSTR_Real = rtdpy.Ncstr(tau=self.deadvol_tau, n = n, dt=.01, time_end=self.tau*5)
         xdata, ydata = [], []
@@ -577,7 +533,7 @@ class Real_RTD:
                 yaxis=dict(range=[0, max(y)*1.1], autorange=False),
                 xaxis_title="Time (s)",
                 yaxis_title = "Cumulative Distribution Function",
-                title="n CSTR: Plot of F against Time, n=" + str(n),
+                title="CSTR: Plot of F against Time",
                 legend=dict(title = 'Legend', orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
                 updatemenus=[dict(
                 bgcolor = 'grey',
@@ -590,71 +546,10 @@ class Real_RTD:
                             "fromcurrent": True, 
                             "transition": {"duration": 0}}])])]
             ), frames = frames)
-        
+        fig.add_annotation(x=45, y=0.98890, text = "Ideal CSTR", showarrow=True, bgcolor="red", font_color="white", arrowcolor="red", arrowhead=1, align="left")
+        fig.add_annotation(x=30, y=max(y), text = "Real CSTR", showarrow=True, bgcolor="blue", font_color="white", arrowcolor="blue", arrowhead=1, align="left")
+        fig.add_annotation(x=30, y=0.5*max(y1), text="Dead volume, steeper gradient", font_size=18, showarrow=False, bgcolor="white", font_color="black")
         return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
-
-    # def CSTRstep(self, n):
-    #     xdata = []
-    #     ydata = []
-    #     ysum = [0]
-    #     CSTR = rtdpy.Ncstr(tau=self.tau, n = n, dt=.01, time_end=self.tau*5)
-    #     x = CSTR.time
-    #     if self.type == 'pulse':
-    #         y = CSTR.exitage
-    #     else:
-    #         y = CSTR.stepresponse
-    #     x = x[::25]
-    #     y = y[::25]
-    #     for i in range(len(x)):
-    #         ysum.append(ysum[-1] + y[i])
-    #     self.x = list(x).copy()
-    #     self.y = list(ysum).copy()
-
-    #     fig = go.Figure(
-    #         data=[go.Scatter(x=xdata, y=ysum, name = "n = " + str(n))],
-    #         layout=go.Layout(template='plotly_dark',
-    #             paper_bgcolor='rgba(0,0,0,0)',
-    #             xaxis=dict(range=[0, self.tau*5], autorange=False),
-    #             yaxis=dict(range=[0, max(y)*1.1], autorange=False),
-    #             xaxis_title="Time (s)",
-    #             yaxis_title = "Exit Age Function",
-    #             title="n CSTR: Plot of E against Time, n=" + str(n),
-    #         )
-    #     )
-    #     # self.fig = fig
-    #     fig.show()
-
-
-        # elif type(n) == list or type(n) == tuple:
-        #     CSTR = {}
-        #     x = {}
-        #     y = {}
-        #     xdata= [[] for i in range(len(n))]
-        #     ydata= [[] for i in range(len(n))]
-        #     handles = [("n = " + str(i)) for i in n]
-
-        #     for count, elem in enumerate(n):
-        #         CSTR[elem] = rtdpy.Ncstr(tau=self.tau, n=elem, dt=.01, time_end=5*self.tau)
-        #         x[elem] = CSTR[elem].time[::100]
-        #         if self.type == "pulse":
-        #             y[elem] = CSTR[elem].exitage[::100]
-        #         else:
-        #             y[elem] = CSTR[elem].stepresponse[::100]
-
-        #     for i in range(len(x[n[0]][0:200000])):
-        #         for j in range(len(n)):   
-        #             xdata[j].append(x[n[j]][i])
-        #             ydata[j].append(y[n[j]][i])
-        #             line.set_xdata(xdata)
-        #             line.set_ydata(ydata)
-        #         for j in range(len(n)):
-        #             plt.plot(xdata[j], ydata[j])
-                    
-
-        #         plt.pause(1e-20)
-        #     plt.show()
-        # else:
-        #     pass
 
 #a = Real_RTD(20,2,'step')  # esp for PFR, ONLY INTEGER VALUES
 #a.CSTR_bypass_F(1)

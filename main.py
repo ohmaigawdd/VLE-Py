@@ -222,20 +222,24 @@ def realreactors():
                 realCgraph = realsystem.CSTR_deadvol(1) 
                 realEgraph = realsystem.CSTR_deadvol_E(1)
                 realFgraph = realsystem.CSTR_deadvol_F(1)
+                bypassdeadvolume = "Dead Volume"
             elif problemType in reasons_for_bypass:
                 realCgraph = realsystem.CSTR_bypass(1) 
                 realEgraph = realsystem.CSTR_bypass_E(1)
                 realFgraph = realsystem.CSTR_bypass_F(1)
+                bypassdeadvolume = "Reactor Bypass"
         elif reactorType == "pfr":
             Cgraph = idealsystem.PFR()
             if problemType in reasons_for_deadvol:
                 realCgraph = realsystem.PFR_deadvol() 
                 realEgraph = realsystem.PFR_deadvol_E()
                 realFgraph = realsystem.PFR_deadvol_F()
+                bypassdeadvolume = "Dead Volume"
             elif problemType in reasons_for_bypass:
                 realCgraph = realsystem.PFR_bypass() 
                 realEgraph = realsystem.PFR_bypass_E()
                 realFgraph = realsystem.PFR_bypass_F()
+                bypassdeadvolume = "Reactor Bypass"
     else:
         idealsystem = RTD(reactorVol, reactorFlow, tracerType)
         realsystem = Real_RTD(reactorVol, reactorFlow, tracerType)

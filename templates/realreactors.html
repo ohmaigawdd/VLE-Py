@@ -116,7 +116,7 @@
                         document.getElementById("pfr-plugflow-real").style.animationPlayState = "running";
                         document.getElementById("pfr-plugflow-real").style.animationTimingFunction = "linear";
                     } else {
-                        document.getElementById("pfr-plugflow-real2").style.animation = "plugflow-fouling {{idealsystem.length * 0.0166 * 0.5}}s";
+                        document.getElementById("pfr-plugflow-real2").style.animation = "plugflow-real {{idealsystem.length * 0.0166 * 0.5}}s";
                         // 0.0166 is obtained by running a console.time() and consol.timeEnd() on the plotly code to find average time to plot a point on plotly
                         document.getElementById("pfr-plugflow-real2").style.animationPlayState = "running";
                         document.getElementById("pfr-plugflow-real2").style.animationTimingFunction = "linear";
@@ -275,7 +275,7 @@
                     } else {
                         document.getElementById("pfr-plugflow-real2").style.animation = 'none';
                         document.getElementById("pfr-plugflow-real2").offsetWidth;
-                        document.getElementById("pfr-plugflow-real2").style.animation = "plugflow {{ idealsystem.length * 0.0166 *0.5}}s";
+                        document.getElementById("pfr-plugflow-real2").style.animation = "plugflow-real {{ idealsystem.length * 0.0166 *0.5}}s";
                         document.getElementById("pfr-plugflow-real2").style.animationPlayState = "paused";
 
                         document.getElementById("bypass-2").style.animation = 'none';
@@ -478,7 +478,7 @@
 
 <div class='information rounded' id='real-reactor-animation' style='margin-top: 0px; height: 720px; padding: 0px;'>
     <br>
-    <h3 style="color:White; text-align:center;">Real Reactor</h3>
+    <h3 style="color:White; text-align:center;">Real Reactor ({{bypassdeadvolume}})</h3>
     {% if reactorType == "cstr" %}
         {% if idealsystem.type == "pulse" %}
             {% if problemType == "poor impeller design" %}
@@ -520,6 +520,7 @@
                 <div id="step-arrow-real"></div>
                 <div id="dead-volume-left"></div>
                 <div id="dead-volume-right"></div>
+                
             {% else %}
                 <div id="cstr-step-real"></div>
                 <div id="impeller-stick-ideal"></div>
