@@ -31,11 +31,11 @@
         <tr>
             <td class='tableHeader'><strong>Reactor Type:</strong></td> 
             <td class='tableText'>{{ reactorType.upper() }}</td>
-            <td class='tableHeader'><strong>Tracer Concentration:</strong></td> 
-            {% if reactorType == "cstr"%}
-            <td class='tableText'>{{ "%0.2f" % (100 / realsystem.V_reactor) | float}} mol/m<sup>3</sup></td>
+            <td class='tableHeader'><strong>Tracer Amount:</strong></td> 
+            {% if tracerType == "pulse"%}
+            <td class='tableText'>100.00 mol</td>
             {% else %}
-            <td class='tableText'>100.00 mol/m<sup>3</sup></td>
+            <td class='tableText'>100.00 mol/s</td>
             {% endif %}
         </tr>
         <tr >

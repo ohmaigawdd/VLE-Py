@@ -179,7 +179,7 @@ def idealreactors():
         Egraph = False
         Fgraph = False
 
-    return render_template("idealreactors.html", reactorType=reactorType, system=system, form=form, errors=errors, Cgraph=Cgraph, Egraph=Egraph, Fgraph=Fgraph)
+    return render_template("idealreactors.html", reactorType=reactorType, tracerType=tracerType, system=system, form=form, errors=errors, Cgraph=Cgraph, Egraph=Egraph, Fgraph=Fgraph)
 
 # REAL PFR/CSTR PAGE
 @app.route("/realreactors", methods=["GET","POST"])
@@ -246,7 +246,7 @@ def realreactors():
         realEgraph = False
         realFgraph = False
 
-    return render_template("realreactors.html", form=form, errors=errors, reactorType=reactorType, problemType=problemType, idealsystem=idealsystem, realsystem=realsystem, Cgraph=Cgraph, realCgraph=realCgraph, realEgraph=realEgraph, realFgraph=realFgraph)
+    return render_template("realreactors.html", form=form, errors=errors, tracerType=tracerType, reactorType=reactorType, problemType=problemType, idealsystem=idealsystem, realsystem=realsystem, Cgraph=Cgraph, realCgraph=realCgraph, realEgraph=realEgraph, realFgraph=realFgraph)
 
 ###############################################################
 
