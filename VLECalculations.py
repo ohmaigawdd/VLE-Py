@@ -82,6 +82,7 @@ class RachfordRice:
             self.exceedT = True
         if self.P >= RachfordRice.CriticalT_P[self.components[0]][1] or self.P >= RachfordRice.CriticalT_P[self.components[1]][1]:
             self.exceedP = True
+        self.matherror = False
 
     def calculate(self):
         self.T_degR = self.T * 9/5 + 491.67
@@ -237,10 +238,25 @@ class RachfordRice:
                     
                     estimate = a.calc_Psat()*0.145038
                     print(estimate)
-                    result = solve(equation, estimate).item(0)
-                    return result / 0.145038
+                    try:
+                        result = solve(equation, estimate).item(0)
+                        return result / 0.145038
+                    except ValueError:
+                        return None
                 except RuntimeWarning:
                     return None
+
+    def checkBoilingPressure(self):
+        for c in components:
+            if self.getPureComponentBoilingPressure(c, self.T) == None:
+                return False
+        return True
+
+    def checkBoilingTemp(self):
+        for c in components:
+            if self.getPureComponentBoilingTemp(c, self.P) == None:
+                return False
+        return True
 
 class Antoine:
     #Not all n-alkanes is available here https://onlinelibrary.wiley.com/doi/pdf/10.1002/9781118135341.app1
@@ -532,6 +548,7 @@ class Steam:
             self.addVol()
         else:
             self.minusVol()
+
 
 
 # a = Steam(50,102)
