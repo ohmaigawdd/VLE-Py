@@ -64,7 +64,7 @@ class plot:
         
         if type == 'T':
             self.fig.add_trace(go.Scatter(x=x_arr, y=y_arr, 
-                                        mode='lines+markers', name="Tie Line",
+                                        mode='lines+markers', name="Current System",
                                         marker = dict(size=10), 
                                         hovertemplate =
                                         '%{text}' + 
@@ -73,7 +73,7 @@ class plot:
                                         text = ['{}'.format(i) for i in labels]))
         else:
             self.fig.add_trace(go.Scatter(x=x_arr, y=y_arr, 
-                                        mode='lines+markers', name="Tie Line",
+                                        mode='lines+markers', name="Current System",
                                         marker = dict(size=10), 
                                         hovertemplate =
                                         '%{text}' + 
