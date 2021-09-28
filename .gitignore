@@ -3,3 +3,4 @@
 **flask-wtf
 *.json
 requirements.txt
+.DS_Store
