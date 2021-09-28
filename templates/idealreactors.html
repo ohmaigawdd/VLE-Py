@@ -1,0 +1,301 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+<!-- import p5/js library -->
+<link rel="stylesheet" href="static/css/reactor.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.10.2/p5.js"></script>
+<title>Ideal Reactors Application</title>
+{% endblock %}
+
+{% block content %}
+<div>
+    <p class="mainHeader">
+	Visualisation of Residence Time Distribution <br> (Ideal Reactors)
+    </p>
+    <p class="mainText">
+	This application allows users to generate the residence time distribution for an ideal reactor given specified system parameters.
+    </p>
+</div>
+
+{% if errors == True %}
+    {% set errorList = [] %}
+    {% if form.reactorVol.errors %}
+        {{ errorList.append(form.reactorVol.errors[0]) or "" }}
+    {% endif %}
+    {% if form.reactorFlow.errors %}
+        {{ errorList.append(form.reactorFlow.errors[0]) or "" }}
+    {% endif %}
+    <div class="alert alert-warning rounded" role="alert" style='padding-bottom: 0px; margin-bottom: 0px;'>
+        {% for error in errorList %}
+            <ul>{{ error }}</ul>
+        {% endfor %}
+    </div>
+{% endif %}
+
+<div class="information rounded" style='margin-right: 35px;'>
+    <p class='informationHeader'>Current System Parameters</p>
+    <table>
+        <tr >
+            <td class='tableHeader'><strong>Tracer Type:</strong></td> 
+            <td class='tableText'>{{ system.type.capitalize() }}</td>
+            <td class='tableHeader'><strong>Tracer Amount:</strong></td>
+            {% if tracerType == "pulse"%}
+            <td class='tableText'>100.00 mol</td>
+            {% else %}
+            <td class='tableText'>100.00 mol/s</td>
+            {% endif %}
+        </tr>
+        <tr>
+            <td class='tableHeader'><strong>Reactor Type:</strong></td> 
+            <td class='tableText'>{{ reactorType.upper() }}</td>
+        </tr>
+        <tr >
+            <td class='tableHeader'><strong>Reactor Volume (V):</strong></td> 
+            <td class='tableText'>{{ system.V_reactor }} m<sup>3</sup></td>
+        </tr>
+        <tr>
+            <td class='tableHeader'><strong>Flow Rate (Q):</strong></td> 
+            <td class='tableText'>{{ system.flow }} m<sup>3</sup>/s</td>
+        </tr>
+    </table>
+    <script>
+        let idx = 1;
+        let flag = false;
+        let running = false;
+        function playAnimation() {
+            if ("{{reactorType}}" == "cstr"){
+                if ("{{system.type}}" == "pulse"){
+                  
+                    document.getElementById("cstr").style.animation = "bgcolor-change {{system.length * 0.0166}}s";
+                    document.getElementById("pulse-arrow").style.animation = "pulse 4s";
+                    document.getElementById("pulse-line").style.animation = "pulse 4s";
+                    document.getElementById("cstr").style.animationPlayState = "running";
+                    document.getElementById("pulse-arrow").style.animationPlayState = "running";
+                    document.getElementById("pulse-line").style.animationPlayState = "running";
+                    
+                } else {
+                    document.getElementById("cstr-step").style.animation = "bgcolor-change-step {{system.length * 0.0166}}s";
+                    document.getElementById("step-arrow").style.animation = "step 4s";
+                    document.getElementById("step-line").style.animation = "step 4s";
+                    document.getElementById("cstr-step").style.animationPlayState = "running";
+                    document.getElementById("step-arrow").style.animationPlayState = "running";
+                    document.getElementById("step-line").style.animationPlayState = "running";
+                }
+                
+            } else {
+                if ("{{system.type}}" == "pulse"){
+                    document.getElementById("pfr-plugflow").style.animation = "plugflow {{system.length * 0.0166}}s";
+                    // 0.0166 is obtained by running a console.time() and consol.timeEnd() on the plotly code to find average time to plot a point on plotly
+                    document.getElementById("pfr-plugflow").style.animationPlayState = "running";
+                    document.getElementById("pfr-plugflow").style.animationTimingFunction = "linear";
+                } else {
+                    document.getElementById("pfr-plugflow-step").style.animation = "plugflow-step {{system.length * 0.0166}}s";
+                    document.getElementById("pfr-plugflow-step").style.animationPlayState = "running";
+                    document.getElementById("pfr-plugflow-step").style.animationTimingFunction = "linear";
+                }
+                
+            }
+            }
+        function pauseAnimation() {
+            if ("{{reactorType}}" == "cstr"){
+                if ("{{system.type}}" == "pulse"){
+                    document.getElementById("cstr").style.animationPlayState = "paused";
+                } else {
+                    document.getElementById("cstr-step").style.animationPlayState = "paused";
+                }
+            } else {
+                if ("{{system.type}}" == "pulse"){
+                    document.getElementById("pfr-plugflow").style.animationPlayState = "paused";
+                } else {
+                    document.getElementById("pfr-plugflow-step").style.animationPlayState = "paused";
+                }
+            }
+            }
+        function resetAnimation() {
+            if ("{{reactorType}}" == "cstr"){
+                if ("{{system.type}}" == "pulse"){
+                    document.getElementById("cstr").style.animation = 'none';
+                    document.getElementById("pulse-arrow").style.animation = "none";
+                    document.getElementById("pulse-line").style.animation = "none";
+                    document.getElementById("cstr").offsetWidth;
+                    document.getElementById("cstr").style.animation = "bgcolor-change {{system.length * 0.0166}}s";
+                    document.getElementById("pulse-arrow").style.animation = "pulse 4s";
+                    document.getElementById("pulse-line").style.animation = "pulse 4s";
+                    document.getElementById("cstr").style.animationPlayState = "paused";
+                    document.getElementById("pulse-arrow").style.animationPlayState = "paused";
+                    document.getElementById("pulse-line").style.animationPlayState = "paused";
+                } else {
+                    document.getElementById("cstr-step").style.animation = 'none';
+                    document.getElementById("step-arrow").style.animation = "none";
+                    document.getElementById("step-line").style.animation = "none";
+                    document.getElementById("cstr-step").offsetWidth;
+                    document.getElementById("cstr-step").style.animation = "bgcolor-change {{system.length * 0.0166}}s";
+                    document.getElementById("step-arrow").style.animation = "step 4s";
+                    document.getElementById("step-line").style.animation = "step 4s";
+                    document.getElementById("cstr-step").style.animationPlayState = "paused";
+                    document.getElementById("step-arrow").style.animationPlayState = "paused";
+                    document.getElementById("step-line").style.animationPlayState = "paused";
+                }
+            } else {
+                if ("{{system.type}}" == "pulse"){
+                    document.getElementById("pfr-plugflow").style.animation = 'none';
+                    document.getElementById("pfr-plugflow").offsetWidth;
+                    document.getElementById("pfr-plugflow").style.animation = "plugflow {{ system.length * 0.0166 }}s";
+                    document.getElementById("pfr-plugflow").style.animationPlayState = "paused";
+                } else {
+                    document.getElementById("pfr-plugflow-step").style.animation = 'none';
+                    document.getElementById("pfr-plugflow-step").offsetWidth;
+                    document.getElementById("pfr-plugflow-step").style.animation = "plugflow-step {{ system.length * 0.0166 }}s";
+                    document.getElementById("pfr-plugflow-step").style.animationPlayState = "paused";
+                }
+            }
+        }
+        function animateReset() {
+            flag = false;
+            running = false;
+            idx = 1;
+            Plotly.animate("Cplot", {
+                data: [{x: [], y: [], mode: "lines"}]
+            },
+            {
+                transition: {duration: 0},
+                frame: {duration: 0,
+                        redraw: false}})
+        };
+        function animatePause() {
+            if (running == true) {
+                flag = true;
+            }
+        };
+        function animateStart() {
+            running = true;
+            Plotly.animate("Cplot", {
+                data: [{x: {{system.x}}.slice(0,idx), y: {{system.y}}.slice(0,idx), mode: "lines"}]
+            },
+            {
+                transition: {duration: 0},
+                frame: {duration: 0,
+                        redraw: false}})
+            
+            idx++
+            if (flag == false) {
+                requestAnimationFrame(animateStart);
+            }
+            else {
+                flag = false;
+                running = false;
+            }
+        }
+    </script>
+</div>
+
+<div class='information rounded'>
+    <form method="POST">
+        <p class='informationHeader'>Reset System Parameters</p>
+        {{ form.hidden_tag() }}
+        <table>
+            <tr class='informationText'>
+                <td><strong>{{ form.tracerType.label  }}</strong></td>
+                <td>{{ form.tracerType() }}</td>
+            </tr>
+            <tr class='informationText'>
+                <td><strong>{{ form.reactorType.label }}</strong></td> 
+                <td>{{ form.reactorType() }}</td>
+            </tr>
+            <tr class='informationText'>
+                <td><strong>{{ form.reactorVol.label }}</strong></td>
+                <td>{{ form.reactorVol() }} m<sup>3</sup></td>
+            </tr>
+            <tr class='informationText'>
+                <td><strong>{{ form.reactorFlow.label  }}</strong></td>
+                <td>{{ form.reactorFlow() }} m<sup>3</sup>/s</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>{{ form.submit() }}</td>
+            </tr>
+        </table>
+    </form>
+</div>
+
+{% if errors == False %}
+<div class='information rounded' id='Cplot' style='margin-right: 35px; margin-top: 0px; height: 720px; padding: 0px'>
+    <!-- import plotly library -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script>
+        var Cgraph = {{ Cgraph | safe }}
+        Plotly.newPlot('Cplot',Cgraph, {})
+    </script>
+</div>
+
+<div class='information rounded' id='reactor-animation' style='height: 720px; margin-top: 0px; padding: 0px;'>
+    {% if reactorType == "cstr" %}
+        {% if system.type == "pulse" %}
+            <div id="cstr"></div>
+            <div id="impeller-stick-ideal"></div>
+            <div id="inflow"></div>
+            <div id="outflow"></div>
+            <div id="in-line"></div>
+            <div id="out-line"></div>
+            <div id="impeller-blades-left-ideal"></div>
+            <div id="impeller-blades-right-ideal"></div>
+            <div id="pulse-line"></div>
+            <div id="pulse-arrow"></div>
+        {% else %}
+            <div id="cstr-step"></div>
+            <div id="impeller-stick-ideal"></div>
+            <div id="inflow"></div>
+            <div id="outflow"></div>
+            <div id="in-line"></div>
+            <div id="out-line"></div>
+            <div id="impeller-blades-left-ideal"></div>
+            <div id="impeller-blades-right-ideal"></div>
+            <div id="step-line"></div>
+            <div id="step-arrow"></div>
+        {% endif %}
+    {% else %}
+        {% if system.type == "pulse" %}
+            <div id="pfr"></div>
+            <div id="inflow-pfr"></div>
+            <div id="outflow-pfr"></div>
+            <div id="in-line-pfr"></div>
+            <div id="out-line-pfr"></div>
+            <div id="pfr-plugflow"></div>
+        {% else %}
+            <div id="pfr"></div>
+            <div id="inflow-pfr"></div>
+            <div id="outflow-pfr"></div>
+            <div id="in-line-pfr"></div>
+            <div id="out-line-pfr"></div>
+            <div id="pfr-plugflow-step"></div>
+        {% endif %}
+    {% endif %}
+</div>
+
+<div class='information rounded' id='Eplot' style='margin-right: 35px; margin-top: 0px; height: 720px; padding: 0px'>
+    <script>
+        var Egraph = {{ Egraph | safe }}
+        Plotly.newPlot('Eplot',Egraph, {})
+    </script>
+</div>
+
+<div class='information rounded' id='Fplot' style='margin-top: 0px; height: 720px; padding: 0px'>
+    <script>
+        var Fgraph = {{ Fgraph | safe }}
+        Plotly.newPlot('Fplot',Fgraph, {})
+    </script>
+</div>
+{% endif %}
+
+<br style="clear: both">
+
+{% endblock %}
+
+{% block taskbar%}
+    <div class="taskbar">Taskbar for Animations: </div>
+    <button id="Start" onclick="requestAnimationFrame(animateStart);playAnimation();">Start Animation</button>
+    <button id="Pause" onclick="animatePause();pauseAnimation();">Pause Animation</button>
+    <button id="Reset" onclick="animateReset();resetAnimation()">Reset Animation</button>
+    <br>
+{% endblock %}

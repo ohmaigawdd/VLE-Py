@@ -1,9 +1,11 @@
 ## Only import below if testing code ##
-from VLECalculations import RachfordRice, Antoine
+from VLECalculations import RachfordRice, Antoine, Steam
 import plotly
 import json
 import plotly.graph_objects as go
 import numpy as np
+from pyXSteam.XSteam import XSteam
+steamTable = XSteam(XSteam.UNIT_SYSTEM_MKS)
 
 # Params is a dictionary with divID, Tmin/max, Pmin/max, numpoints
 #self.params = params
@@ -53,11 +55,11 @@ class plot:
             if self.plotID == 'Txy':
                 y_arr = [P]
                 type = 'P'
-                print("i ran")
+                # print("i ran")
             else:
                 y_arr = [T]
                 type = 'T'
-                print("i ran")
+                # print("i ran")
 
         
         if type == 'T':
@@ -83,13 +85,15 @@ class plot:
         # zA = composition of component A in VLE
         # Generates (x,y,P) values using zA data at constant T
         points = []
-        Tmax = self.RR.params['Tmax']
-        Tmin = self.RR.params['Tmin']
-        step = round((Tmax - Tmin) / 50)
 
         # @ selected zA, vary T to obtain [x,y,T,v] values
+        bps = [self.RR.getPureComponentBoilingTemp(self.RR.components[0],self.RR.P_psia), self.RR.getPureComponentBoilingTemp(self.RR.components[1],self.RR.P_psia)]
+        if bps[0] > bps[1]: # first component is lighter
+            bp_light, bp_heavy = bps[0], bps[1]
+        else: 
+            bp_light, bp_heavy = bps[1], bps[0]
         temporaryobject = RachfordRice(self.RR.n, self.RR.T, self.RR.P, self.RR.components, self.RR.z)
-        for i in range(Tmin, Tmax, step):
+        for i in np.linspace(bp_light, bp_heavy, num=50):
             temporaryobject.setT(i)
             if 0 <= temporaryobject.v and temporaryobject.v <= 1:
                 # points will have [[xA1,yA1,T1,v1],[xA1,yA1,T1,v1]]
@@ -114,13 +118,16 @@ class plot:
         # zA = composition of component A in VLE
         # Generates (x,y,P) values using zA data at constant T
         points = []
-        Pmax = self.RR.params['Pmax']
-        Pmin = self.RR.params['Pmin']
-        step = round((Pmax - Pmin) / 100)
 
         # @ selected zA, vary P to obtain [x,y,P,v] values
+        bps = [self.RR.getPureComponentBoilingPressure(self.RR.components[0], self.RR.T_degR), self.RR.getPureComponentBoilingPressure(self.RR.components[1],self.RR.T_degR)]
+            
+        if bps[0] < bps[1]: # first component is lighter
+            bp_light, bp_heavy = bps[0], bps[1]
+        else: 
+            bp_light, bp_heavy = bps[1], bps[0]
         temporaryobject = RachfordRice(self.RR.n, self.RR.T, self.RR.P, self.RR.components, self.RR.z)
-        for i in range(Pmin, Pmax, step):
+        for i in np.linspace(bp_heavy, bp_light, num = 50):
             temporaryobject.setP(i)
             if 0 <= temporaryobject.v and temporaryobject.v <= 1:
                 # points will have [[xA1,yA1,P1,v1],[xA2,yA2,P2,v2]]
@@ -166,7 +173,6 @@ class plot:
             xaxis_title="x (" + component + ")",
             yaxis_title = "y (" + component + ")",
             legend=dict(
-                title='Legend',
                 orientation="h",
                 yanchor="bottom",
                 y=1.02,
@@ -219,7 +225,6 @@ class plot:
             xaxis_title="x (" + component + ")",
             yaxis_title = "y (" + component + ")",
             legend=dict(
-                title = 'Legend',
                 orientation="h",
                 yanchor="bottom",
                 y=1.02,
@@ -272,7 +277,6 @@ class plot:
             xaxis_title="x (" + component + ")/y (" + component + ")",
             yaxis_title = "Temperature ("+chr(176)+"C)",
             legend=dict(
-                title = 'Legend',
                 orientation="h",
                 yanchor="bottom",
                 y=1.02,
@@ -323,7 +327,6 @@ class plot:
             xaxis_title = "x (" + component + ")/y (" + component + ")",
             yaxis_title="Pressure (kPa)",
             legend=dict(
-                title = 'Legend',
                 orientation="h",
                 yanchor="bottom",
                 y=1.02,
@@ -401,11 +404,214 @@ class plot_pure:
     show = plot.__dict__["show"]
 
 
-# Things to add on:
-# (1) TieLine
-# (2) Show selected option marker. Best if use fig.add_annotation(current)
-# (3) Senior's one able to show live update if increase T/P/z. Since we doing rerendering 
-#     should consider showing the previous plot to compare
+class plot_steam:
+    def __init__(self,sys):
+        self.sys = sys #sys is based on Steam class in VLE calculations e.g Steam(T,P)
+
+    def generate_vapcurve(self):
+        Tmin = self.sys.triplePointT()
+        Pmax = self.sys.Pcrit()
+        Pmin = self.sys.triplePointP()
+
+        P_ls, T_ls = [Pmin], [Tmin]
+        for i in np.arange(Pmin, Pmax, 0.01):
+            P_ls.append(i)
+            T = self.sys.getvapcurveT(i)
+            T_ls.append(T)
+
+        return [np.array(T_ls), np.array(P_ls)*100] # T in degC and P in kPa
+
+    def plot_steamVLE(self):
+        self.create_plot()
+        self.points = self.generate_vapcurve()
+
+        self.fig.update_layout(
+            title="<b>Vaporization Curve of Water</b>",
+            xaxis_title = "Temperature" + chr(176) + "C",
+            yaxis_title="Pressure (kPa)",
+            legend=dict(
+                orientation="h",
+                yanchor="bottom",
+                y=1.02,
+                xanchor="right",
+                x=1
+            ),
+            font=dict(
+                family="Helvetica Neue, monospace",
+                size=12,
+                color="#FFFFFF"
+            )
+        )
+        
+        self.fig.add_trace(go.Scatter(x=self.points[0], y=self.points[1],
+                                        mode="lines", name="Vaporization Curve", line_color = "#FF00FF",
+                                        hovertemplate =
+                                        'T: %{x:.2f} C' +
+                                        '<br>P: %{y:.2f} kPa'))
+
+        self.fig.add_annotation(x=self.sys.triplePointT(), y=self.sys.triplePointP(), text = "TRIPLE <br> POINT", showarrow=True, arrowhead=1, align="left")
+
+        self.fig.update_xaxes(showspikes=True)
+        self.fig.update_yaxes(showspikes=True)
+
+
+    create_plot = plot.__dict__["create_plot"]
+    generate = plot.__dict__["generate"]
+    show = plot.__dict__["show"]
+
+    def generate(self):
+        return json.dumps(self.fig, cls=plotly.utils.PlotlyJSONEncoder)
+
+def GvsP(T): #ISOTHERMAL T in degC
+    #useful link: https://chem.libretexts.org/Bookshelves/Physical_and_Theoretical_Chemistry_Textbook_Maps/Map%3A_Physical_Chemistry_(McQuarrie_and_Simon)/23%3A_Phase_Equilibria/23.02%3A_Gibbs_Energies_and_Phase_Diagrams
+    total_range = np.array([i for i in range(1, 221)])
+    G = {}
+    Ggas = {}
+    Gliq = {}
+    H = {}
+    Hgas_val = {}
+    Hliq_val = {}
+    S = {}
+    Sgas_val = {}
+    Sliq_val = {}
+    for pressure in total_range:
+        Hgas = steamTable.h_tx(T, 1)
+        Hgas_val[pressure*100] = Hgas
+        Sgas = steamTable.s_ph(pressure, Hgas)
+        Sgas_val[pressure*100] = Sgas
+        Ggas[pressure*100] = (Hgas - (273.15+T) * Sgas)
+
+        Hliq = steamTable.h_tx(T, 0)
+        Hliq_val[pressure*100] = Hliq
+        Sliq = steamTable.s_ph(pressure, Hliq)
+        Sliq_val[pressure*100] = Sliq
+        Gliq[pressure*100] = (Hliq - (273.15+T) * Sliq)
+
+        G[pressure*100] = min(Ggas[pressure*100], Gliq[pressure*100])
+        if G[pressure*100] == Ggas[pressure*100]:
+            S[pressure*100] = Sgas_val[pressure*100]
+            H[pressure*100] = Hgas_val[pressure*100]
+        else:
+            S[pressure*100] = Sliq_val[pressure*100]
+            H[pressure*100] = Hliq_val[pressure*100]
+    
+    fig = go.Figure()
+    fig.update_layout(template='plotly_dark', 
+        paper_bgcolor='rgba(0,0,0,0)',
+        title="<b>Gibbs Energy vs Pressure</b>",
+        xaxis_title = "Pressure (kPa)",
+        yaxis_title="Gibbs (kJ/kg)",
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            xanchor="right",
+            x=1
+        ),
+        font=dict(
+            family="Helvetica Neue, monospace",
+            size=12,
+            color="#FFFFFF"
+        ))
+    fig.add_trace(go.Scatter(x=[pressure*100 for pressure in total_range], y=list(Ggas.values()),
+                    mode='lines+markers', 
+                    name='G<sup>vap</sup><sub>water</sub>',
+                    showlegend=True,
+                    hovertemplate =
+                    'P: %{x:.2f} kPa' +
+                    '<br>G: %{y:.2f} kJ/kg'))
+    fig.add_trace(go.Scatter(x=[pressure*100 for pressure in total_range], y=list(Gliq.values()),
+                    mode='lines+markers', 
+                    name='G<sup>liq</sup><sub>water</sub>',
+                    showlegend=True,
+                    hovertemplate =
+                    'P: %{x:.2f} kPa' +
+                    '<br>G: %{y:.2f} kJ/kg'))
+    fig.add_trace(go.Scatter(x=[pressure*100 for pressure in total_range], y=list(G.values()),
+                        mode='lines+markers', 
+                        name='G<sup>sys</sup><sub>water</sub>',
+                        showlegend=True,
+                        hovertemplate =
+                        'P: %{x:.2f} kPa' +
+                        '<br>G: %{y:.2f} kJ/kg'))
+
+    return (json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder), G, Ggas, Gliq, H, Hgas_val, Hliq_val, S, Sgas_val, Sliq_val)
+
+def GvsT(P): # ISOBARIC P in bar
+    #useful link: https://chem.libretexts.org/Bookshelves/Physical_and_Theoretical_Chemistry_Textbook_Maps/Map%3A_Physical_Chemistry_(McQuarrie_and_Simon)/23%3A_Phase_Equilibria/23.02%3A_Gibbs_Energies_and_Phase_Diagrams
+    total_range = np.array([i for i in range(1, 374)])
+    G = {}
+    Ggas = {}
+    Gliq = {}
+    H = {}
+    Hgas_val = {}
+    Hliq_val = {}
+    S = {}
+    Sgas_val = {}
+    Sliq_val = {}
+    for temperature in total_range:
+        Hgas = steamTable.h_tx(temperature, 1)
+        Hgas_val[temperature] = Hgas
+        Sgas = steamTable.s_ph(P, Hgas)
+        Sgas_val[temperature] = Sgas
+        Ggas[temperature] = (Hgas - (273.15+temperature) * Sgas)
+
+        Hliq = steamTable.h_tx(temperature, 0)
+        Hliq_val[temperature] = Hliq
+        Sliq = steamTable.s_ph(P, Hliq)
+        Sliq_val[temperature] = Sliq
+        Gliq[temperature] = (Hliq - (273.15+temperature) * Sliq)
+
+        G[temperature] = min(Ggas[temperature], Gliq[temperature])
+        if G[temperature] == Ggas[temperature]:
+            S[temperature] = Sgas_val[temperature]
+            H[temperature] = Hgas_val[temperature]
+        else:
+            S[temperature] = Sliq_val[temperature]
+            H[temperature] = Hliq_val[temperature]
+
+    fig = go.Figure()
+    fig.update_layout(template='plotly_dark', 
+            paper_bgcolor='rgba(0,0,0,0)',
+            title="<b>Gibbs Energy vs Temperature</b>",
+            xaxis_title = "Temperature" + chr(176) + "C",
+            yaxis_title="Gibbs (kJ/kj)",
+            legend=dict(
+                orientation="h",
+                yanchor="bottom",
+                y=1.02,
+                xanchor="right",
+                x=1
+            ),
+            font=dict(
+                family="Helvetica Neue, monospace",
+                size=12,
+                color="#FFFFFF"
+            ))
+    fig.add_trace(go.Scatter(x=total_range, y=list(Ggas.values()),
+                    mode='lines+markers', 
+                    name='G<sup>vap</sup><sub>water</sub>',
+                    showlegend=True,
+                    hovertemplate =
+                    'P: %{x:.2f} kPa' +
+                    '<br>G: %{y:.2f} kJ/kg'))
+    fig.add_trace(go.Scatter(x=total_range, y=list(Gliq.values()),
+                    mode='lines+markers', 
+                    name='G<sup>liq</sup><sub>water</sub>',
+                    showlegend=True,
+                    hovertemplate =
+                    'P: %{x:.2f} kPa' +
+                    '<br>G: %{y:.2f} kJ/kg'))
+    fig.add_trace(go.Scatter(x=total_range, y=list(G.values()),
+                        mode='lines+markers', 
+                        name='G<sup>sys</sup><sub>water</sub>',
+                        showlegend=True,
+                        hovertemplate =
+                        'P: %{x:.2f} kPa' +
+                        '<br>G: %{y:.2f} kJ/kg'))
+    
+    return (json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder), G, Ggas, Gliq, H, Hgas_val, Hliq_val, S, Sgas_val, Sliq_val)
+
 
 # Testing functions
 # plot = plot(RachfordRice(2, 150, 101.3, ['n-Hexane','n-Octane'], [0.6,0.4]))
@@ -413,8 +619,8 @@ class plot_pure:
 # plot.show()
 # print(plot.RR.x, plot.RR.y, plot.RR.v)
 
-# plot = plot_pure(Antoine('n-Octane', 50, 105))
-# plot.plot_pureVLE()
+# plot = plot_steam(Steam(100, 100))
+# plot.plot_steamVLE()
 # plot.show()
 
 '''

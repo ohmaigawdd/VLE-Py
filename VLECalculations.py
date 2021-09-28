@@ -1,7 +1,9 @@
 import math
 import random
 import warnings
+import plotly.graph_objects as go
 from scipy import optimize
+import numpy as np
 from pyXSteam.XSteam import XSteam
 steamTable = XSteam(XSteam.UNIT_SYSTEM_MKS)
 solve = optimize.fsolve
@@ -399,13 +401,32 @@ class Steam:
     def getG(self):
         return self.G
 
+    def triplePointT(self):
+        return 0.01  # T1
+
+    def triplePointP(self):
+        return steamTable.psat_t(0.01)
+
+    def Tcrit(self):
+        return 373.946 
+
+    def Pcrit(self):
+        return 220.6  # bar
+
+    def setT(self,T):
+        self.T = T
+        return self.getboilingP()*100
+    
     def getTotalVol(self):
         return self.vapvol + self.liqvol
 
     def getboilingT(self):
         return steamTable.tsat_p(self.Pbar)
 
-    def getboilingP(self):
+    def getvapcurveT(self,P):
+        return steamTable.tsat_p(P)
+
+    def getboilingP(self): 
         return steamTable.psat_t(self.T)
 
     def instantiate(self):
@@ -415,8 +436,10 @@ class Steam:
             self.v = steamTable.x_ph(self.Pbar, self.H)
             if self.v == 0:
                 self.liqvol = steamTable.v_pt(self.Pbar, self.T)
+                self.vapvol = 0
             else:
                 self.vapvol = steamTable.v_pt(self.Pbar, self.T)
+                self.liqvol = 0
             
         else:
             self.H = [steamTable.hL_p(self.Pbar), steamTable.hV_p(self.Pbar)]
@@ -509,8 +532,8 @@ class Steam:
             self.addVol()
         else:
             self.minusVol()
-           
 
-a = Steam(200,100)
-a.instantiate()
-print(a.liqvol)
+
+# a = Steam(50,102)
+# a.instantiate()
+# print(a.liqvol)

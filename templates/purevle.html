@@ -4,27 +4,33 @@
 {% block title %}
 <!-- import p5/js library -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.10.2/p5.js"></script>
-<title>Vapour Liquid Equilibrium (Pure)</title>
+<title>Pure VLE Application</title>
 {% endblock %}
 
 
 {% block content %}
 <div>
-	<p class="mainHeader">
-	Visualisation of Pure VLE System (Water)
-	</p>
-	<p class="mainText">
-	This tool utilises information on the parameters of a pure component (water) system to generate a molecular representation of the system, as well as the vaporisation curve.
-	</p>
+    <p class="mainHeader">
+    Visualisation of Pure VLE System (Water)
+    </p>
+    <p class="mainText">
+    This tool utilises information on the parameters of a pure component system to generate a molecular representation of the system, as well as the vaporisation curve.
+    </p>
 </div>
 
 {% if errors == True %}
     {% set errorList = [] %}
-    {% if form.T.errors %}
-        {{ errorList.append(form.T.errors[0]) or "" }}
+    {% if form.T_isot.errors %}
+        {{ errorList.append(form.T_isot.errors[0]) or "" }}
     {% endif %}
-    {% if form.P.errors %}
-        {{ errorList.append(form.P.errors[0]) or "" }}
+    {% if form.T_isob.errors %}
+        {{ errorList.append(form.T_isob.errors[0]) or "" }}
+    {% endif %}
+    {% if form.P_isot.errors %}
+        {{ errorList.append(form.P_isot.errors[0]) or "" }}
+    {% endif %}
+    {% if form.P_isob.errors %}
+        {{ errorList.append(form.P_isob.errors[0]) or "" }}
     {% endif %}
     <div class="alert alert-warning rounded" role="alert" style='padding-bottom: 0px; margin-bottom: 0px;'>
         {% for error in errorList %}
@@ -33,69 +39,268 @@
     </div>
 {% endif %}
 
-<div class="information rounded" style='margin-right: 35px;'>
-    <p class='informationHeader'>Current System Parameters</p>
-    <br>
-    <table>
-        <tr >
-            <td class='tableHeader'><strong>Temperature (T):</strong></td> 
-            <td class='tableText'>{{ "%0.2f" % system.T }} <sup>o</sup>C</td>
-            <td class='tableHeader'><strong>Enthalpy (H):</strong></td> 
-            <td class='tableText'>{{ "%0.2f" % system.H }} kJ/kg</td>
-        </tr>
-        <tr>
-            <td class='tableHeader'><strong>Pressure (P):</strong></td> 
-            <td class='tableText'>{{ "%0.2f" % system.P }} kPa</td>
-            <td class='tableHeader'><strong>Entropy (S):</strong></td> 
-            <td class='tableText'>{{ "%0.2f" % system.S }} kJ/kg<sup>o</sup>C</td>
-        </tr>
-        <tr>
-            <td class='tableHeader'><strong>Volume of Vapour:</strong></td> 
-            <td class='tableText'>Still Buggy</td>
-            <td class='tableHeader'><strong>Volume of Liquid:</strong></td> 
-            <td class='tableText'>Still Buggy</td>
-        </tr>
-        <tr>
-            <td class='tableHeader'><strong>Molar Gibbs (G):</strong></td> 
-            <td class='tableText'>{{ "%0.2f" % system.G }} kJ/kg</td>
-            <td class='tableHeader'><strong>Vapour Fraction:</strong></td> 
-            <td class='tableText'>{{ "%0.2f" % system.v }}</td>
-        </tr>
-    </table>
-</div>
-
-<div class='information rounded'>
+<div class='information rounded' style="margin-right: 35px;">
     <form method="POST">
-        <p class='informationHeader'>Reset Parameters</p>
+        <p class='informationHeader'>Reset System Parameters</p>
         {{ form.hidden_tag() }}
         <table>
             <tr class='informationText'>
-                <td><strong>{{ form.T.label  }}</strong></td>
-                <td>{{ form.T() }} <sup>o</sup>C</td>
+                <td><strong>{{ form.processType.label  }}</strong></td>
+                <td onchange="optionChange()">{{ form.processType() }}</td>
             </tr>
             <tr class='informationText'>
-                <td><strong>{{ form.P.label  }}</strong></td>
-                <td>{{ form.P() }} kPa</td>
+                <td><strong>{{ form.T_isot.label  }}</strong></td>
+                <td>{{ form.T_isot() }}{{ form.T_isob() }}</td>
+                {% if processType == "Isobar" %}
+                <script>
+                    document.getElementById("T_isot").style.display = "none"
+                    document.getElementById("T_isob").style.display = "initial"
+                    document.getElementById("T_isot").value = 50
+                </script>
+                {% else %}
+                <script>
+                    document.getElementById("T_isot").style.display = "initial"
+                    document.getElementById("T_isob").style.display = "none"
+                    document.getElementById("T_isob").value = 50
+                </script>
+                {% endif %}
+            </tr>
+            <tr class='informationText'>
+                <td><strong>{{ form.P_isot.label  }}</strong></td>
+                <td>{{ form.P_isot() }}{{ form.P_isob() }}</td>
+                {% if processType == "Isobar" %}
+                <script>
+                    document.getElementById("P_isot").style.display = "none"
+                    document.getElementById("P_isob").style.display = "initial"
+                    document.getElementById("P_isot").value = 100
+                </script>
+                {% else %}
+                <script>
+                    document.getElementById("P_isot").style.display = "initial"
+                    document.getElementById("P_isob").style.display = "none"
+                    document.getElementById("P_isob").value = 100
+                </script>
+                {% endif %}
             </tr>
             <tr>
+                <td></td>
                 <td>{{ form.submit() }}</td>
             </tr>
         </table>
+        <script>
+            function optionChange() {
+                let box_value = document.getElementById("processType").value;
+                if (box_value === "Isobar") {
+                    document.getElementById("T_isob").value = null
+                    document.getElementById("P_isob").value = null
+                    document.getElementById("T_isot").style.display = "none"
+                    document.getElementById("T_isob").style.display = "initial"
+                    document.getElementById("P_isot").style.display = "none"
+                    document.getElementById("P_isob").style.display = "initial"
+                    document.getElementById("T_isot").value = 50
+                    document.getElementById("P_isot").value = 100
+                } else {
+                    document.getElementById("T_isot").value = null
+                    document.getElementById("P_isot").value = null
+                    document.getElementById("T_isot").style.display = "initial"
+                    document.getElementById("T_isob").style.display = "none"
+                    document.getElementById("P_isot").style.display = "initial"
+                    document.getElementById("P_isob").style.display = "none"
+                    document.getElementById("T_isob").value = 50
+                    document.getElementById("P_isob").value = 100
+                }
+            }
+        </script>
+        <br>
+        <div class="slidecontainer">
+            {% if processType == "Isotherm" %}
+            <input type="range" min="100" max="22000" value="{{"%0.2f" % system.P}}" class="slider" id="myRange" oninput="adjustValue(this.value)">
+            <span style="color: white;">Use this slider to adjust P: 
+                <span id="demo"></span> kPa
+            </span>
+            <div style="color: white;">The system has a boiling pressure at {{'%0.2f'| format(system.getboilingP() * 100|float)}} kPa at {{system.T}} <sup>o</sup>C</div>
+            {% else %}
+            <input type="range" min="1" max="374" value="{{"%0.2f" % system.T}}" class="slider" id="myRange" oninput="adjustValue(this.value)">
+            <span style="color: white;">Use this slider to adjust T: 
+                <span id="demo" style="color: white;"></span> <sup>o</sup>C
+            </span>
+            <div style="color: white;">The system has a boiling temperature at {{'%0.2f'| format(system.getboilingT()|float)}} <sup>o</sup>C at {{'%0.2f'| format(system.P|float)}} kPa</div>
+            {% endif %}
+            <script>
+                var slider = document.getElementById("myRange");
+                var output = document.getElementById("demo");
+                output.innerHTML = slider.value; // Display the default slider value
 
+                // UPDATES ON SLIDER MOVEMENT
+                slider.oninput = function() {
+                    output.innerHTML = this.value;
+                    // Update Vaporisation curve, Gibbs plot and Animation
+                    Plotly.deleteTraces('vapCurve', [-1]);
+                    Plotly.deleteTraces('Gplot', [-1]);
+                    if ("{{ processType }}" == "Isotherm") {
+                        var newP = Math.round(this.value/100) * 100;
+                        gibbsGas.innerHTML = Math.round({{Ggraph[2]}}[newP] * 100) / 100;
+                        gibbsLiq.innerHTML = Math.round({{Ggraph[3]}}[newP] * 100) / 100;
+                        gibbsSys.innerHTML = Math.round({{Ggraph[1]}}[newP] * 100) / 100;
+                        Hgas.innerHTML = Math.round({{Ggraph[5]}}[newP] * 100) / 100;
+                        Hliq.innerHTML = Math.round({{Ggraph[6]}}[newP] * 100) / 100;
+                        Hsys.innerHTML = Math.round({{Ggraph[4]}}[newP] * 100) / 100;
+                        Sgas.innerHTML = Math.round({{Ggraph[8]}}[newP] * 100) / 100;
+                        Sliq.innerHTML = Math.round({{Ggraph[9]}}[newP] * 100) / 100;
+                        Ssys.innerHTML = Math.round({{Ggraph[7]}}[newP] * 100) / 100;
+                        Plotly.addTraces('vapCurve',{x: [{{ system.T }}, {{ system.T }}], y: [{{ system.P }}, this.value], name: "{{ processType }}",text: ["Start", "End"], hovertemplate: '<br><b>%{text}</b></br>' + 'T: %{x:.2f} C' + '<br>P: %{y:.2f} kPa'});
+                        Plotly.addTraces('Gplot',{x: [newP], y: [{{ Ggraph[1] }}[newP]], name: "Final System", mode: "markers", marker: {size: 15, color: "orange"}, hovertemplate: 'P: %{x:.2f} kPa' + '<br>G: %{y:.2f} kJ/kg'});
+                        if (newP <= {{ equi }} && vapFrac == 0) { // if gas->liq
+                            transition =  true
+                        }
+                        else if (newP >= {{ equi }} && vapFrac == 1) { // if liq->gas
+                            transition =  true
+                        }
+                    }
+                    else {
+                        var newT = this.value
+                        gibbsGas.innerHTML = Math.round({{Ggraph[2]}}[newT] * 100) / 100;
+                        gibbsLiq.innerHTML = Math.round({{Ggraph[3]}}[newT] * 100) / 100;
+                        gibbsSys.innerHTML = Math.round({{Ggraph[1]}}[newT] * 100) / 100;
+                        Hgas.innerHTML = Math.round({{Ggraph[5]}}[newT] * 100) / 100;
+                        Hliq.innerHTML = Math.round({{Ggraph[6]}}[newT] * 100) / 100;
+                        Hsys.innerHTML = Math.round({{Ggraph[4]}}[newT] * 100) / 100;
+                        Sgas.innerHTML = Math.round({{Ggraph[8]}}[newT] * 100) / 100;
+                        Sliq.innerHTML = Math.round({{Ggraph[9]}}[newT] * 100) / 100;
+                        Ssys.innerHTML = Math.round({{Ggraph[7]}}[newT] * 100) / 100;
+                        Plotly.addTraces('vapCurve',{x: [{{ system.T }},this.value], y: [{{ system.P }}, {{ system.P }}], name: "{{ processType }}",text: ["Start", "End"], hovertemplate: '<br><b>%{text}</b></br>' + 'T: %{x:.2f} C' + '<br>P: %{y:.2f} kPa'});
+                        Plotly.addTraces('Gplot',{x: [newT], y: [{{ Ggraph[1] }}[newT]], name: "Final System", mode: "markers", marker: {size: 15, color: "orange"}, hovertemplate: 'T: %{x:.2f} C' + '<br>G: %{y:.2f} kJ/kg'});
+                        if (newT <= {{ equi }} && vapFrac == 1) { // if liq->gas
+                            transition =  true
+                        }
+                        else if (newT >= {{ equi }} && vapFrac == 0) { // if gas->liq
+                            transition =  true
+                        }
+                    }
+                }
+            </script>
+        </div>
     </form>
 </div>
 
-{% if errors == False %}
-<div id="animateMolecules" style='position: float;'>
+<div id="animateMolecules2" style='position: float;'>
     <script>
-        var number = 100;
+        var number = 50;
         var vapFrac = {{ system.v }};
         var crossedOver = 0;
+        let transition = false;
     </script>
     <script src="{{url_for('static', filename='app2.js')}}"></script>
+        <div class='legend rounded' style='margin-top: 15px;'>
+        <table>
+            <tr>
+                <td><p class='informationHeader' style='margin-bottom: 0px;'>Legend</p></td>
+                <td class='tableHeader' style='padding-bottom: 0px; padding-left: 60px; font-size: 20px;'>Vapour: </td>
+                <td class='tableText' style='padding-bottom: 0px;'><img src='static/images/vap.png' style='height: 15px; width: auto; margin-bottom: 5px;'></td>
+                <td class='tableHeader' style='padding-bottom: 0px; font-size: 20px;'>Liquid: </td>
+                <td class='tableText' style='padding-bottom: 0px;'><img src='static/images/liq.png' style='height: 15px; width: auto; margin-bottom: 5px;'></td>
+                <td class='tableHeader' style='padding-bottom: 0px; font-size: 20px;'>Molecule: </td>
+                <td class='tableText' style='padding-bottom: 0px;'><img src='static/images/blue.png' style='height: 15px; width: auto; margin-bottom: 5px;'></td>
+            </tr>
+        </table>
+    </div>
 </div>
-{% else %}
-<div style='height: 350px; width: 100%'></div>
+
+{% if errors == False %}
+<div class='information rounded' id='Gplot' style='margin-right: 35px; margin-top: 0px; height: 640px; padding: 0px'>
+    <div class='legend rounded' style="margin-right: 35px">
+        <table style="text-align: center;">
+            <tr>
+                <td class='tableHeader' style='padding-bottom: 0px; padding-left: 5px; color: #636efb;'>G<sup>vap</sup><sub>water</sub>: </td>
+                <td class='tableText' style='padding-bottom: 0px;'><span id="Ggas"></span> <span class="tableText" style="font-size: 10px;">kJ/kg</span></td>
+                <td class='tableHeader' style='padding-bottom: 0px; color: #f0543c;'>G<sup>liq</sup><sub>water</sub>: </td>
+                <td class='tableText' style='padding-bottom: 0px;'><span id="Gliq"></span> <span class="tableText" style="font-size: 10px;">kJ/kg</span></td>
+                <td class='tableHeader' style='padding-bottom: 0px; color: #08cc94;'>G<sup>sys</sup><sub>water</sub>: </td>
+                <td class='tableText' style='padding-bottom: 0px;'><span id="Gsys"></span> <span class="tableText" style="font-size: 10px;">kJ/kg</span></td>
+            </tr>
+            <tr>
+                <td class='tableHeader' style='padding-bottom: 0px; padding-left: 5px; color: #636efb;'>H<sup>vap</sup><sub>water</sub>: </td>
+                <td class='tableText' style='padding-bottom: 0px;'><span id="Hgas"></span> <span class="tableText" style="font-size: 10px;">kJ/kg</span></td>
+                <td class='tableHeader' style='padding-bottom: 0px; color: #f0543c;'>H<sup>liq</sup><sub>water</sub>: </td>
+                <td class='tableText' style='padding-bottom: 0px;'><span id="Hliq"></span> <span class="tableText" style="font-size: 10px;">kJ/kg</span></td>
+                <td class='tableHeader' style='padding-bottom: 0px; color: #08cc94;'>H<sup>sys</sup><sub>water</sub>: </td>
+                <td class='tableText' style='padding-bottom: 0px;'><span id="Hsys"></span> <span class="tableText" style="font-size: 10px;">kJ/kg</span></td>
+            </tr>
+            <tr>
+                <td class='tableHeader' style='padding-bottom: 0px; padding-left: 5px; color: #636efb;'>S<sup>vap</sup><sub>water</sub>: </td>
+                <td class='tableText' style='padding-bottom: 0px;'><span id="Sgas"></span> <span class="tableText" style="font-size: 10px;">kJ/kg</span></td>
+                <td class='tableHeader' style='padding-bottom: 0px; color: #f0543c;'>S<sup>liq</sup><sub>water</sub>: </td>
+                <td class='tableText' style='padding-bottom: 0px;'><span id="Sliq"></span> <span class="tableText" style="font-size: 10px;">kJ/kg</span></td>
+                <td class='tableHeader' style='padding-bottom: 0px; color: #08cc94;'>S<sup>sys</sup><sub>water</sub>: </td>
+                <td class='tableText' style='padding-bottom: 0px;'><span id="Ssys"></span> <span class="tableText" style="font-size: 10px;">kJ/kg</span></td>
+            </tr>
+            <script>
+                var gibbsGas = document.getElementById("Ggas")
+                var gibbsLiq = document.getElementById("Gliq")
+                var gibbsSys = document.getElementById("Gsys")
+
+                var HGas = document.getElementById("Hgas")
+                var HLiq = document.getElementById("Hliq")
+                var HSys = document.getElementById("Hsys")
+
+                var SGas = document.getElementById("Sgas")
+                var SLiq = document.getElementById("Sliq")
+                var SSys = document.getElementById("Ssys")
+                if ("{{ processType }}" == "Isotherm") {
+                    var initP = Math.round({{system.P}}/100) * 100
+                    gibbsGas.innerHTML = Math.round({{Ggraph[2]}}[initP] * 100) / 100;
+                    gibbsLiq.innerHTML = Math.round({{Ggraph[3]}}[initP] * 100) / 100;
+                    gibbsSys.innerHTML = Math.round({{Ggraph[1]}}[initP] * 100) / 100;
+
+                    Hgas.innerHTML = Math.round({{Ggraph[5]}}[initP] * 100) / 100;
+                    Hliq.innerHTML = Math.round({{Ggraph[6]}}[initP] * 100) / 100;
+                    Hsys.innerHTML = Math.round({{Ggraph[4]}}[initP] * 100) / 100;
+
+                    Sgas.innerHTML = Math.round({{Ggraph[8]}}[initP] * 100) / 100;
+                    Sliq.innerHTML = Math.round({{Ggraph[9]}}[initP] * 100) / 100;
+                    Ssys.innerHTML = Math.round({{Ggraph[7]}}[initP] * 100) / 100;
+                } else {
+                    var initT = {{system.T}}
+                    gibbsGas.innerHTML = Math.round({{Ggraph[2]}}[initT] * 100) / 100;
+                    gibbsLiq.innerHTML = Math.round({{Ggraph[3]}}[initT] * 100) / 100;
+                    gibbsSys.innerHTML = Math.round({{Ggraph[1]}}[initT] * 100) / 100;
+
+                    Hgas.innerHTML = Math.round({{Ggraph[5]}}[initT] * 100) / 100;
+                    Hliq.innerHTML = Math.round({{Ggraph[6]}}[initT] * 100) / 100;
+                    Hsys.innerHTML = Math.round({{Ggraph[4]}}[initT] * 100) / 100;
+
+                    Sgas.innerHTML = Math.round({{Ggraph[8]}}[initT] * 100) / 100;
+                    Sliq.innerHTML = Math.round({{Ggraph[9]}}[initT] * 100) / 100;
+                    Ssys.innerHTML = Math.round({{Ggraph[7]}}[initT] * 100) / 100;
+                }
+            </script>
+        </table>
+    </div>
+</div>
+
+<!-- import plotly library -->
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script>
+    var graphs1 = {{ Ggraph[0] | safe }};
+    Plotly.plot('Gplot',graphs1,{});
+    if ("{{ processType }}" == "Isotherm") {
+        Plotly.addTraces('Gplot',{x: [initP], y: [{{ Ggraph[1] }}[initP]], name: "Starting System", mode: "markers", marker: {size: 15, color: "orange"},hovertemplate: 'P: %{x:.2f} kPa' + '<br>G: %{y:.2f} kJ/kg'});
+    }
+    else {
+        Plotly.addTraces('Gplot',{x: [initT], y: [{{ Ggraph[1] }}[initT]], name: "Starting System", mode: "markers", marker: {size: 15, color: "orange"}, hovertemplate: 'T: %{x:.2f} C' + '<br>G: %{y:.2f} kJ/kg'});
+    }
+</script>
+<div class='information rounded' id='vapCurve' style='height: 765px; margin-top: 0px; padding: 0px;'>
+    <script>
+        var graphs2 = {{ graphJSON | safe }}
+        Plotly.plot('vapCurve',graphs2,{})
+        Plotly.addTraces('vapCurve',{x: [{{ system.T }}, {{ system.T }}], y: [ {{ system.P }}, {{ system.P }}], name: "{{ processType }}",text: ["End", "Start"], hovertemplate: '<br><b>%{text}</b></br>' + 'T: %{x:.2f} C' + '<br>P: %{y:.2f} kPa'});
+    </script>
+</div>
+
+
+
+<br style="clear: both" >
 {% endif %}
 
 

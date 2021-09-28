@@ -4,7 +4,7 @@
 {% block title %}
 <!-- import p5/js library -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.10.2/p5.js"></script>
-<title>Vapour Liquid Equilibrium (Binary)</title>
+<title>Binary VLE Application</title>
 {% endblock %}
 
 
@@ -38,7 +38,7 @@
         {% endfor %}
     </div>
 {% endif %}
-
+<br>
 {% if exceed == True%}
     {% set exceedList = [] %}
     {% if system.exceedT == True %}
@@ -72,7 +72,7 @@
         </tr>
         <tr >
             <td class='tableHeader'><strong>Temperature (T):</strong></td> 
-            <td class='tableText'>{{ "%0.2f" % system.T }} <sup>o</sup>C</td>
+            <td class='tableText'>{{ "%0.2f" % system.T }} degree Celcius</td>
             <td class='tableHeader'>y<sub>A</sub>:</td>
             <td class='tableText'>{{"%0.2f" % system.y[0]}}</td>
         </tr>
@@ -93,7 +93,7 @@
 
 <div class='information rounded'>
     <form method="POST">
-        <p class='informationHeader'>Reset Parameters</p>
+        <p class='informationHeader'>Reset System Parameters</p>
         {{ form.hidden_tag() }}
         <table>
             <tr class='informationText'>
@@ -110,35 +110,35 @@
             </tr>
             <tr class='informationText'>
                 <td><strong>{{ form.T.label  }}</strong></td>
-                <td>{{ form.T() }} <sup>o</sup>C</td>
+                <td>{{ form.T() }}</td>
             </tr>
             <tr class='informationText'>
                 <td><strong>{{ form.P.label  }}</strong></td>
-                <td>{{ form.P() }} kPa</td>
+                <td>{{ form.P() }}</td>
             </tr>
             <tr class='informationText'>
                 <td><strong>{{ form.z.label  }}</strong></td>
                 <td>{{ form.z() }}</td>
             </tr>
             <tr>
+                <td></td>
                 <td>{{ form.submit() }}</td>
             </tr>
         </table>
-
     </form>
 </div>
 
 {% if errors == False %}
 <div id='scatterchart' class='information rounded' style='margin-right: 35px; margin-top: 0px; height: 720px; padding: 0px;'>
 <!-- import plotly library -->
-<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-<script>
-    var graphs = {{ graphJSON | safe }}
-    Plotly.plot('scatterchart',graphs,{})
-</script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script>
+        var graphs = {{ graphJSON | safe }}
+        Plotly.plot('scatterchart',graphs,{})
+    </script>
 </div>
 
-<div id="animateMolecules" style='position: float;'>
+<div id="animateMolecules">
     <script>
         var number = 100;
         var liqArray = {{ system.x }};
@@ -152,17 +152,17 @@
     <div class='legend rounded' style='margin-top: 0px;'>
         <table>
             <tr>
-                <td><p class='informationHeader' style='margin-bottom: 0px;'>Legend for Animation</p></td>
-                <td class='tableHeader' style='padding-bottom: 0px; padding-left: 60px;'>Vapour: </td>
-                <td class='tableText' style='padding-bottom: 0px;'><img src='static/images/vap.png' style='height: 15px; width: auto; margin-bottom: 5px;'></td>
-                <td class='tableHeader' style='padding-bottom: 0px;'>Liquid: </td>
+                <td><p class='informationHeader' style='margin-bottom: 0px;'>Legend</p></td>
+                <td class='tableHeader' style='padding-bottom: 0px; padding-left: 60px; font-size: 20px;'>Vapour: </td>
+                <td class='tableText' style='padding-bottom: 0px; '><img src='static/images/vap.png' style='height: 15px; width: auto; margin-bottom: 5px;'></td>
+                <td class='tableHeader' style='padding-bottom: 0px; font-size: 20px;'>Liquid: </td>
                 <td class='tableText' style='padding-bottom: 0px;'><img src='static/images/liq.png' style='height: 15px; width: auto; margin-bottom: 5px;'></td>
             </tr>
         </table>
     </div>
 </div>
 {% else %}
-<div style='height: 350px; width: 100%'></div>
+<br style="clear: both" >
 {% endif %}
 
 {% endblock %}

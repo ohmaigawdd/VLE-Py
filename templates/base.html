@@ -22,12 +22,31 @@
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav mr-auto">
 					<li class="nav-item dropdown">
-						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-							Vapour-Liquid Equilibrium
+						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							Pure Vapour-Liquid Equilibrium
 						</a>
-						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
-							<a class="dropdown-item" href="{{ url_for('purevle') }}">Pure VLE</a>
-							<a class="dropdown-item" href="{{ url_for('binaryvle') }}">Binary VLE</a>
+						<div class="dropdown-menu" aria-labelledby="navbarDropdown1">
+							<a class="dropdown-item" href="{{ url_for('purevleinfo') }}">Introduction</a>
+							<a class="dropdown-item" href="{{ url_for('purevle') }}">Pure VLE (Water) Application</a>
+						</div>
+					</li>
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							Binary Vapour-Liquid Equilibrium
+						</a>
+						<div class="dropdown-menu" aria-labelledby="navbarDropdown2">
+							<a class="dropdown-item" href="{{ url_for('binaryvleinfo') }}">Introduction</a>
+							<a class="dropdown-item" href="{{ url_for('binaryvle') }}">Binary VLE (Hydrocarbons) Application</a>
+						</div>
+					</li>
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown3" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							Reactor Design and Analysis
+						</a>
+						<div class="dropdown-menu" aria-labelledby="navbarDropdown3">
+							<a class="dropdown-item" href="{{ url_for('reactorwriteup') }}">Introduction</a>
+							<a class="dropdown-item" href="{{ url_for('idealreactors') }}">Ideal Reactors Application</a>
+							<a class="dropdown-item" href="{{ url_for('realreactors') }}">Real Reactors Application</a>
 						</div>
 					</li>
 				</ul>
@@ -35,11 +54,12 @@
 		</div>
 	</nav>
 
-	
 	{% block content %}
 	{% endblock %}
 
 	<footer class="footer bg-dark rounded">
+		{% block taskbar %}
+		{% endblock %}
 		NUS Department of Chemical and Biomolecular Engineering
 	</footer>
 </body>

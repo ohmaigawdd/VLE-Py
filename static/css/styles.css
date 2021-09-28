@@ -10,6 +10,7 @@ html {
 /* To modify <body> by Bootstrap a little */
 .container {
 	background-color: black;
+	height: auto;
 }
 
 /* For the main content for each page right now */
@@ -44,6 +45,15 @@ html {
 	border: 5px solid darkgray;
 }
 
+.buttons {
+	width: 1295px;
+	padding: 15px;
+	position: sticky;
+	margin-top: 15px;
+	margin-bottom: 15px;
+	border: 5px solid darkgray;
+}
+
 /* For main text in web app function boxes */
 
 .informationHeader {
@@ -58,9 +68,15 @@ html {
 }
 
 /* For the footer of the webpage */
+.taskbar {
+	font-size: 20px;
+	font-weight: 600;
+	color: white;  
+}
+
 .footer {
 	position: sticky;
-	height: 25px;
+	height: auto;
 	bottom: 0;
 	color: white;
 	text-align: center;
@@ -80,11 +96,14 @@ td {
 .tableHeader {
 	font-weight: 300;
 	color: white;
+	white-space: nowrap;
+	vertical-align: top;
 }
 
 .tableText {
 	font-weight: 300;
 	color: darkgray;
+	vertical-align: top;
 }
 
 /* For any legends (put a <table> inside */
@@ -97,4 +116,44 @@ td {
 	margin-top: 15px;
 	margin-bottom: 15px;
 	border: 5px solid darkgray;
+}
+
+.slidecontainer {
+	width: 100%; /* Width of the outside container */
+}
+      
+.slider {
+	-webkit-appearance: none;
+	width: 100%;
+	height: 15px;
+	border-radius: 5px;   
+	background: #d3d3d3;
+	outline: none;
+	opacity: 0.7;
+	-webkit-transition: .2s;
+	transition: opacity .2s;
+}
+      
+/* Mouse-over effects */
+.slider:hover {
+	opacity: 1; /* Fully shown on mouse-over */
+}
+      
+/* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */ 
+.slider::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	appearance: none;
+	width: 25px;
+	height: 25px;
+	border-radius: 50%; 
+	background: #04AA6D;
+	cursor: pointer;
+}
+      
+.slider::-moz-range-thumb {
+	width: 25px;
+	height: 25px;
+	border-radius: 50%;
+	background: #04AA6D;
+	cursor: pointer;
 }

@@ -1,0 +1,628 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+<!-- import p5/js library -->
+<link rel="stylesheet" href="static/css/reactor.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.10.2/p5.js"></script>
+<title>Real Reactors Application</title>
+{% endblock %}
+
+{% block content %}
+<div>
+    <p class="mainHeader">
+    	Visualisation of Residence Time Distribution <br> (Real Reactors)
+    </p>
+    <p class="mainText">
+	    Comparison of Residence Time Distribution between Ideal and Non-ideal Reactors
+    </p>
+</div>
+
+<div class="information rounded" style='margin-right: 35px;'>
+    <p class='informationHeader'>Current System Parameters</p>
+    <table>
+        <tr >
+            <td class='tableHeader'><strong>Tracer Type:</strong></td> 
+            <td class='tableText'>{{ idealsystem.type.capitalize() }}</td>
+        </tr>
+        <tr>
+            <td class='tableHeader'><strong>Reactor Type:</strong></td> 
+            <td class='tableText'>{{ reactorType.upper() }}</td>
+        </tr>
+        <tr >
+            <td class='tableHeader'><strong>Reactor Volume (V):</strong></td> 
+            <td class='tableText'>{{ idealsystem.V_reactor }} m<sup>3</sup></td>
+        </tr>
+        <tr>
+            <td class='tableHeader'><strong>Flow Rate (Q):</strong></td> 
+            <td class='tableText'>{{ idealsystem.flow }} m<sup>3</sup>/s</td>
+        </tr>
+        <tr>
+            <td class='tableHeader'><strong>Tracer Amount:</strong></td> 
+            {% if tracerType == "pulse"%}
+            <td class='tableText'>100.00 mol</td>
+            {% else %}
+            <td class='tableText'>100.00 mol/s</td>
+            {% endif %}
+        </tr>
+    </table>
+    <script>
+        let idx = 1;
+        let flag = false;
+        let running = false;
+        function playAnimation() {
+            if ("{{reactorType}}" == "cstr"){
+                if ("{{idealsystem.type}}" == "pulse"){
+                  
+                    document.getElementById("cstr").style.animation = "bgcolor-change {{idealsystem.length * 0.0166}}s";
+                    document.getElementById("pulse-arrow").style.animation = "pulse 4s";
+                    document.getElementById("pulse-line").style.animation = "pulse 4s";
+                    document.getElementById("cstr").style.animationPlayState = "running";
+                    document.getElementById("pulse-arrow").style.animationPlayState = "running";
+                    document.getElementById("pulse-line").style.animationPlayState = "running";
+
+                    if ("{{problemType}}" == "poor impeller design"){
+                        document.getElementById("cstr-real").style.animation = "bgcolor-change {{idealsystem.length * 0.0166}}s";
+                        document.getElementById("pulse-arrow-real").style.animation = "pulse 4s";
+                        document.getElementById("pulse-line-real").style.animation = "pulse 4s";
+                        document.getElementById("cstr-real").style.animationPlayState = "running";
+                        document.getElementById("pulse-arrow-real").style.animationPlayState = "running";
+                        document.getElementById("pulse-line-real").style.animationPlayState = "running";
+                    } else {
+                        document.getElementById("cstr-real").style.animation = "bgcolor-change {{idealsystem.length * 0.0095}}s";
+                        document.getElementById("pulse-arrow-real2").style.animation = "pulse 4s";
+                        document.getElementById("pulse-line-real2").style.animation = "pulse 4s";
+                        document.getElementById("cstr-real").style.animationPlayState = "running";
+                        document.getElementById("pulse-arrow-real2").style.animationPlayState = "running";
+                        document.getElementById("pulse-line-real2").style.animationPlayState = "running";
+                    }
+    
+                } else {
+                    document.getElementById("cstr-step").style.animation = "bgcolor-change-step {{idealsystem.length * 0.0166}}s";
+                    document.getElementById("step-arrow").style.animation = "step 4s";
+                    document.getElementById("step-line").style.animation = "step 4s";
+                    document.getElementById("cstr-step").style.animationPlayState = "running";
+                    document.getElementById("step-arrow").style.animationPlayState = "running";
+                    document.getElementById("step-line").style.animationPlayState = "running";
+
+                    if ("{{problemType}}" == "poor impeller design"){
+                        document.getElementById("cstr-step-real").style.animation = "bgcolor-change-step {{idealsystem.length * 0.0166}}s";
+                        document.getElementById("step-arrow-real").style.animation = "step 4s";
+                        document.getElementById("step-line-real").style.animation = "step 4s";
+                        document.getElementById("cstr-step-real").style.animationPlayState = "running";
+                        document.getElementById("step-arrow-real").style.animationPlayState = "running";
+                        document.getElementById("step-line-real").style.animationPlayState = "running";
+                    } else {
+                        document.getElementById("cstr-step-real").style.animation = "bgcolor-change-step {{idealsystem.length * 0.02}}s";
+                        document.getElementById("step-arrow-real2").style.animation = "step 4s";
+                        document.getElementById("step-line-real2").style.animation = "step 4s";
+                        document.getElementById("cstr-step-real").style.animationPlayState = "running";
+                        document.getElementById("step-arrow-real2").style.animationPlayState = "running";
+                        document.getElementById("step-line-real2").style.animationPlayState = "running";
+                    }
+                }
+                
+            } else {
+                if ("{{idealsystem.type}}" == "pulse"){
+                    document.getElementById("pfr-plugflow").style.animation = "plugflow {{idealsystem.length * 0.0166}}s";
+                    // 0.0166 is obtained by running a console.time() and consol.timeEnd() on the plotly code to find average time to plot a point on plotly
+                    document.getElementById("pfr-plugflow").style.animationPlayState = "running";
+                    document.getElementById("pfr-plugflow").style.animationTimingFunction = "linear";
+
+                    if ("{{problemType}}" == "reactor fouling"){
+                        document.getElementById("pfr-plugflow-real").style.animation = "plugflow-fouling {{idealsystem.length * 0.0166 * 0.5}}s";
+                        // 0.0166 is obtained by running a console.time() and consol.timeEnd() on the plotly code to find average time to plot a point on plotly
+                        document.getElementById("pfr-plugflow-real").style.animationPlayState = "running";
+                        document.getElementById("pfr-plugflow-real").style.animationTimingFunction = "linear";
+                    } else {
+                        document.getElementById("pfr-plugflow-real2").style.animation = "plugflow-real {{idealsystem.length * 0.0166 * 0.5}}s";
+                        // 0.0166 is obtained by running a console.time() and consol.timeEnd() on the plotly code to find average time to plot a point on plotly
+                        document.getElementById("pfr-plugflow-real2").style.animationPlayState = "running";
+                        document.getElementById("pfr-plugflow-real2").style.animationTimingFunction = "linear";
+
+                        document.getElementById("bypass-2").style.animation = "bypass-tracer {{0.1}}s";
+                        // 0.0166 is obtained by running a console.time() and consol.timeEnd() on the plotly code to find average time to plot a point on plotly
+                        document.getElementById("bypass-2").style.animationPlayState = "running";
+                        document.getElementById("bypass-2").style.animationTimingFunction = "linear";
+
+                        document.getElementById("bypass-1").style.animation = "bypass-tracer {{0.1}}s";
+                        // 0.0166 is obtained by running a console.time() and consol.timeEnd() on the plotly code to find average time to plot a point on plotly
+                        document.getElementById("bypass-1").style.animationPlayState = "running";
+                        document.getElementById("bypass-1").style.animationTimingFunction = "linear";
+
+                        document.getElementById("bypass-3").style.animation = "bypass-tracer {{0.1}}s";
+                        // 0.0166 is obtained by running a console.time() and consol.timeEnd() on the plotly code to find average time to plot a point on plotly
+                        document.getElementById("bypass-3").style.animationPlayState = "running";
+                        document.getElementById("bypass-3").style.animationTimingFunction = "linear";
+                    }
+                } else {
+                    document.getElementById("pfr-plugflow-step").style.animation = "plugflow-step {{idealsystem.length * 0.0166}}s";
+                    document.getElementById("pfr-plugflow-step").style.animationPlayState = "running";
+                    document.getElementById("pfr-plugflow-step").style.animationTimingFunction = "linear";
+
+                    if ("{{problemType}}" == "reactor fouling"){
+                        document.getElementById("pfr-plugflow-step-real").style.animation = "plugflow-step {{idealsystem.length * 0.0166 *0.5}}s";
+                        document.getElementById("pfr-plugflow-step-real").style.animationPlayState = "running";
+                        document.getElementById("pfr-plugflow-step-real").style.animationTimingFunction = "linear";
+                    } else {
+                        document.getElementById("pfr-plugflow-step-real2").style.animation = "plugflow-step {{idealsystem.length * 0.0166 *0.5}}s";
+                        document.getElementById("pfr-plugflow-step-real2").style.animationPlayState = "running";
+                        document.getElementById("pfr-plugflow-step-real2").style.animationTimingFunction = "linear";
+
+                        document.getElementById("bypass-2-red").style.animation = "bypass-tracer {{0.1}}s";
+                        // 0.0166 is obtained by running a console.time() and consol.timeEnd() on the plotly code to find average time to plot a point on plotly
+                        document.getElementById("bypass-2-red").style.animationPlayState = "running";
+                        document.getElementById("bypass-2-red").style.animationTimingFunction = "linear";
+
+                        document.getElementById("bypass-1-red").style.animation = "bypass-tracer {{0.1}}s";
+                        // 0.0166 is obtained by running a console.time() and consol.timeEnd() on the plotly code to find average time to plot a point on plotly
+                        document.getElementById("bypass-1-red").style.animationPlayState = "running";
+                        document.getElementById("bypass-1-red").style.animationTimingFunction = "linear";
+
+                        document.getElementById("bypass-3-red").style.animation = "bypass-tracer {{0.1}}s";
+                        // 0.0166 is obtained by running a console.time() and consol.timeEnd() on the plotly code to find average time to plot a point on plotly
+                        document.getElementById("bypass-3-red").style.animationPlayState = "running";
+                        document.getElementById("bypass-3-red").style.animationTimingFunction = "linear";
+                    }
+                }
+                
+            }
+            }
+        function pauseAnimation() {
+            if ("{{reactorType}}" == "cstr"){
+                if ("{{idealsystem.type}}" == "pulse"){
+                    document.getElementById("cstr").style.animationPlayState = "paused";
+                    document.getElementById("cstr-real").style.animationPlayState = "paused";
+                } else {
+                    document.getElementById("cstr-step").style.animationPlayState = "paused";
+                    document.getElementById("cstr-step-real").style.animationPlayState = "paused";
+                }
+            } else {
+                if ("{{idealsystem.type}}" == "pulse"){
+                    document.getElementById("pfr-plugflow").style.animationPlayState = "paused";
+                } else {
+                    document.getElementById("pfr-plugflow-step").style.animationPlayState = "paused";
+                }
+            }
+            }
+        function resetAnimation() {
+            if ("{{reactorType}}" == "cstr"){
+                if ("{{idealsystem.type}}" == "pulse"){
+                    document.getElementById("cstr").style.animation = 'none';
+                    document.getElementById("pulse-arrow").style.animation = "none";
+                    document.getElementById("pulse-line").style.animation = "none";
+                    document.getElementById("cstr").offsetWidth;
+                    document.getElementById("cstr").style.animation = "bgcolor-change {{idealsystem.length * 0.0166}}s";
+                    document.getElementById("pulse-arrow").style.animation = "pulse 4s";
+                    document.getElementById("pulse-line").style.animation = "pulse 4s";
+                    document.getElementById("cstr").style.animationPlayState = "paused";
+                    document.getElementById("pulse-arrow").style.animationPlayState = "paused";
+                    document.getElementById("pulse-line").style.animationPlayState = "paused";
+
+                    if ("{{problemType}}" == "poor impeller design"){
+                        document.getElementById("cstr-real").style.animation = 'none';
+                        document.getElementById("pulse-arrow-real").style.animation = "none";
+                        document.getElementById("pulse-line-real").style.animation = "none";
+                        document.getElementById("cstr-real").offsetWidth;
+                        document.getElementById("cstr-real").style.animation = "bgcolor-change {{idealsystem.length * 0.0166}}s";
+                        document.getElementById("pulse-arrow-real").style.animation = "pulse 4s";
+                        document.getElementById("pulse-line-real").style.animation = "pulse 4s";
+                        document.getElementById("cstr-real").style.animationPlayState = "paused";
+                        document.getElementById("pulse-arrow-real").style.animationPlayState = "paused";
+                        document.getElementById("pulse-line-real").style.animationPlayState = "paused";
+                    } else {
+                        document.getElementById("cstr-real").style.animation = 'none';
+                        document.getElementById("pulse-arrow-real2").style.animation = "none";
+                        document.getElementById("pulse-line-real2").style.animation = "none";
+                        document.getElementById("cstr-real").offsetWidth;
+                        document.getElementById("cstr-real").style.animation = "bgcolor-change {{idealsystem.length * 0.095}}s";
+                        document.getElementById("pulse-arrow-real2").style.animation = "pulse 4s";
+                        document.getElementById("pulse-line-real2").style.animation = "pulse 4s";
+                        document.getElementById("cstr-real").style.animationPlayState = "paused";
+                        document.getElementById("pulse-arrow-real2").style.animationPlayState = "paused";
+                        document.getElementById("pulse-line-real2").style.animationPlayState = "paused";
+                    }
+
+                } else {
+                    document.getElementById("cstr-step").style.animation = 'none';
+                    document.getElementById("step-arrow").style.animation = "none";
+                    document.getElementById("step-line").style.animation = "none";
+                    document.getElementById("cstr-step").offsetWidth;
+                    document.getElementById("cstr-step").style.animation = "bgcolor-change {{idealsystem.length * 0.0166}}s";
+                    document.getElementById("step-arrow").style.animation = "step 4s";
+                    document.getElementById("step-line").style.animation = "step 4s";
+                    document.getElementById("cstr-step").style.animationPlayState = "paused";
+                    document.getElementById("step-arrow").style.animationPlayState = "paused";
+                    document.getElementById("step-line").style.animationPlayState = "paused";
+                    
+                    if ("{{problemType}}" == "poor impeller design"){
+                        document.getElementById("cstr-step-real").style.animation = 'none';
+                        document.getElementById("step-arrow-real").style.animation = "none";
+                        document.getElementById("step-line-real").style.animation = "none";
+                        document.getElementById("cstr-step-real").offsetWidth;
+                        document.getElementById("cstr-step-real").style.animation = "bgcolor-change {{idealsystem.length * 0.0166}}s";
+                        document.getElementById("step-arrow-real").style.animation = "step 4s";
+                        document.getElementById("step-line-real").style.animation = "step 4s";
+                        document.getElementById("cstr-step-real").style.animationPlayState = "paused";
+                        document.getElementById("step-arrow-real").style.animationPlayState = "paused";
+                        document.getElementById("step-line-real").style.animationPlayState = "paused";
+                    } else {
+                        document.getElementById("cstr-step-real").style.animation = 'none';
+                        document.getElementById("step-arrow-real2").style.animation = "none";
+                        document.getElementById("step-line-real2").style.animation = "none";
+                        document.getElementById("cstr-step-real").offsetWidth;
+                        document.getElementById("cstr-step-real").style.animation = "bgcolor-change {{idealsystem.length * 0.025}}s";
+                        document.getElementById("step-arrow-real2").style.animation = "step 4s";
+                        document.getElementById("step-line-real2").style.animation = "step 4s";
+                        document.getElementById("cstr-step-real").style.animationPlayState = "paused";
+                        document.getElementById("step-arrow-real2").style.animationPlayState = "paused";
+                        document.getElementById("step-line-real2").style.animationPlayState = "paused";
+                    }
+                }
+            } else {
+                if ("{{idealsystem.type}}" == "pulse"){
+                    document.getElementById("pfr-plugflow").style.animation = 'none';
+                    document.getElementById("pfr-plugflow").offsetWidth;
+                    document.getElementById("pfr-plugflow").style.animation = "plugflow {{ idealsystem.length * 0.0166 }}s";
+                    document.getElementById("pfr-plugflow").style.animationPlayState = "paused";
+                    
+                    if ("{{problemType}}" == "reactor fouling"){
+                        document.getElementById("pfr-plugflow-real").style.animation = 'none';
+                        document.getElementById("pfr-plugflow-real").offsetWidth;
+                        document.getElementById("pfr-plugflow-real").style.animation = "plugflow {{ idealsystem.length * 0.0166 *0.5}}s";
+                        document.getElementById("pfr-plugflow-real").style.animationPlayState = "paused";
+                    } else {
+                        document.getElementById("pfr-plugflow-real2").style.animation = 'none';
+                        document.getElementById("pfr-plugflow-real2").offsetWidth;
+                        document.getElementById("pfr-plugflow-real2").style.animation = "plugflow-real {{ idealsystem.length * 0.0166 *0.5}}s";
+                        document.getElementById("pfr-plugflow-real2").style.animationPlayState = "paused";
+
+                        document.getElementById("bypass-2").style.animation = 'none';
+                        document.getElementById("bypass-2").offsetWidth;
+                        document.getElementById("bypass-2").style.animation = "bypass-tracer {{ 0.5 }}s";
+                        document.getElementById("bypass-2").style.animationPlayState = "paused";
+
+                        document.getElementById("bypass-1").style.animation = 'none';
+                        document.getElementById("bypass-1").offsetWidth;
+                        document.getElementById("bypass-1").style.animation = "bypass-tracer {{ 0.5 }}s";
+                        document.getElementById("bypass-1").style.animationPlayState = "paused";
+
+                        document.getElementById("bypass-3").style.animation = 'none';
+                        document.getElementById("bypass-3").offsetWidth;
+                        document.getElementById("bypass-3").style.animation = "bypass-tracer {{ 0.5 }}s";
+                        document.getElementById("bypass-3").style.animationPlayState = "paused";
+                    }
+                } else {
+                    document.getElementById("pfr-plugflow-step").style.animation = 'none';
+                    document.getElementById("pfr-plugflow-step").offsetWidth;
+                    document.getElementById("pfr-plugflow-step").style.animation = "plugflow-step {{ idealsystem.length * 0.0166 }}s";
+                    document.getElementById("pfr-plugflow-step").style.animationPlayState = "paused";
+
+                    if ("{{problemType}}" == "reactor fouling"){
+                        document.getElementById("pfr-plugflow-step-real").style.animation = 'none';
+                        document.getElementById("pfr-plugflow-step-real").offsetWidth;
+                        document.getElementById("pfr-plugflow-step-real").style.animation = "plugflow-step {{ idealsystem.length * 0.0166 }}s";
+                        document.getElementById("pfr-plugflow-step-real").style.animationPlayState = "paused";
+                    } else {
+                        document.getElementById("pfr-plugflow-step-real2").style.animation = 'none';
+                        document.getElementById("pfr-plugflow-step-real2").offsetWidth;
+                        document.getElementById("pfr-plugflow-step-real2").style.animation = "plugflow-step {{ idealsystem.length * 0.0166 }}s";
+                        document.getElementById("pfr-plugflow-step-real2").style.animationPlayState = "paused";
+
+                        document.getElementById("bypass-2-red").style.animation = 'none';
+                        document.getElementById("bypass-2-red").offsetWidth;
+                        document.getElementById("bypass-2-red").style.animation = "bypass-tracer {{ 0.5 }}s";
+                        document.getElementById("bypass-2-red").style.animationPlayState = "paused";
+
+                        document.getElementById("bypass-1-red").style.animation = 'none';
+                        document.getElementById("bypass-1-red").offsetWidth;
+                        document.getElementById("bypass-1-red").style.animation = "bypass-tracer {{ 0.5 }}s";
+                        document.getElementById("bypass-1-red").style.animationPlayState = "paused";
+
+                        document.getElementById("bypass-3-red").style.animation = 'none';
+                        document.getElementById("bypass-3-red").offsetWidth;
+                        document.getElementById("bypass-3-red").style.animation = "bypass-tracer {{ 0.5 }}s";
+                        document.getElementById("bypass-3-red").style.animationPlayState = "paused";
+                    }
+                }
+            }
+        }
+        function animateReset() {
+            flag = false;
+            running = false;
+            idx = 1;
+            Plotly.animate("Cplot", {
+                data: [{x: [], y: [], mode: "lines"}]
+            },
+            {
+                transition: {duration: 0},
+                frame: {duration: 0,
+                        redraw: false}})
+            Plotly.animate("realCplot", {
+                data: [{x: [], y: [], mode: "lines"}]
+            },
+            {
+                transition: {duration: 0},
+                frame: {duration: 0,
+                        redraw: false}})
+        };
+        function animatePause() {
+            if (running == true) {
+                flag = true;
+            }
+        };
+        function animateStart() {
+            running = true;
+            Plotly.animate("Cplot", {
+                data: [{x: {{idealsystem.x}}.slice(0,idx), y: {{idealsystem.y}}.slice(0,idx), mode: "lines"}]
+            },
+            {
+                transition: {duration: 0},
+                frame: {duration: 0,
+                        redraw: false}})
+            Plotly.animate("realCplot", {
+                data: [{x: {{realsystem.x}}.slice(0,idx), y: {{realsystem.y}}.slice(0,idx), mode: "lines"}]
+            },
+            {
+                transition: {duration: 0},
+                frame: {duration: 0,
+                        redraw: false}})
+            
+            idx++
+            if (flag == false) {
+                requestAnimationFrame(animateStart);
+            }
+            else {
+                flag = false;
+                running = false;
+            }
+        }
+    </script>
+</div>
+
+<div class='information rounded'>
+    <form method="POST">
+        <p class='informationHeader'>Reset System Parameters</p>
+        {{ form.hidden_tag() }}
+        <table>
+            <tr class='informationText'>
+                <td><strong>{{ form.tracerType.label  }}</strong></td>
+                <td>{{ form.tracerType() }}</td>
+            </tr>
+            <tr class='informationText'>
+                <td><strong>{{ form.reactorType.label }}</strong></td> 
+                <td onchange="optionChange()">{{ form.reactorType() }}</td>
+            </tr>
+            <tr class='informationText'>
+                <td><strong>{{ form.problemType_cstr.label }}</strong></td> 
+                <td>{{ form.problemType_cstr() }}{{ form.problemType_pfr() }}</td>
+                {% if reactorType == "cstr" %}
+                <script>
+                    document.getElementById("problemType_pfr").style.display = "none"
+                    document.getElementById("problemType_cstr").style.display = "initial"
+                </script>
+                {% else %}
+                <script>
+                    document.getElementById("problemType_pfr").style.display = "initial"
+                    document.getElementById("problemType_cstr").style.display = "none"
+                </script>
+                {% endif %}
+            </tr>
+            <tr>
+                <td></td>
+                <td>{{ form.submit() }}</td>
+            </tr>
+        </table>
+        <script>
+            function optionChange() {
+                let box_value = document.getElementById("reactorType").value;
+                if (box_value === "pfr") {
+                    document.getElementById("problemType_pfr").style.display = "initial"
+                    document.getElementById("problemType_cstr").style.display = "none"
+                } else {
+                    document.getElementById("problemType_pfr").style.display = "none"
+                    document.getElementById("problemType_cstr").style.display = "initial"
+                }
+            }
+        </script>
+    </form>
+</div>
+
+{% if errors == False %}
+<div class='information rounded' id='reactor-animation' style='margin-right: 35px; margin-top: 0px; height: 720px; padding: 0px'>
+    <br>
+    <h3 style="color:White; text-align:center;">Ideal Reactor</h3>
+    {% if reactorType == "cstr" %}
+        {% if idealsystem.type == "pulse" %}
+            <div id="cstr"></div>
+            <div id="impeller-stick-ideal"></div>
+            <div id="inflow"></div>
+            <div id="outflow"></div>
+            <div id="in-line"></div>
+            <div id="out-line"></div>
+            <div id="impeller-blades-left-ideal"></div>
+            <div id="impeller-blades-right-ideal"></div>
+            <div id="pulse-line"></div>
+            <div id="pulse-arrow"></div>
+        {% else %}
+            <div id="cstr-step"></div>
+            <div id="impeller-stick-ideal"></div>
+            <div id="inflow"></div>
+            <div id="outflow"></div>
+            <div id="in-line"></div>
+            <div id="out-line"></div>
+            <div id="impeller-blades-left-ideal"></div>
+            <div id="impeller-blades-right-ideal"></div>
+            <div id="step-line"></div>
+            <div id="step-arrow"></div>
+        {% endif %}
+    {% else %}
+        {% if idealsystem.type == "pulse" %}
+            <div id="pfr"></div>
+            <div id="inflow-pfr"></div>
+            <div id="outflow-pfr"></div>
+            <div id="in-line-pfr"></div>
+            <div id="out-line-pfr"></div>
+            <div id="pfr-plugflow"></div>
+        {% else %}
+            <div id="pfr"></div>
+            <div id="inflow-pfr"></div>
+            <div id="outflow-pfr"></div>
+            <div id="in-line-pfr"></div>
+            <div id="out-line-pfr"></div>
+            <div id="pfr-plugflow-step"></div>
+        {% endif %}
+    {% endif %}
+</div>
+
+<div class='information rounded' id='real-reactor-animation' style='margin-top: 0px; height: 720px; padding: 0px;'>
+    <br>
+    <h3 style="color:White; text-align:center;">Real Reactor ({{bypassdeadvolume}})</h3>
+    {% if reactorType == "cstr" %}
+        {% if idealsystem.type == "pulse" %}
+            {% if problemType == "poor impeller design" %}
+                <div id="cstr-real"></div>
+                <div id="impeller-stick"></div>
+                <div id="inflow"></div>
+                <div id="outflow"></div>
+                <div id="in-line"></div>
+                <div id="out-line"></div>
+                <div id="impeller-blades-left"></div>
+                <div id="impeller-blades-right"></div>
+                <div id="pulse-line-real"></div>
+                <div id="pulse-arrow-real"></div>
+                <div id="dead-volume-left"></div>
+                <div id="dead-volume-right"></div>
+            {% else %}
+                <div id="cstr-real"></div>
+                <div id="impeller-stick-ideal"></div>
+                <div id="inflow"></div>
+                <div id="outflow-real"></div>
+                <div id="in-line"></div>
+                <div id="out-line-real"></div>
+                <div id="impeller-blades-left-ideal"></div>
+                <div id="impeller-blades-right-ideal"></div>
+                <div id="pulse-line-real2"></div>
+                <div id="pulse-arrow-real2"></div>
+            {% endif %}
+        {% else %}
+            {% if problemType == "poor impeller design" %}
+                <div id="cstr-step-real"></div>
+                <div id="impeller-stick"></div>
+                <div id="inflow"></div>
+                <div id="outflow"></div>
+                <div id="in-line"></div>
+                <div id="out-line"></div>
+                <div id="impeller-blades-left"></div>
+                <div id="impeller-blades-right"></div>
+                <div id="step-line-real"></div>
+                <div id="step-arrow-real"></div>
+                <div id="dead-volume-left"></div>
+                <div id="dead-volume-right"></div>
+                
+            {% else %}
+                <div id="cstr-step-real"></div>
+                <div id="impeller-stick-ideal"></div>
+                <div id="inflow"></div>
+                <div id="outflow-real"></div>
+                <div id="in-line"></div>
+                <div id="out-line-real"></div>
+                <div id="impeller-blades-left-ideal"></div>
+                <div id="impeller-blades-right-ideal"></div>
+                <div id="step-line-real2"></div>
+                <div id="step-arrow-real2"></div>
+            {% endif %}
+        {% endif %}
+    {% else %}
+        {% if idealsystem.type == "pulse" %}
+            {% if problemType == "reactor fouling" %}
+                <div id="pfr"></div>
+                <div id="inflow-pfr"></div>
+                <div id="outflow-pfr"></div>
+                <div id="in-line-pfr"></div>
+                <div id="out-line-pfr"></div>
+                <div id="fouling-1"></div>
+                <div id="fouling-2"></div>
+                <div id="pfr-plugflow-real"></div>
+            {% else %}
+                <div id="pfr"></div>
+                <div id="inflow-pfr"></div>
+                <div id="outflow-pfr"></div>
+                <div id="in-line-pfr"></div>
+                <div id="out-line-pfr"></div>
+                <div id="pfr-plugflow-real2"></div>
+                <div id="bypass-1"></div>
+                <div id="bypass-3"></div>
+                <div id="bypass-2"></div>
+                <div id="bypass-arrow"></div>
+            {% endif %}
+        {% else %}
+            {% if problemType == "reactor fouling" %}
+                <div id="pfr"></div>
+                <div id="inflow-pfr"></div>
+                <div id="outflow-pfr"></div>
+                <div id="in-line-pfr"></div>
+                <div id="out-line-pfr"></div>
+                <div id="fouling-1"></div>
+                <div id="fouling-2"></div>
+                <div id="pfr-plugflow-step-real"></div>
+            {% else %}
+                <div id="pfr"></div>
+                <div id="inflow-pfr"></div>
+                <div id="outflow-pfr"></div>
+                <div id="in-line-pfr"></div>
+                <div id="out-line-pfr"></div>
+                <div id="pfr-plugflow-step-real2"></div>
+                <div id="bypass-1-red"></div>
+                <div id="bypass-3-red"></div>
+                <div id="bypass-2-red"></div>
+                <div id="bypass-arrow"></div>
+            {% endif %}
+        {% endif %}
+    {% endif %}
+</div>
+
+<div class='information rounded' id='Cplot' style='margin-right: 35px; margin-top: 0px; height: 720px; padding: 0px'>
+    <!-- import plotly library -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script>
+        var Cgraph = {{ Cgraph | safe }}
+        Plotly.newPlot('Cplot',Cgraph, {})
+    </script>
+</div>
+
+<div class='information rounded' id='realCplot' style='margin-top: 0px; height: 720px; padding: 0px'>
+    <!-- import plotly library -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script>
+        var realCgraph = {{ realCgraph | safe }}
+        Plotly.newPlot('realCplot',realCgraph, {})
+    </script>
+</div>
+
+<div class='information rounded' id='realEplot' style='margin-right: 35px; margin-top: 0px; height: 720px; padding: 0px'>
+    <script>
+        var realEgraph = {{ realEgraph | safe }}
+        Plotly.newPlot('realEplot',realEgraph, {})
+    </script>
+</div>
+
+<div class='information rounded' id='realFplot' style='margin-top: 0px; height: 720px; padding: 0px'>
+    <script>
+        var realFgraph = {{ realFgraph | safe }}
+        Plotly.newPlot('realFplot',realFgraph, {})
+    </script>
+</div>
+{% endif %}
+
+<br style="clear: both">
+
+{% endblock %}
+
+{% block taskbar%}
+    <div class="taskbar">Taskbar for Animations: </div>
+    <button id="Start" onclick="requestAnimationFrame(animateStart);playAnimation();">Start Animation</button>
+    <button id="Pause" onclick="animatePause();pauseAnimation();">Pause Animation</button>
+    <button id="Reset" onclick="animateReset();resetAnimation()">Reset Animation</button>
+    <br>
+{% endblock %}
