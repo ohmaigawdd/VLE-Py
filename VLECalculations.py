@@ -237,7 +237,6 @@ class RachfordRice:
                     a = Antoine(component, (temperature-491.67)*(5/9), self.P)
                     
                     estimate = a.calc_Psat()*0.145038
-                    print(estimate)
                     try:
                         result = solve(equation, estimate).item(0)
                         return result / 0.145038
@@ -509,12 +508,10 @@ class Steam:
         vol1 = self.vapvol
         self.vapvol += 0.001
         self.Pbar = self.Pbar*vol1/self.vapvol
-        print(self.Pbar)
         self.v = steamTable.x_ph(self.Pbar, self.getmeanH())
         if self.v < 1 and self.v > 0:
             self.S = [steamTable.sL_t(self.T), steamTable.sV_t(self.T)]
         else:
-            print(self.v, self.getmeanH())
             self.S = steamTable.s_ph(self.Pbar, self.getmeanH())
         self.G = self.getmeanH() - (273.15+self.T)*self.getmeanS()
 
