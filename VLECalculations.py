@@ -247,14 +247,14 @@ class RachfordRice:
                     return None
 
     def checkBoilingPressure(self):
-        for c in components:
-            if self.getPureComponentBoilingPressure(c, self.T) == None:
+        for c in self.components:
+            if self.getPureComponentBoilingPressure(c, self.T_degR) == None:
                 return False
         return True
 
     def checkBoilingTemp(self):
-        for c in components:
-            if self.getPureComponentBoilingTemp(c, self.P) == None:
+        for c in self.components:
+            if self.getPureComponentBoilingTemp(c, self.P_psia) == None:
                 return False
         return True
 
