@@ -117,18 +117,25 @@ def binaryvle():
     else:
         exceed = False
 
-    initial = plot(system)
-    if plot_type == "yxP":
-        initial.plot_yx_constP()
-    elif plot_type == "yxT":
-        initial.plot_yx_constT()
-    elif plot_type == "Txy":
-        initial.plot_Pxy()
+    if (system.checkBoilingPressure()==False and plot_type == "Pxy") or (system.checkBoilingTemp()==False and plot_type == "Txy"):
+        errors = True
+        graphJSON = None
+        initial = None
+        solver_limit = True
     else:
-        initial.plot_Txy()
-    graphJSON = initial.generate()
+        initial = plot(system)
+        if plot_type == "yxP":
+            initial.plot_yx_constP()
+        elif plot_type == "yxT":
+            initial.plot_yx_constT()
+        elif plot_type == "Txy":
+            initial.plot_Pxy()
+        else:
+            initial.plot_Txy()
+        graphJSON = initial.generate()
+        solver_limit = False
 
-    return render_template("binaryvle.html", form=form, graphJSON=graphJSON, plot_type=plot_type, system=system, chemicals=chemicals, plots=plots, errors=errors, exceed=exceed)
+    return render_template("binaryvle.html", solver_limit=solver_limit, form=form, graphJSON=graphJSON, plot_type=plot_type, system=system, chemicals=chemicals, plots=plots, errors=errors, exceed=exceed)
 
 ###############################################################
 
