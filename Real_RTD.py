@@ -83,6 +83,7 @@ class Real_RTD:
         fig = go.Figure(
             data=[go.Scatter(x=[], y=[], name = "PFR_Real")],
             layout=go.Layout(template='plotly_dark',
+                hovermode=False,
                 paper_bgcolor='rgba(0,0,0,0)',
                 xaxis=dict(range=[0, self.tau*2], autorange=False),
                 yaxis=dict(range=[0, 110], autorange=False, showticklabels=False),
@@ -112,9 +113,10 @@ class Real_RTD:
         fig = go.Figure(
             data=[go.Scatter(x=xdata, y=ydata, name="Real", showlegend=True),go.Scatter(x=x1, y=y1, name = "Ideal", showlegend=True)],
             layout=go.Layout(template='plotly_dark',
+                hovermode=False,
                 paper_bgcolor='rgba(0,0,0,0)',
                 xaxis=dict(range=[0, self.tau*2], autorange=False),
-                yaxis=dict(range=[0, max(y1)*1.1], autorange=False),
+                yaxis=dict(range=[0, max(y1)*1.1], autorange=False, showticklabels=False),
                 xaxis_title="Time (s)",
                 yaxis_title = "Exit Age Function (1/s)",
                 title="PFR: Plot of E against Time",
@@ -131,9 +133,6 @@ class Real_RTD:
                             "transition": {"duration": 0}}])])]
             ), frames = frames
         )
-        fig.add_annotation(x=self.tau, y=max(y1), text = "Ideal PFR", showarrow=True, bgcolor="red", font_color="white", arrowcolor="red", arrowhead=1, align="left",  ax=-20,
-        ay=-30,)
-        fig.add_annotation(x=self.bypass_tau, y=max(y), text = "Real PFR", showarrow=True, bgcolor="blue", font_color="white", arrowcolor="blue", arrowhead=1, align="right")
         fig.add_annotation(x=5, y=0.5*max(y1), text="Flow bypass, delayed exit", font_size=14, showarrow=False, bgcolor="white", font_color="black")
         return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
@@ -176,9 +175,6 @@ class Real_RTD:
                             "transition": {"duration": 0}}])])]
             ), frames = frames
         )
-        fig.add_annotation(x=self.tau, y=max(y1), text = "Ideal PFR", showarrow=True, bgcolor="red", font_color="white", arrowcolor="red", arrowhead=1, align="left",  ax=-20,
-        ay=-30,)
-        fig.add_annotation(x=self.bypass_tau, y=max(y), text = "Real PFR", showarrow=True, bgcolor="blue", font_color="white", arrowcolor="blue", arrowhead=1, align="right")
         fig.add_annotation(x=5, y=0.5*max(y1), text="Flow bypass, delayed exit", font_size=14, showarrow=False, bgcolor="white", font_color="black")
         return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
       
@@ -214,6 +210,7 @@ class Real_RTD:
         fig = go.Figure(
             data=[go.Scatter(x=[], y=[], name = "PFR Real")],
             layout=go.Layout(template='plotly_dark',
+                hovermode=False,
                 paper_bgcolor='rgba(0,0,0,0)',
                 xaxis=dict(range=[0, self.tau*2], autorange=False),
                 yaxis=dict(range=[0, 110], autorange=False, showticklabels=False),
@@ -242,9 +239,10 @@ class Real_RTD:
         fig = go.Figure(
             data=[go.Scatter(x=xdata, y=ydata, name="Real", showlegend=True), go.Scatter(x=x1, y=y1, name = "Ideal", showlegend=True)],
             layout=go.Layout(template='plotly_dark',
+                hovermode=False,
                 paper_bgcolor='rgba(0,0,0,0)',
                 xaxis=dict(range=[0, self.tau*2], autorange=False),
-                yaxis=dict(range=[0, max(y)*1.1], autorange=False),
+                yaxis=dict(range=[0, max(y)*1.1], autorange=False, showticklabels=False),
                 xaxis_title="Time (s)",
                 yaxis_title = "Exit Age Function (1/s)",
                 title="PFR: Plot of E against Time",
@@ -261,8 +259,6 @@ class Real_RTD:
                             "transition": {"duration": 0}}])])]
             ), frames = frames
         )
-        fig.add_annotation(x=self.tau, y=max(y1), text = "Ideal PFR", showarrow=True, bgcolor="red", font_color="white", arrowcolor="red", arrowhead=1, align="left")
-        fig.add_annotation(x=self.deadvol_tau, y=max(y), text = "Real PFR", showarrow=True, bgcolor="blue", font_color="white", arrowcolor="blue", arrowhead=1, align="left")
         fig.add_annotation(x=15, y=0.5*max(y1), text="Dead volume, early exit", font_size=16, showarrow=False, bgcolor="white", font_color="black")
         
         return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
@@ -304,8 +300,6 @@ class Real_RTD:
             ), frames = frames
         )
 
-        fig.add_annotation(x=self.tau, y=max(y1), text = "Ideal PFR", showarrow=True, bgcolor="red", font_color="white", arrowcolor="red", arrowhead=1, align="left")
-        fig.add_annotation(x=self.deadvol_tau, y=max(y), text = "Real PFR", showarrow=True, bgcolor="blue", font_color="white", arrowcolor="blue", arrowhead=1, align="left")
         fig.add_annotation(x=15, y=0.5*max(y1), text="Dead volume, early exit", font_size=16, showarrow=False, bgcolor="white", font_color="black")
 
         return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
@@ -386,8 +380,6 @@ class Real_RTD:
                             "transition": {"duration": 0}}])])]
             ), frames = frames
         )
-        fig.add_annotation(x=0, y=0.1, text = "Ideal CSTR", showarrow=True, bgcolor="red", font_color="white", arrowcolor="red", arrowhead=1, align="left",  ax=40, ay=-30,)
-        fig.add_annotation(x=0, y=max(y), text = "Real CSTR", showarrow=True, bgcolor="blue", font_color="white", arrowcolor="blue", arrowhead=1, align="right", ax=20, ay=-30)
         fig.add_annotation(x=30, y=0.1, text="Flow bypass, gentler gradient", font_size=18, showarrow=False, bgcolor="white", font_color="black")
         return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
@@ -433,9 +425,6 @@ class Real_RTD:
                             "transition": {"duration": 0}}])])]
             ), frames = frames
         )
-        fig.add_annotation(x=45, y=0.98890, text = "Ideal CSTR", showarrow=True, bgcolor="red", font_color="white", arrowcolor="red", arrowhead=1, align="left",  ax=-20,
-        ay=-30,)
-        fig.add_annotation(x=30, y=max(y), text = "Real CSTR", showarrow=True, bgcolor="blue", font_color="white", arrowcolor="blue", arrowhead=1, align="right")
         fig.add_annotation(x=30, y=0.5*max(y1), text="Flow bypass, gentler gradient", font_size=18, showarrow=False, bgcolor="white", font_color="black")
         return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
@@ -507,8 +496,6 @@ class Real_RTD:
                             "transition": {"duration": 0}}])])]
             ), frames = frames
         )
-        fig.add_annotation(x=0, y=0.1, text = "Ideal CSTR", showarrow=True, bgcolor="red", font_color="white", arrowcolor="red", arrowhead=1, align="left", ax=40, ay=-30,)
-        fig.add_annotation(x=0, y=max(y), text = "Real CSTR", showarrow=True, bgcolor="blue", font_color="white", arrowcolor="blue", arrowhead=1, align="left",  ax=20, ay=-30,)
         fig.add_annotation(x=30, y=0.1, text="Dead volume, steeper gradient", font_size=18, showarrow=False, bgcolor="white", font_color="black")
         return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
@@ -546,8 +533,6 @@ class Real_RTD:
                             "fromcurrent": True, 
                             "transition": {"duration": 0}}])])]
             ), frames = frames)
-        fig.add_annotation(x=45, y=0.98890, text = "Ideal CSTR", showarrow=True, bgcolor="red", font_color="white", arrowcolor="red", arrowhead=1, align="left")
-        fig.add_annotation(x=30, y=max(y), text = "Real CSTR", showarrow=True, bgcolor="blue", font_color="white", arrowcolor="blue", arrowhead=1, align="left")
         fig.add_annotation(x=30, y=0.5*max(y1), text="Dead volume, steeper gradient", font_size=18, showarrow=False, bgcolor="white", font_color="black")
         return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
