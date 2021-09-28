@@ -20,23 +20,14 @@
 
 <div class="information rounded" style='margin-right: 35px;'>
     <p class='informationHeader'>Current System Parameters</p>
-    <br>
     <table>
         <tr >
             <td class='tableHeader'><strong>Tracer Type:</strong></td> 
             <td class='tableText'>{{ idealsystem.type.capitalize() }}</td>
-            <td class='tableHeader'><strong>Type of Non-ideality:</strong></td> 
-            <td class='tableText'>{{ problemType.capitalize() }}</td>
         </tr>
         <tr>
             <td class='tableHeader'><strong>Reactor Type:</strong></td> 
             <td class='tableText'>{{ reactorType.upper() }}</td>
-            <td class='tableHeader'><strong>Tracer Amount:</strong></td> 
-            {% if tracerType == "pulse"%}
-            <td class='tableText'>100.00 mol</td>
-            {% else %}
-            <td class='tableText'>100.00 mol/s</td>
-            {% endif %}
         </tr>
         <tr >
             <td class='tableHeader'><strong>Reactor Volume (V):</strong></td> 
@@ -45,6 +36,14 @@
         <tr>
             <td class='tableHeader'><strong>Flow Rate (Q):</strong></td> 
             <td class='tableText'>{{ idealsystem.flow }} m<sup>3</sup>/s</td>
+        </tr>
+        <tr>
+            <td class='tableHeader'><strong>Tracer Amount:</strong></td> 
+            {% if tracerType == "pulse"%}
+            <td class='tableText'>100.00 mol</td>
+            {% else %}
+            <td class='tableText'>100.00 mol/s</td>
+            {% endif %}
         </tr>
     </table>
     <script>

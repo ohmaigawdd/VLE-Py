@@ -149,7 +149,7 @@
                         Sliq.innerHTML = Math.round({{Ggraph[9]}}[newP] * 100) / 100;
                         Ssys.innerHTML = Math.round({{Ggraph[7]}}[newP] * 100) / 100;
                         Plotly.addTraces('vapCurve',{x: [{{ system.T }}, {{ system.T }}], y: [{{ system.P }}, this.value], name: "{{ processType }}",text: ["Start", "End"], hovertemplate: '<br><b>%{text}</b></br>' + 'T: %{x:.2f} C' + '<br>P: %{y:.2f} kPa'});
-                        Plotly.addTraces('Gplot',{x: [newP], y: [{{ Ggraph[1] }}[newP]], name: "Final System", mode: "markers", marker: {size: 15}, hovertemplate: 'P: %{x:.2f} kPa' + '<br>G: %{y:.2f} kJ/kg'});
+                        Plotly.addTraces('Gplot',{x: [newP], y: [{{ Ggraph[1] }}[newP]], name: "Final System", mode: "markers", marker: {size: 15, color: "orange"}, hovertemplate: 'P: %{x:.2f} kPa' + '<br>G: %{y:.2f} kJ/kg'});
                         if (newP <= {{ equi }} && vapFrac == 0) { // if gas->liq
                             transition =  true
                         }
@@ -169,7 +169,7 @@
                         Sliq.innerHTML = Math.round({{Ggraph[9]}}[newT] * 100) / 100;
                         Ssys.innerHTML = Math.round({{Ggraph[7]}}[newT] * 100) / 100;
                         Plotly.addTraces('vapCurve',{x: [{{ system.T }},this.value], y: [{{ system.P }}, {{ system.P }}], name: "{{ processType }}",text: ["Start", "End"], hovertemplate: '<br><b>%{text}</b></br>' + 'T: %{x:.2f} C' + '<br>P: %{y:.2f} kPa'});
-                        Plotly.addTraces('Gplot',{x: [newT], y: [{{ Ggraph[1] }}[newT]], name: "Final System", mode: "markers", marker: {size: 15}, hovertemplate: 'T: %{x:.2f} C' + '<br>G: %{y:.2f} kJ/kg'});
+                        Plotly.addTraces('Gplot',{x: [newT], y: [{{ Ggraph[1] }}[newT]], name: "Final System", mode: "markers", marker: {size: 15, color: "orange"}, hovertemplate: 'T: %{x:.2f} C' + '<br>G: %{y:.2f} kJ/kg'});
                         if (newT <= {{ equi }} && vapFrac == 1) { // if liq->gas
                             transition =  true
                         }
