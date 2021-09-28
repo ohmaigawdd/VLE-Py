@@ -48,7 +48,7 @@ class BinaryForm(FlaskForm):
     ('prop','Propane'), ('isob','Isobutane') , ('nbut','n-Butane'), ('isop','Isopentane'), ('npent','n-Pentane'),
     ('nhex','n-Hexane'), ('nhep','n-Heptane'), ('noct','n-Octane'),('nnon','n-Nonane'), ('ndec','n-Decane')])
 
-    plot_type = SelectField("Plot Type: ", choices = [("yxP","y-x (const P)"), ("yxT","y-x (const T)"), ("Txy","T-x-y"), ("Pxy","P-x-y")])
+    plot_type = SelectField("Plot Type: ", choices = [("Pxy","P-x-y"), ("Txy","T-x-y"), ("yxP","y-x (const P)"), ("yxT","y-x (const T)")])
 
     T = FloatField("Temperature (T in \u00b0C): ", validators=[NumberRange(-70, 200, message=("Temperature out of range!"))], render_kw={'placeholder': "From -70 - 200"})
 
