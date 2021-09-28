@@ -94,6 +94,7 @@ class RTD:
         fig = go.Figure(
             data=[go.Scatter(x=[], y=[], name = "PFR")],
             layout=go.Layout(template='plotly_dark',
+                hovermode=False,
                 paper_bgcolor='rgba(0,0,0,0)',
                 xaxis=dict(range=[0, self.tau*2], autorange=False),
                 yaxis=dict(range=[0, 110], autorange=False, showticklabels=False),
@@ -117,6 +118,7 @@ class RTD:
         fig = go.Figure(
             data=[go.Scatter(x=xdata, y=ydata, name = "PFR")],
             layout=go.Layout(template='plotly_dark',
+                hovermode=False,
                 paper_bgcolor='rgba(0,0,0,0)',
                 xaxis=dict(range=[0, self.tau*2], autorange=False),
                 yaxis=dict(range=[0, 110], autorange=False),
