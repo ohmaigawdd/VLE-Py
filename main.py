@@ -1,13 +1,48 @@
-from flask import Flask, render_template, session, request
+from flask import Flask, render_template, session, request, Response
 from resetParamForm import PureForm, BinaryForm, IdealReactorForm, RealReactorForm
 from VLECalculations import RachfordRice, Antoine, Steam
 from Plot import plot, plot_steam, GvsP, GvsT
 from RTD import RTD
 from Real_RTD import Real_RTD
+from functools import wraps
 
 app = Flask(__name__)
 
 app.config["SECRET_KEY"] = "mykey"
+
+def check_authTHERMO(username, password):
+    """This function is called to check if a username /
+    password combination is valid.
+    """
+    return username == 'student' and password == 'thermo2121rox'
+
+def check_authRXT(username, password):
+    """This function is called to check if a username /
+    password combination is valid.
+    """
+    return username == 'student' and password == 'reactor2116best'
+
+def authenticate():
+    """Sends a 401 response that enables basic auth"""
+    return render_template("error.html"), 401, {'WWW-Authenticate': 'Basic realm="Login Required"'}
+
+def requires_authTHERMO(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        auth = request.authorization
+        if not auth or not check_authTHERMO(auth.username, auth.password):
+            return authenticate()
+        return f(*args, **kwargs)
+    return decorated
+
+def requires_authRXT(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        auth = request.authorization
+        if not auth or not check_authRXT(auth.username, auth.password):
+            return authenticate()
+        return f(*args, **kwargs)
+    return decorated
 
 ###############################################################
 
@@ -20,11 +55,13 @@ def home():
 
 # PURE VLE WRITE UP
 @app.route("/purevleinfo")
+@requires_authTHERMO
 def purevleinfo():
     return render_template("purevleinfo.html")
 
 # PURE VLE APP
 @app.route("/purevle", methods=["GET","POST"])
+@requires_authTHERMO
 def purevle():
 
     form = PureForm()
@@ -67,11 +104,13 @@ def purevle():
 
 # BINARY VLE WRITE UP
 @app.route("/binaryvleinfo")
+@requires_authTHERMO
 def binaryvleinfo():
     return render_template("binaryvleinfo.html")
 
 # BINARY VLE PAGE
 @app.route("/binaryvle", methods=["GET","POST"])
+@requires_authTHERMO
 def binaryvle():
 
     form = BinaryForm()
@@ -141,11 +180,13 @@ def binaryvle():
 
 # REACTOR DESIGN AND ANALYSIS WRITE UP
 @app.route("/reactorwriteup")
+@requires_authRXT
 def reactorwriteup():
     return render_template("reactorwriteup.html")
 
 # IDEAL PFR/CSTR PAGE
 @app.route("/idealreactors", methods=["GET","POST"])
+@requires_authRXT
 def idealreactors():
 
     form = IdealReactorForm()
@@ -190,6 +231,7 @@ def idealreactors():
 
 # REAL PFR/CSTR PAGE
 @app.route("/realreactors", methods=["GET","POST"])
+@requires_authRXT
 def realreactors():
 
     form = RealReactorForm()
