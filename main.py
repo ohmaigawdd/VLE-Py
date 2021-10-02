@@ -24,7 +24,7 @@ def check_authRXT(username, password):
 
 def authenticate():
     """Sends a 401 response that enables basic auth"""
-    return render_template("error.html")
+    return render_template("error.html"), 401, {'WWW-Authenticate': 'Basic realm="Login Required"'}
 
 def requires_authTHERMO(f):
     @wraps(f)
