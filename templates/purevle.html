@@ -119,12 +119,18 @@
                 <span id="demo"></span> kPa
             </span>
             <div style="color: white;">The system has a boiling pressure at {{'%0.2f'| format(system.getboilingP() * 100|float)}} kPa at {{system.T}} <sup>o</sup>C</div>
+            <span style="color: white;">This system has a specific volume of 
+                <span id="specific_vol"></span> m<sup>3</sup>/kg
+            </span>
             {% else %}
             <input type="range" min="1" max="374" value="{{"%0.2f" % system.T}}" class="slider" id="myRange" oninput="adjustValue(this.value)">
             <span style="color: white;">Use this slider to adjust T: 
                 <span id="demo" style="color: white;"></span> <sup>o</sup>C
             </span>
             <div style="color: white;">The system has a boiling temperature at {{'%0.2f'| format(system.getboilingT()|float)}} <sup>o</sup>C at {{'%0.2f'| format(system.P|float)}} kPa</div>
+            <span style="color: white;">This system has a specific volume of 
+                <span id="specific_vol"></span> m<sup>3</sup>/kg
+            </span>
             {% endif %}
             <script>
                 var slider = document.getElementById("myRange");
@@ -148,6 +154,7 @@
                         Sgas.innerHTML = Math.round({{Ggraph[8]}}[newP] * 100) / 100;
                         Sliq.innerHTML = Math.round({{Ggraph[9]}}[newP] * 100) / 100;
                         Ssys.innerHTML = Math.round({{Ggraph[7]}}[newP] * 100) / 100;
+                        specific_vol.innerHTML = Math.round({{Ggraph[10]}}[newP] * 10000)/10000;
                         Plotly.addTraces('vapCurve',{x: [{{ system.T }}, {{ system.T }}], y: [{{ system.P }}, this.value], name: "{{ processType }}",text: ["Start", "End"], hovertemplate: '<br><b>%{text}</b></br>' + 'T: %{x:.2f} C' + '<br>P: %{y:.2f} kPa'});
                         Plotly.addTraces('Gplot',{x: [newP], y: [{{ Ggraph[1] }}[newP]], name: "Final System", mode: "markers", marker: {size: 15, color: "orange"}, hovertemplate: 'P: %{x:.2f} kPa' + '<br>G: %{y:.2f} kJ/kg'});
                         if (newP <= {{ equi }} && vapFrac == 0) { // if gas->liq
@@ -168,6 +175,7 @@
                         Sgas.innerHTML = Math.round({{Ggraph[8]}}[newT] * 100) / 100;
                         Sliq.innerHTML = Math.round({{Ggraph[9]}}[newT] * 100) / 100;
                         Ssys.innerHTML = Math.round({{Ggraph[7]}}[newT] * 100) / 100;
+                        specific_vol.innerHTML = Math.round({{Ggraph[10]}}[newT] * 10000)/10000;
                         Plotly.addTraces('vapCurve',{x: [{{ system.T }},this.value], y: [{{ system.P }}, {{ system.P }}], name: "{{ processType }}",text: ["Start", "End"], hovertemplate: '<br><b>%{text}</b></br>' + 'T: %{x:.2f} C' + '<br>P: %{y:.2f} kPa'});
                         Plotly.addTraces('Gplot',{x: [newT], y: [{{ Ggraph[1] }}[newT]], name: "Final System", mode: "markers", marker: {size: 15, color: "orange"}, hovertemplate: 'T: %{x:.2f} C' + '<br>G: %{y:.2f} kJ/kg'});
                         if (newT <= {{ equi }} && vapFrac == 1) { // if liq->gas
@@ -246,6 +254,8 @@
                 var SGas = document.getElementById("Sgas")
                 var SLiq = document.getElementById("Sliq")
                 var SSys = document.getElementById("Ssys")
+
+                var specific_vol = document.getElementById("specific_vol")
                 if ("{{ processType }}" == "Isotherm") {
                     var initP = Math.round({{system.P}}/100) * 100
                     gibbsGas.innerHTML = Math.round({{Ggraph[2]}}[initP] * 100) / 100;
@@ -259,6 +269,8 @@
                     Sgas.innerHTML = Math.round({{Ggraph[8]}}[initP] * 100) / 100;
                     Sliq.innerHTML = Math.round({{Ggraph[9]}}[initP] * 100) / 100;
                     Ssys.innerHTML = Math.round({{Ggraph[7]}}[initP] * 100) / 100;
+
+                    specific_vol.innerHTML = Math.round({{Ggraph[10]}}[initP] * 10000)/10000;
                 } else {
                     var initT = {{system.T}}
                     gibbsGas.innerHTML = Math.round({{Ggraph[2]}}[initT] * 100) / 100;
@@ -272,6 +284,8 @@
                     Sgas.innerHTML = Math.round({{Ggraph[8]}}[initT] * 100) / 100;
                     Sliq.innerHTML = Math.round({{Ggraph[9]}}[initT] * 100) / 100;
                     Ssys.innerHTML = Math.round({{Ggraph[7]}}[initT] * 100) / 100;
+
+                    specific_vol.innerHTML = Math.round({{Ggraph[10]}}[initT] * 10000)/10000;
                 }
             </script>
         </table>
