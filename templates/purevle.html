@@ -119,7 +119,7 @@
                 <span id="demo"></span> kPa
             </span>
             <div style="color: white;">The system has a boiling pressure at {{'%0.2f'| format(system.getboilingP() * 100|float)}} kPa at {{system.T}} <sup>o</sup>C</div>
-            <span style="color: white;">This system has a specific volume of 
+            <span style="color: white;">The current final system has a specific volume of 
                 <span id="specific_vol"></span> m<sup>3</sup>/kg
             </span>
             {% else %}
@@ -128,7 +128,7 @@
                 <span id="demo" style="color: white;"></span> <sup>o</sup>C
             </span>
             <div style="color: white;">The system has a boiling temperature at {{'%0.2f'| format(system.getboilingT()|float)}} <sup>o</sup>C at {{'%0.2f'| format(system.P|float)}} kPa</div>
-            <span style="color: white;">This system has a specific volume of 
+            <span style="color: white;">The current final system has a specific volume of 
                 <span id="specific_vol"></span> m<sup>3</sup>/kg
             </span>
             {% endif %}
