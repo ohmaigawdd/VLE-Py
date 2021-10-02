@@ -1,13 +1,36 @@
-from flask import Flask, render_template, session, request
+from flask import Flask, render_template, session, request, Response
 from resetParamForm import PureForm, BinaryForm, IdealReactorForm, RealReactorForm
 from VLECalculations import RachfordRice, Antoine, Steam
 from Plot import plot, plot_steam, GvsP, GvsT
 from RTD import RTD
 from Real_RTD import Real_RTD
+from functools import wraps
 
 app = Flask(__name__)
 
 app.config["SECRET_KEY"] = "mykey"
+
+def check_auth(username, password):
+    """This function is called to check if a username /
+    password combination is valid.
+    """
+    return username == 'admin' and password == 'secret'
+
+def authenticate():
+    """Sends a 401 response that enables basic auth"""
+    return Response(
+    'Could not verify your access level for that URL.\n'
+    'You have to login with proper credentials', 401,
+    {'WWW-Authenticate': 'Basic realm="Login Required"'})
+
+def requires_auth(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        auth = request.authorization
+        if not auth or not check_auth(auth.username, auth.password):
+            return authenticate()
+        return f(*args, **kwargs)
+    return decorated
 
 ###############################################################
 
@@ -25,6 +48,7 @@ def purevleinfo():
 
 # PURE VLE APP
 @app.route("/purevle", methods=["GET","POST"])
+@requires_auth
 def purevle():
 
     form = PureForm()
@@ -72,6 +96,7 @@ def binaryvleinfo():
 
 # BINARY VLE PAGE
 @app.route("/binaryvle", methods=["GET","POST"])
+@requires_auth
 def binaryvle():
 
     form = BinaryForm()
