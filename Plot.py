@@ -477,7 +477,7 @@ def GvsP(T): #ISOTHERMAL T in degC
     specific_vol = {}
 
     for pressure in total_range:
-        specific_vol[pressure*100] = steamTable.v_pt(T, pressure)
+        specific_vol[pressure*100] = steamTable.v_pt(pressure, T)
 
         Hgas = steamTable.h_tx(T, 1)
         Hgas_val[pressure*100] = Hgas
