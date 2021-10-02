@@ -474,7 +474,11 @@ def GvsP(T): #ISOTHERMAL T in degC
     S = {}
     Sgas_val = {}
     Sliq_val = {}
+    specific_vol = {}
+
     for pressure in total_range:
+        specific_vol[pressure*100] = steamTable.v_pt(T, pressure)
+
         Hgas = steamTable.h_tx(T, 1)
         Hgas_val[pressure*100] = Hgas
         Sgas = steamTable.s_ph(pressure, Hgas)
@@ -535,7 +539,7 @@ def GvsP(T): #ISOTHERMAL T in degC
                         'P: %{x:.2f} kPa' +
                         '<br>G: %{y:.2f} kJ/kg'))
 
-    return (json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder), G, Ggas, Gliq, H, Hgas_val, Hliq_val, S, Sgas_val, Sliq_val)
+    return (json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder), G, Ggas, Gliq, H, Hgas_val, Hliq_val, S, Sgas_val, Sliq_val, specific_vol)
 
 def GvsT(P): # ISOBARIC P in bar
     #useful link: https://chem.libretexts.org/Bookshelves/Physical_and_Theoretical_Chemistry_Textbook_Maps/Map%3A_Physical_Chemistry_(McQuarrie_and_Simon)/23%3A_Phase_Equilibria/23.02%3A_Gibbs_Energies_and_Phase_Diagrams
@@ -549,7 +553,11 @@ def GvsT(P): # ISOBARIC P in bar
     S = {}
     Sgas_val = {}
     Sliq_val = {}
+    specific_vol = {}
+
     for temperature in total_range:
+        specific_vol[temperature] = steamTable.v_pt(P, temperature)
+
         Hgas = steamTable.h_tx(temperature, 1)
         Hgas_val[temperature] = Hgas
         Sgas = steamTable.s_ph(P, Hgas)
@@ -610,7 +618,7 @@ def GvsT(P): # ISOBARIC P in bar
                         'P: %{x:.2f} kPa' +
                         '<br>G: %{y:.2f} kJ/kg'))
     
-    return (json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder), G, Ggas, Gliq, H, Hgas_val, Hliq_val, S, Sgas_val, Sliq_val)
+    return (json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder), G, Ggas, Gliq, H, Hgas_val, Hliq_val, S, Sgas_val, Sliq_val, specific_vol)
 
 
 # Testing functions
