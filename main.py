@@ -188,8 +188,8 @@ def reactorwriteup():
     return render_template("reactorwriteup.html")
 
 # IDEAL PFR/CSTR PAGE
-@requires_authRXT
 @app.route("/idealreactors", methods=["GET","POST"])
+@requires_authRXT
 def idealreactors():
 
     form = IdealReactorForm()
@@ -233,8 +233,8 @@ def idealreactors():
     return render_template("idealreactors.html", reactorType=reactorType, tracerType=tracerType, system=system, form=form, errors=errors, Cgraph=Cgraph, Egraph=Egraph, Fgraph=Fgraph)
 
 # REAL PFR/CSTR PAGE
-@requires_authRXT
 @app.route("/realreactors", methods=["GET","POST"])
+@requires_authRXT
 def realreactors():
 
     form = RealReactorForm()
