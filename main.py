@@ -10,11 +10,17 @@ app = Flask(__name__)
 
 app.config["SECRET_KEY"] = "mykey"
 
-def check_auth(username, password):
+def check_authTHERMO(username, password):
     """This function is called to check if a username /
     password combination is valid.
     """
-    return username == 'admin' and password == 'secret'
+    return username == 'student' and password == 'thermo2121rox'
+
+def check_authRXT(username, password):
+    """This function is called to check if a username /
+    password combination is valid.
+    """
+    return username == 'student' and password == 'reactor2116best'
 
 def authenticate():
     """Sends a 401 response that enables basic auth"""
@@ -23,11 +29,20 @@ def authenticate():
     'You have to login with proper credentials', 401,
     {'WWW-Authenticate': 'Basic realm="Login Required"'})
 
-def requires_auth(f):
+def requires_authTHERMO(f):
     @wraps(f)
     def decorated(*args, **kwargs):
         auth = request.authorization
-        if not auth or not check_auth(auth.username, auth.password):
+        if not auth or not check_authTHERMO(auth.username, auth.password):
+            return authenticate()
+        return f(*args, **kwargs)
+    return decorated
+
+def requires_authRXT(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        auth = request.authorization
+        if not auth or not check_authRXT(auth.username, auth.password):
             return authenticate()
         return f(*args, **kwargs)
     return decorated
@@ -43,12 +58,13 @@ def home():
 
 # PURE VLE WRITE UP
 @app.route("/purevleinfo")
+@requires_authTHERMO
 def purevleinfo():
     return render_template("purevleinfo.html")
 
 # PURE VLE APP
 @app.route("/purevle", methods=["GET","POST"])
-@requires_auth
+@requires_authTHERMO
 def purevle():
 
     form = PureForm()
@@ -91,12 +107,13 @@ def purevle():
 
 # BINARY VLE WRITE UP
 @app.route("/binaryvleinfo")
+@requires_authTHERMO
 def binaryvleinfo():
     return render_template("binaryvleinfo.html")
 
 # BINARY VLE PAGE
 @app.route("/binaryvle", methods=["GET","POST"])
-@requires_auth
+@requires_authTHERMO
 def binaryvle():
 
     form = BinaryForm()
@@ -166,10 +183,12 @@ def binaryvle():
 
 # REACTOR DESIGN AND ANALYSIS WRITE UP
 @app.route("/reactorwriteup")
+@requires_authRXT
 def reactorwriteup():
     return render_template("reactorwriteup.html")
 
 # IDEAL PFR/CSTR PAGE
+@requires_authRXT
 @app.route("/idealreactors", methods=["GET","POST"])
 def idealreactors():
 
@@ -214,6 +233,7 @@ def idealreactors():
     return render_template("idealreactors.html", reactorType=reactorType, tracerType=tracerType, system=system, form=form, errors=errors, Cgraph=Cgraph, Egraph=Egraph, Fgraph=Fgraph)
 
 # REAL PFR/CSTR PAGE
+@requires_authRXT
 @app.route("/realreactors", methods=["GET","POST"])
 def realreactors():
 
