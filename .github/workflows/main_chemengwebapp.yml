@@ -60,4 +60,4 @@ jobs:
         with:
           app-name: 'chemengwebapp'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_8832332873FF4C03872D3A8C1A7D91B3 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_02740D6845F840EDA8B1EDA5ECEEDF06 }}
