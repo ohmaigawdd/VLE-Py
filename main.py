@@ -14,13 +14,13 @@ def check_authTHERMO(username, password):
     """This function is called to check if a username /
     password combination is valid.
     """
-    return username == 'student' and password == 'thermo2121rox'
+    return username == 'student' and password == 'ChE_VLEapp'
 
 def check_authRXT(username, password):
     """This function is called to check if a username /
     password combination is valid.
     """
-    return username == 'student' and password == 'reactor2116best'
+    return username == 'student' and password == 'ChE_RTDapp'
 
 def authenticate():
     """Sends a 401 response that enables basic auth"""
